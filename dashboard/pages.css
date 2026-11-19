@@ -123,9 +123,9 @@
 .st-stepper input { width: 70px; text-align: center; border: 0; background: none; font: 800 1.05rem var(--sans); color: var(--ink); -moz-appearance: textfield; }
 .st-stepper input::-webkit-inner-spin-button { -webkit-appearance: none; }
 .st-stepper span { font-size: .85rem; color: var(--ink-3); padding-inline-end: 6px; }
-.st-geo { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.st-geo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 12px; }
 .st-geo label { display: flex; flex-direction: column; gap: 4px; font-size: .82rem; font-weight: 600; color: var(--ink-3); }
-.st-geo input { height: 42px; border: 1px solid var(--rule-2); border-radius: 12px; padding: 0 12px; background: var(--paper); font: 700 .95rem var(--sans); color: var(--ink); direction: ltr; }
+.st-geo input { width: 100%; min-width: 0; height: 42px; border: 1px solid var(--rule-2); border-radius: 12px; padding: 0 12px; background: var(--paper); font: 700 .95rem var(--sans); color: var(--ink); direction: ltr; }
 .st-gps svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; }
 .st-hint { margin: 8px 0 0; font-size: .82rem; color: var(--ink-3); }
 .st-adv summary { cursor: pointer; font-weight: 700; color: var(--ink-2); list-style: none; }

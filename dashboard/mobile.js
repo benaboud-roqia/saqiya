@@ -41,6 +41,14 @@
       if (b && mq.matches) b.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" });
     });
   }
+  // onglets des réglages (téléphone) : même indice « il y en a d'autres »
+  const stTabs = document.getElementById("st-tabs");
+  const nudgeTabs = watch(stTabs, "saqiya-sttabs-hint");
+  document.addEventListener("click", (e) => {
+    if (e.target.closest('.nav[data-view="settings"]') && nudgeTabs) setTimeout(nudgeTabs, 600);
+    const t = e.target.closest("#st-tabs button");
+    if (t && window.matchMedia("(max-width: 760px)").matches) t.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" });
+  });
   const prompts = document.getElementById("prompts");
   const nudgePrompts = watch(prompts, "saqiya-prompts-hint");
   // à l'ouverture du conseiller, rappelle que d'autres suggestions existent

@@ -138,3 +138,10 @@ html[dir="rtl"] .xf-col a:hover { transform: translateX(-4px); }
 @media (max-width: 560px) {
   .burger { margin-inline-start: 0; }
 }
+
+/* ---------- logo de l'application ---------- */
+img.brand-logo { display: block; flex: none; border-radius: 24%; }
+.brand img.brand-logo { width: 34px; height: 34px; }
+.xf-logo img.brand-logo { width: 48px; height: 48px; transition: transform .6s cubic-bezier(.2, .8, .2, 1); box-shadow: 0 10px 26px -10px rgba(0, 0, 0, .7); }
+.xf-logo:hover img.brand-logo { transform: rotate(-8deg) scale(1.06); }
+.sc-end img.brand-logo.logo { width: 11cqw; height: 11cqw; box-shadow: 0 1.5cqw 4cqw -1cqw rgba(0, 0, 0, .6); }

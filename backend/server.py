@@ -197,6 +197,26 @@ def build_report(t0, t1):
     data["crop_label"] = knowledge.crop(settings["crop"])["label"]
     data["soil_label"] = knowledge.soil(settings["soil_type"])["label"]
     data["period"] = {"from": t0, "to": t1}
+    # pour un rapport complet : exploitant, plages idéales, risques de maladies, diagnostics photo de la période
+    me = db.user_by_id(db.uid()) or {}
+    data["account"] = {"name": me.get("name") or "", "email": me.get("email") or ""}
+    crop = knowledge.crop(settings["crop"])
+    data["ideal"] = {"ph": crop.get("ph"), "ec_max": crop.get("ec_max"), "needs": crop.get("needs", ""),
+                     "nutrients": {k: {"low": v["low"], "high": v["high"]} for k, v in knowledge.KB["nutrients"].items()}}
+    dz = disease_status()
+    data["diseases"] = [{"label": r["label"], "risk": r["risk"], "level": r["level"]} for r in (dz.get("risks") or [])][:6] \
+        if dz.get("available") else []
+    diag = []
+    for p in db.list_photos():
+        if not (t0 <= p["ts"] < t1) or p["kind"] in ("sol", "materiel"):
+            continue
+        a = p.get("analysis") or {}
+        top = (a.get("diagnoses") or [None])[0] if p.get("analysis_status") == "done" else None
+        diag.append({"ts": p["ts"], "status": a.get("status") if p.get("analysis_status") == "done" else None,
+                     "name_fr": top.get("name_fr") if top else None, "name_ar": top.get("name_ar") if top else None,
+                     "confidence": top.get("confidence") if top else None, "colors": p.get("colors")})
+    data["diagnoses"] = diag[:20]
+    data["report_id"] = f"SQ-{db.uid():03d}-{time.strftime('%Y%m%d', time.localtime(t1 - 1))}"
     return data
 
 

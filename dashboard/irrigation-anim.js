@@ -56,7 +56,7 @@
 
     // 1) taches d'humidité sous chaque goutteur (terre plus sombre, légèrement brillante)
     for (const e of emitters) {
-      const r = (6 + 34 * grow) * e.depth * box.scale * 1.6;
+      const r = Math.max(10, (6 + 34 * grow) * e.depth * box.scale * 1.6) * (0.55 + 0.45 * grow);   // jamais trop petit sur téléphone
       ctx.save();
       ctx.translate(e.x, e.y + 2 * e.depth);
       ctx.scale(1, 0.42);
@@ -77,10 +77,10 @@
     ctx.lineCap = "round";
     hosePaths.forEach((p, i) => {
       ctx.save();
-      ctx.setLineDash([10 * box.scale * 2, 46 * box.scale * 2]);
+      ctx.setLineDash([Math.max(8, 10 * box.scale * 2), Math.max(26, 46 * box.scale * 2)]);
       ctx.lineDashOffset = -t * 90 * box.scale * 2 - i * 13;
       ctx.strokeStyle = "rgba(170, 215, 255, .38)";
-      ctx.lineWidth = 2.2;
+      ctx.lineWidth = Math.max(2.4, 3.2 * box.scale * 1.6);
       ctx.beginPath(); ctx.moveTo(p[0][0], p[0][1]); ctx.lineTo(p[1][0], p[1][1]); ctx.lineTo(p[2][0], p[2][1]); ctx.stroke();
       ctx.restore();
     });
@@ -88,7 +88,7 @@
     // 3) gouttes : se forment au goutteur, tombent, éclaboussent
     for (const e of emitters) {
       const k = ((t / e.period) + e.phase) % 1;
-      const R = 2.6 * e.depth * Math.max(0.7, box.scale * 1.6);
+      const R = Math.max(2.8, 2.6 * e.depth * Math.max(0.9, box.scale * 1.6));   // gouttes visibles même sur petit écran
       if (k < 0.7) {                                       // la goutte grossit
         drawDrop(e.x, e.y - 1, R * (0.35 + 0.65 * (k / 0.7)));
       } else {                                             // elle tombe
@@ -119,6 +119,9 @@
     ctx.bezierCurveTo(x + r, y - r * 0.4, x + r, y + r, x, y + r);
     ctx.bezierCurveTo(x - r, y + r, x - r, y - r * 0.4, x, y - r * 1.5);
     ctx.fill();
+    ctx.strokeStyle = "rgba(10, 45, 90, .55)";   // léger contour : la goutte reste visible sur une terre claire
+    ctx.lineWidth = 0.8;
+    ctx.stroke();
   }
 
   function hud(s) {
