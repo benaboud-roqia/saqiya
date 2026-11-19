@@ -15,6 +15,7 @@
       owner_t: "Créer le compte propriétaire", owner_s: "Premier compte du système : vous en serez le propriétaire et pourrez ouvrir les comptes des autres.",
       tab_login: "Connexion", tab_register: "Inscription", google: "Continuer avec Google",
       google_off: "La connexion avec Gmail sera disponible dès que son identifiant Google sera ajouté au serveur.",
+      google_here: "Sur cette adresse en ligne, connectez-vous avec votre e-mail et votre mot de passe. La connexion Gmail fonctionne sur le PC de la parcelle.",
       or: "ou avec votre e-mail", name: "Votre nom", email: "Adresse e-mail", password: "Mot de passe",
       submit_login: "Se connecter", submit_reg: "Créer mon compte",
       foot_login: "Pas encore de compte ?", foot_reg: "Déjà un compte ?", go_reg: "Inscrivez-vous", go_login: "Connectez-vous",
@@ -37,6 +38,7 @@
       owner_t: "إنشاء حساب المالك", owner_s: "أول حساب في النظام: ستكون المالك ويمكنك تفعيل حسابات الآخرين.",
       tab_login: "تسجيل الدخول", tab_register: "التسجيل", google: "المتابعة مع Google",
       google_off: "سيتوفر الدخول عبر Gmail بمجرد إضافة معرّف Google إلى الخادم.",
+      google_here: "على هذا العنوان، سجّل الدخول ببريدك الإلكتروني وكلمة المرور. الدخول عبر Gmail يعمل على حاسوب المزرعة.",
       or: "أو ببريدك الإلكتروني", name: "اسمك", email: "البريد الإلكتروني", password: "كلمة السر",
       submit_login: "دخول", submit_reg: "إنشاء حسابي",
       foot_login: "ليس لديك حساب؟", foot_reg: "لديك حساب؟", go_reg: "سجّل الآن", go_login: "سجّل الدخول",
@@ -156,9 +158,15 @@
   let gisLoaded = false;
   function renderGoogle() {
     const cid = cfg.google_client_id;
-    $("#g-fake").hidden = !!cid;
-    $("#g-note").hidden = !!cid;
-    if (!cid) { $("#g-btn").innerHTML = ""; return; }
+    // adresse non autorisée dans Google Cloud Console : Google répondrait « Accès bloqué » → pas de bouton
+    const allowed = !cfg.google_origins || cfg.google_origins.includes(location.origin);
+    const note = $("#g-note");
+    note.setAttribute("data-t", cid && !allowed ? "google_here" : "google_off");
+    note.textContent = t(note.getAttribute("data-t"));
+    $("#g-fake").hidden = !!cid || !allowed;
+    note.hidden = !!cid && allowed;
+    const sep = document.querySelector(".au-or"); if (sep) sep.hidden = !!cid && !allowed;
+    if (!cid || !allowed) { $("#g-btn").innerHTML = ""; return; }
     const draw = () => {
       if (!window.google?.accounts?.id) return;
       google.accounts.id.initialize({

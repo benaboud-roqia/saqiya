@@ -478,7 +478,8 @@ class Handler(BaseHTTPRequestHandler):
             if u.path == "/api/alive":     # le site vitrine (Vercel) vérifie que le serveur du PC répond
                 return self._json({"ok": True}, headers={"Access-Control-Allow-Origin": "*"})
             if u.path == "/api/auth/config":
-                return self._json({"google_client_id": auth.google_client_id(), "has_users": db.count_users() > 0})
+                return self._json({"google_client_id": auth.google_client_id(), "has_users": db.count_users() > 0,
+                                   "google_origins": auth.google_origins()})
             if u.path == "/api/auth/me":
                 return self._json({"user": auth.public_user(auth.user_from_cookie(self.headers.get("Cookie")))})
             if u.path == "/api/public/summary":

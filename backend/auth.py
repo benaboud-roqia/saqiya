@@ -104,6 +104,14 @@ def google_client_id():
             or db.get_settings().get("google_client_id") or "")
 
 
+def google_origins():
+    """Adresses ajoutées dans Google Cloud Console › « Origines JavaScript autorisées ».
+    Sur une autre adresse (tunnel en ligne…), Google affiche « Accès bloqué » : le bouton y est donc masqué.
+    Fichier .env : GOOGLE_ORIGINS=http://localhost:8000,http://localhost,https://mon-adresse-fixe"""
+    raw = os.environ.get("GOOGLE_ORIGINS") or "http://localhost:8000,http://localhost"
+    return [o.strip().rstrip("/") for o in raw.split(",") if o.strip()]
+
+
 def verify_google(credential):
     """Vérifie le jeton d'identité Google auprès de Google et renvoie (email, nom, sub, photo)."""
     cid = google_client_id()
