@@ -53,8 +53,10 @@
   const fail = (txt) => { $("m").innerHTML = ""; const e = document.createElement("span"); e.className = "err"; e.textContent = txt;
     const a = document.createElement("a"); a.href = "./"; a.textContent = TX.back; $("m").append(e, document.createElement("br"), a); };
 
-  fetch("https://raw.githubusercontent.com/benaboud-roqia/saqiya/gh-pages/adresse.json?t=" + Date.now(), { cache: "no-store" })
-    .then((r) => r.json())
+  // dernière adresse publiée : API GitHub (toujours à jour), sinon copie en cache de raw.githubusercontent
+  fetch("https://api.github.com/repos/benaboud-roqia/saqiya/contents/adresse.json?ref=gh-pages", { cache: "no-store", headers: { Accept: "application/vnd.github.raw+json" } })
+    .then((r) => { if (!r.ok) throw 0; return r.json(); })
+    .catch(() => fetch("https://raw.githubusercontent.com/benaboud-roqia/saqiya/gh-pages/adresse.json?t=" + Date.now(), { cache: "no-store" }).then((r) => r.json()))
     .then(async (j) => {
       const base = String(j.url || "").replace(/\/$/, "");
       if (!/^https:\/\/[a-z0-9-]+\.trycloudflare\.com$/.test(base)) throw new Error("adresse");

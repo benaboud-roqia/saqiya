@@ -26,8 +26,10 @@
       const a = e.target.closest && e.target.closest("[data-app]");
       if (a && offline) { e.preventDefault(); note(); }
     }, true);
-    fetch(CFG.addr + "?t=" + Date.now(), { cache: "no-store" })
-      .then((r) => r.json())
+    // API GitHub (toujours à jour), sinon la copie en cache (raw.githubusercontent, jusqu'à 5 min de retard)
+    fetch("https://api.github.com/repos/benaboud-roqia/saqiya/contents/adresse.json?ref=gh-pages", { cache: "no-store", headers: { Accept: "application/vnd.github.raw+json" } })
+      .then((r) => { if (!r.ok) throw 0; return r.json(); })
+      .catch(() => fetch(CFG.addr + "?t=" + Date.now(), { cache: "no-store" }).then((r) => r.json()))
       .then(async (j) => {
         const base = String(j.url || "").replace(/\/$/, "");
         if (!/^https:\/\//.test(base)) throw new Error("adresse");
