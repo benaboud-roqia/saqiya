@@ -160,12 +160,15 @@
     const cid = cfg.google_client_id;
     // adresse non autorisée dans Google Cloud Console : Google répondrait « Accès bloqué » → pas de bouton
     const allowed = !cfg.google_origins || cfg.google_origins.includes(location.origin);
+    const relay = cid && !allowed && cfg.google_relay;      // adresse en ligne : connexion Google via la page à adresse fixe
     const note = $("#g-note");
-    note.setAttribute("data-t", cid && !allowed ? "google_here" : "google_off");
+    note.setAttribute("data-t", cid && !allowed && !relay ? "google_here" : "google_off");
     note.textContent = t(note.getAttribute("data-t"));
-    $("#g-fake").hidden = !!cid || !allowed;
-    note.hidden = !!cid && allowed;
-    const sep = document.querySelector(".au-or"); if (sep) sep.hidden = !!cid && !allowed;
+    $("#g-fake").hidden = !!cid && !relay;
+    $("#g-fake").classList.toggle("relay", !!relay);
+    $("#g-fake").onclick = relay ? () => { location.href = cfg.google_relay + "?lang=" + lang; } : null;
+    note.hidden = !!cid && (allowed || !!relay);
+    const sep = document.querySelector(".au-or"); if (sep) sep.hidden = !!cid && !allowed && !relay;
     if (!cid || !allowed) { $("#g-btn").innerHTML = ""; return; }
     const draw = () => {
       if (!window.google?.accounts?.id) return;
@@ -230,6 +233,13 @@
 
   /* ---------- démarrage ---------- */
   (async () => {
+    // retour de la page Google à adresse fixe : #g=<jeton> (le fragment n'est jamais envoyé sur le réseau)
+    if (location.hash.startsWith("#g=")) {
+      const cred = decodeURIComponent(location.hash.slice(3));
+      history.replaceState(null, "", location.pathname + location.search);
+      try { const r = await post("/api/auth/google", { credential: cred }); return done(r.user); }
+      catch (err) { setTimeout(() => showErr(err.message), 400); }
+    }
     const [me, c] = await Promise.all([
       fetch("/api/auth/me", { cache: "no-store" }).then((r) => r.json()).catch(() => ({})),
       fetch("/api/auth/config", { cache: "no-store" }).then((r) => r.json()).catch(() => cfg),

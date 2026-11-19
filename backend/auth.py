@@ -112,6 +112,12 @@ def google_origins():
     return [o.strip().rstrip("/") for o in raw.split(",") if o.strip()]
 
 
+def google_relay():
+    """Page de connexion Google à adresse FIXE (GitHub Pages), utilisée depuis l'adresse en ligne qui change.
+    Elle renvoie le jeton Google au tableau de bord ; à autoriser une fois dans Google Cloud Console."""
+    return os.environ.get("GOOGLE_RELAY") or "https://benaboud-roqia.github.io/saqiya/google.html"
+
+
 def verify_google(credential):
     """Vérifie le jeton d'identité Google auprès de Google et renvoie (email, nom, sub, photo)."""
     cid = google_client_id()

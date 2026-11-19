@@ -208,3 +208,7 @@ body { background: #06101f; }
 
 /* ---------- logo de l'application ---------- */
 .au-brand img.brand-logo { width: 40px; height: 40px; border-radius: 24%; box-shadow: 0 8px 22px -8px rgba(0, 0, 0, .7); }
+
+/* bouton Google sur l'adresse en ligne : ouvre la page Google à adresse fixe */
+.au-gfake.relay { width: 100%; cursor: pointer; opacity: 1; background: #fff; color: #1f1f1f; border-color: #dadce0; transition: background .2s, box-shadow .2s; }
+.au-gfake.relay:hover { background: #f8faff; box-shadow: 0 4px 14px -6px rgba(26, 79, 184, .35); }

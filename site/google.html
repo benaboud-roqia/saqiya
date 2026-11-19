@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sāqiya · Connexion Google</title>
+<link rel="icon" href="logo.svg">
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 16px;
+    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif; color: #0b1d33;
+    background: linear-gradient(160deg, #0b1d33, #12365f 60%, #1a6dff); }
+  .card { width: min(420px, 100%); background: #fff; border-radius: 20px; padding: 32px 26px; text-align: center;
+    box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .55); }
+  .logo { width: 58px; height: 58px; border-radius: 24%; }
+  h1 { margin: 14px 0 4px; font-size: 1.35rem; }
+  p { margin: 0 0 22px; color: #44566f; }
+  #g { display: flex; justify-content: center; min-height: 44px; }
+  .msg { margin-top: 18px; font-size: .88rem; color: #44566f; }
+  .err { color: #b42318; }
+  a { color: #1a6dff; font-weight: 600; }
+  html[dir="rtl"] body { font-family: Tahoma, "Segoe UI", sans-serif; }
+</style>
+</head>
+<body>
+<main class="card">
+  <img class="logo" src="logo.svg" alt="">
+  <h1 id="t">Connexion avec Google</h1>
+  <p id="s">Choisissez votre compte Gmail : vous revenez ensuite au tableau de bord Sāqiya.</p>
+  <div id="g"></div>
+  <div class="msg" id="m">Chargement…</div>
+</main>
+<script>
+/* Sāqiya — page de connexion Google à adresse FIXE (GitHub Pages).
+   L'adresse du tableau de bord change à chaque démarrage du tunnel, et Google n'accepte que des adresses enregistrées :
+   on se connecte donc ici, puis le jeton Google est renvoyé au tableau de bord (dans le fragment #g=, jamais envoyé sur le réseau),
+   uniquement vers l'adresse publiée par en_ligne.ps1 (adresse.json), jamais vers une adresse donnée dans le lien. */
+(function () {
+  const AR = new URLSearchParams(location.search).get("lang") === "ar";
+  const $ = (id) => document.getElementById(id);
+  const TX = AR ? {
+    t: "الدخول عبر Google", s: "اختر حساب Gmail الخاص بك ثم تعود إلى لوحة تحكم الساقية.", load: "جارٍ التحميل…",
+    go: "جارٍ العودة إلى لوحة التحكم…", off: "لوحة التحكم غير متاحة الآن (حاسوب المزرعة مطفأ). أعد المحاولة لاحقاً.",
+    noid: "الدخول عبر Google غير مفعّل على الخادم.", back: "العودة إلى الموقع",
+  } : {
+    t: "Connexion avec Google", s: "Choisissez votre compte Gmail : vous revenez ensuite au tableau de bord Sāqiya.", load: "Chargement…",
+    go: "Retour au tableau de bord…", off: "Le tableau de bord est hors ligne pour le moment (PC de la parcelle éteint). Réessayez plus tard.",
+    noid: "La connexion Google n'est pas activée sur le serveur.", back: "Retour au site",
+  };
+  if (AR) { document.documentElement.lang = "ar"; document.documentElement.dir = "rtl"; }
+  $("t").textContent = TX.t; $("s").textContent = TX.s; $("m").textContent = TX.load;
+  const fail = (txt) => { $("m").innerHTML = ""; const e = document.createElement("span"); e.className = "err"; e.textContent = txt;
+    const a = document.createElement("a"); a.href = "./"; a.textContent = TX.back; $("m").append(e, document.createElement("br"), a); };
+
+  fetch("https://raw.githubusercontent.com/benaboud-roqia/saqiya/gh-pages/adresse.json?t=" + Date.now(), { cache: "no-store" })
+    .then((r) => r.json())
+    .then(async (j) => {
+      const base = String(j.url || "").replace(/\/$/, "");
+      if (!/^https:\/\/[a-z0-9-]+\.trycloudflare\.com$/.test(base)) throw new Error("adresse");
+      const ctl = new AbortController(); setTimeout(() => ctl.abort(), 10000);
+      const cfg = await fetch(base + "/api/auth/config", { cache: "no-store", signal: ctl.signal }).then((r) => r.json());
+      if (!cfg.google_client_id) return fail(TX.noid);
+      const s = document.createElement("script");
+      s.src = "https://accounts.google.com/gsi/client"; s.async = true;
+      s.onload = () => {
+        google.accounts.id.initialize({
+          client_id: cfg.google_client_id,
+          callback: (resp) => {
+            $("m").textContent = TX.go;
+            location.replace(base + "/login#g=" + encodeURIComponent(resp.credential));
+          },
+        });
+        google.accounts.id.renderButton($("g"), { theme: "outline", size: "large", shape: "pill",
+          width: Math.min(340, $("g").clientWidth || 300), text: "continue_with", locale: AR ? "ar" : "fr" });
+        $("m").textContent = "";
+      };
+      s.onerror = () => fail(TX.off);
+      document.head.appendChild(s);
+    })
+    .catch(() => fail(TX.off));
+})();
+</script>
+</body>
+</html>
