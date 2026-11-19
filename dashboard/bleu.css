@@ -1,0 +1,206 @@
+/* Sāqiya — thème « Bleu nuit » (thème par défaut).
+   Fond photo de la parcelle sous un voile bleu nuit, panneaux en verre, accent bleu électrique,
+   chiffres en gros comme des « constantes », barre latérale à icônes. */
+
+:root[data-theme="bleu"] {
+  --paper: #06101f; --paper-2: #0a1a31; --sheet: #0e2242;
+  --ink: #eaf2ff; --ink-2: #a8bbd8; --ink-3: #6d84a8;
+  --rule: #1a3159; --rule-2: #254573;
+  --olive: #2e8bff; --olive-soft: rgba(46, 139, 255, .16);
+  --clay: #ff6b6b; --clay-soft: rgba(255, 107, 107, .14);
+  --ochre: #ffb547; --ochre-soft: rgba(255, 181, 71, .14);
+  --water: #38bdf8; --water-soft: rgba(56, 189, 248, .14);
+  --lime: #38bdf8;
+  --forest: #1a6dff;
+  --vital: #3ddc97;
+  --glass: rgba(11, 27, 54, .68);
+  --glass-b: rgba(120, 170, 255, .16);
+  --grad: linear-gradient(135deg, #1a6dff 0%, #2e8bff 55%, #38bdf8 100%);
+  --pump-band: rgba(56, 189, 248, .12);
+  --shadow: 0 1px 0 rgba(255, 255, 255, .03) inset, 0 14px 36px -18px rgba(0, 0, 0, .8);
+  --shadow-up: 0 1px 0 rgba(255, 255, 255, .04) inset, 0 28px 60px -24px rgba(0, 0, 0, .9);
+  color-scheme: dark;
+}
+
+/* ---------- fond : photo de la parcelle sous un voile bleu ---------- */
+:root[data-theme="bleu"] body { background: var(--paper); }
+:root[data-theme="bleu"] body::before {
+  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(6, 16, 31, .80), rgba(6, 16, 31, .94) 55%, #06101f),
+    url("https://images.unsplash.com/photo-1524486361537-8ad15938e1a3?auto=format&fit=crop&w=1800&q=60") center / cover;
+}
+
+/* ---------- panneaux en verre ---------- */
+:root[data-theme="bleu"] .panel, :root[data-theme="bleu"] .kpi, :root[data-theme="bleu"] .bx-steps li,
+:root[data-theme="bleu"] .bx-tile, :root[data-theme="bleu"] .bx-facts div, :root[data-theme="bleu"] .bx-tech,
+:root[data-theme="bleu"] .bx-leds > div, :root[data-theme="bleu"] .bx-help {
+  background: var(--glass); border: 1px solid var(--glass-b);
+  backdrop-filter: blur(16px) saturate(1.3); -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  box-shadow: var(--shadow);
+}
+:root[data-theme="bleu"] .panel { border-radius: 18px; }
+:root[data-theme="bleu"] .panel-h h2 { font-weight: 700; letter-spacing: -.02em; }
+:root[data-theme="bleu"] .panel-h h2::before { background: var(--water); border-radius: 1px; width: 3px; height: 14px; }
+:root[data-theme="bleu"] .hint, :root[data-theme="bleu"] .foot { color: var(--ink-3); }
+
+/* ---------- barre latérale ---------- */
+:root[data-theme="bleu"] .rail {
+  background: linear-gradient(180deg, rgba(10, 26, 52, .92), rgba(6, 16, 33, .96));
+  border-inline-end: 1px solid var(--glass-b); backdrop-filter: blur(18px);
+}
+:root[data-theme="bleu"] .rail .mark svg { stroke: #fff; }
+:root[data-theme="bleu"] .rail .mark svg path:first-of-type { fill: #2e8bff; }
+:root[data-theme="bleu"] .rail .mark span, :root[data-theme="bleu"] .theme-dots span, :root[data-theme="bleu"] .rail .device span { color: #7f98c0; }
+:root[data-theme="bleu"] .nav { color: #a8bbd8; border-radius: 12px; }
+:root[data-theme="bleu"] .nav svg { stroke: currentColor; }
+:root[data-theme="bleu"] .nav:hover { background: rgba(46, 139, 255, .10); color: #fff; }
+:root[data-theme="bleu"] .nav.active {
+  background: linear-gradient(90deg, rgba(46, 139, 255, .28), rgba(46, 139, 255, .06));
+  color: #fff; box-shadow: inset 3px 0 0 #38bdf8, 0 0 0 1px rgba(56, 189, 248, .25);
+}
+:root[data-theme="bleu"][dir="rtl"] .nav.active { box-shadow: inset -3px 0 0 #38bdf8, 0 0 0 1px rgba(56, 189, 248, .25); }
+:root[data-theme="bleu"] .nav.active svg { stroke: #38bdf8; }
+:root[data-theme="bleu"] .kbar-btn { background: rgba(255, 255, 255, .05); border: 1px solid var(--glass-b); color: #a8bbd8; }
+:root[data-theme="bleu"] .theme-dots, :root[data-theme="bleu"] .rail .device { border-color: var(--glass-b); }
+:root[data-theme="bleu"] .theme-dots button[aria-checked="true"] { box-shadow: 0 0 0 2px #0a1a31, 0 0 0 3.5px #38bdf8; }
+:root[data-theme="bleu"] .dot.on { background: var(--vital); box-shadow: 0 0 0 3px rgba(61, 220, 151, .25); }
+
+/* ---------- bandeau photo ---------- */
+:root[data-theme="bleu"] .masthead { background: #0a1a31; border: 1px solid var(--glass-b); border-radius: 20px; }
+:root[data-theme="bleu"] .masthead::before {
+  background: linear-gradient(100deg, rgba(6, 16, 31, .92) 0%, rgba(6, 16, 31, .6) 48%, rgba(6, 16, 31, .12) 100%),
+    linear-gradient(0deg, rgba(6, 16, 31, .7), transparent 60%);
+}
+:root[data-theme="bleu"][dir="rtl"] .masthead::before {
+  background: linear-gradient(260deg, rgba(6, 16, 31, .92) 0%, rgba(6, 16, 31, .6) 48%, rgba(6, 16, 31, .12) 100%),
+    linear-gradient(0deg, rgba(6, 16, 31, .7), transparent 60%);
+}
+@media (max-width: 760px) {
+  :root[data-theme="bleu"] .masthead::before, :root[data-theme="bleu"][dir="rtl"] .masthead::before {
+    background: linear-gradient(180deg, rgba(6, 16, 31, .55), rgba(6, 16, 31, .88));
+  }
+}
+:root[data-theme="bleu"] .masthead h1 { font-weight: 800; letter-spacing: -.035em; }
+:root[data-theme="bleu"] .masthead .eyebrow { color: #7cc8ff; }
+:root[data-theme="bleu"] .masthead .mode, :root[data-theme="bleu"] .lang-btn {
+  background: rgba(10, 26, 52, .6); border: 1px solid rgba(120, 170, 255, .25); backdrop-filter: blur(12px);
+}
+:root[data-theme="bleu"] .masthead .mode button[aria-checked="true"] { background: #1a6dff; color: #fff; box-shadow: none; }
+
+/* ---------- boutons ---------- */
+:root[data-theme="bleu"] .btn-ink, :root[data-theme="bleu"] .bx-copy, :root[data-theme="bleu"] .send,
+:root[data-theme="bleu"] .upload .btn-ink, :root[data-theme="bleu"] .st-save .btn-ink {
+  background: #1a6dff; color: #fff; border: 0; box-shadow: none;
+}
+:root[data-theme="bleu"] .btn-ink:hover { filter: brightness(1.1); }
+:root[data-theme="bleu"] .btn-line { border-color: rgba(120, 170, 255, .35); color: #cfe0ff; background: rgba(46, 139, 255, .06); }
+:root[data-theme="bleu"] .btn-line:hover { border-color: #38bdf8; background: rgba(46, 139, 255, .14); }
+:root[data-theme="bleu"] .seg, :root[data-theme="bleu"] .bx-lang, :root[data-theme="bleu"] .bx-mode {
+  background: rgba(10, 26, 52, .7); border: 1px solid var(--glass-b);
+}
+:root[data-theme="bleu"] .seg button.on, :root[data-theme="bleu"] .bx-lang button[aria-checked="true"],
+:root[data-theme="bleu"] .bx-mode button[aria-selected="true"], :root[data-theme="bleu"] .st-tabs button[aria-selected="true"],
+:root[data-theme="bleu"] .filters button.on {
+  background: #1a6dff; color: #fff; border-color: transparent; box-shadow: none;
+}
+:root[data-theme="bleu"] input, :root[data-theme="bleu"] select, :root[data-theme="bleu"] textarea {
+  background-color: rgba(6, 16, 31, .55); border-color: var(--rule-2); color: var(--ink);
+}
+:root[data-theme="bleu"] input:focus, :root[data-theme="bleu"] select:focus, :root[data-theme="bleu"] textarea:focus {
+  border-color: #38bdf8; box-shadow: 0 0 0 3px rgba(56, 189, 248, .18);
+}
+:root[data-theme="bleu"] .toast { background: rgba(14, 34, 66, .95); border: 1px solid rgba(56, 189, 248, .35); }
+:root[data-theme="bleu"] .tip, :root[data-theme="bleu"] .vtip { background: #0e2242; color: #eaf2ff; border: 1px solid rgba(56, 189, 248, .35); border-radius: 8px; }
+:root[data-theme="bleu"] .msg.user { background: #1a6dff; }
+
+/* ---------- relevés = « constantes » ---------- */
+:root[data-theme="bleu"] .ro { background: rgba(6, 16, 31, .45); border: 1px solid var(--glass-b); border-radius: 14px; }
+:root[data-theme="bleu"] .ro .lbl { color: #8fa6c9; }
+:root[data-theme="bleu"] .ro .v { font-weight: 800; letter-spacing: -.03em; color: #fff; }
+:root[data-theme="bleu"] .ro .v small { color: #7f98c0; }
+:root[data-theme="bleu"] .ro .note { color: var(--vital); }
+:root[data-theme="bleu"] .ro .note.warn { color: var(--ochre); }
+:root[data-theme="bleu"] .spark path { stroke: #38bdf8; }
+:root[data-theme="bleu"] .spark circle { fill: #38bdf8; }
+:root[data-theme="bleu"] .kpi .n { color: #fff; }
+:root[data-theme="bleu"] .tank-num b { color: #fff; }
+
+/* verdicts « bon » en vert, comme les constantes normales */
+:root[data-theme="bleu"] .sx-now .verdict.ok, :root[data-theme="bleu"] .sx-now .verdict:not(.low):not(.high) { background: rgba(61, 220, 151, .14); color: var(--vital); }
+:root[data-theme="bleu"] .bx-tile .s:not(.low):not(.high):not(.na), :root[data-theme="bleu"] .bx-facts .good { color: var(--vital); }
+:root[data-theme="bleu"] .sx-now { background: rgba(6, 16, 31, .5); border: 1px solid var(--glass-b); }
+:root[data-theme="bleu"] .sx-now .big { color: #fff; }
+:root[data-theme="bleu"] .sx-tabs button { background: rgba(6, 16, 31, .5); border-color: var(--glass-b); }
+:root[data-theme="bleu"] .sx-chart .zone { fill: rgba(61, 220, 151, .10); }
+:root[data-theme="bleu"] .sx-chart .zone-l { stroke: rgba(61, 220, 151, .5); }
+:root[data-theme="bleu"] .chart .gl, :root[data-theme="bleu"] .viz .gl { stroke: rgba(120, 170, 255, .10); }
+
+/* ---------- page Boîtier ---------- */
+:root[data-theme="bleu"] .bx-hero { background: linear-gradient(135deg, rgba(46, 139, 255, .16), var(--glass) 60%); border: 1px solid var(--glass-b); backdrop-filter: blur(16px); }
+:root[data-theme="bleu"] .bx[data-state="ok"] { --st: var(--vital); --st-soft: rgba(61, 220, 151, .14); }
+:root[data-theme="bleu"] .bx .bx-case { fill: #0e2242; stroke: #cfe0ff; }
+:root[data-theme="bleu"] .bx .bx-ant, :root[data-theme="bleu"] .bx .bx-legs, :root[data-theme="bleu"] .bx .bx-ground, :root[data-theme="bleu"] .bx .bx-base { stroke: #cfe0ff; }
+:root[data-theme="bleu"] .bx .bx-base, :root[data-theme="bleu"] .bx .bx-ant-tip { fill: #cfe0ff; }
+:root[data-theme="bleu"] .bx-tile .v { color: #fff; }
+:root[data-theme="bleu"] .bx-num { background: #1a6dff; }
+:root[data-theme="bleu"] .bx-code, :root[data-theme="bleu"] .bx-wifi { background: rgba(6, 16, 31, .5); }
+
+/* ---------- divers ---------- */
+:root[data-theme="bleu"] .avatar, :root[data-theme="bleu"] .me-av { background: #1a6dff; color: #fff; }
+:root[data-theme="bleu"] .panel-photo figcaption { text-shadow: 0 2px 12px rgba(0, 0, 0, .6); }
+:root[data-theme="bleu"] .panel-photo::after { background: linear-gradient(180deg, transparent 20%, rgba(6, 16, 31, .9)) !important; }
+:root[data-theme="bleu"] ::selection { background: rgba(56, 189, 248, .35); }
+@media (max-width: 860px) {
+  :root[data-theme="bleu"] .rail { background: rgba(8, 20, 40, .92); }
+  :root[data-theme="bleu"] .nav.active { box-shadow: none; background: rgba(46, 139, 255, .18); color: #7cc8ff; }
+}
+
+/* =====================================================================
+   Version sobre : moins d'effets, plus de vrai.
+   ===================================================================== */
+/* formes plus droites, moins de « bulles » */
+:root[data-theme="bleu"] { --r: 12px; }
+:root[data-theme="bleu"] .panel, :root[data-theme="bleu"] .kpi, :root[data-theme="bleu"] .masthead,
+:root[data-theme="bleu"] .scene, :root[data-theme="bleu"] .bx-hero, :root[data-theme="bleu"] .bx-steps li { border-radius: 12px; }
+:root[data-theme="bleu"] .ro, :root[data-theme="bleu"] .bx-tile, :root[data-theme="bleu"] .sx-now,
+:root[data-theme="bleu"] .bx-facts div, :root[data-theme="bleu"] .pump-panel .facts > *, :root[data-theme="bleu"] .tank { border-radius: 8px; }
+:root[data-theme="bleu"] .hb-stats span, :root[data-theme="bleu"] .scene-tags span, :root[data-theme="bleu"] .sx-tabs button,
+:root[data-theme="bleu"] .masthead .mode, :root[data-theme="bleu"] .masthead .mode button, :root[data-theme="bleu"] .lang-btn,
+:root[data-theme="bleu"] .btn, :root[data-theme="bleu"] .seg, :root[data-theme="bleu"] .seg button, :root[data-theme="bleu"] .bx-badge,
+:root[data-theme="bleu"] .tag-pump, :root[data-theme="bleu"] .bx-mode, :root[data-theme="bleu"] .bx-mode button,
+:root[data-theme="bleu"] .bx-lang, :root[data-theme="bleu"] .bx-lang button, :root[data-theme="bleu"] .bx-copy { border-radius: 6px; }
+
+/* typographie : pas de petites capitales espacées, chiffres alignés */
+:root[data-theme="bleu"] .eyebrow { text-transform: none; letter-spacing: 0; font-size: .85rem; font-weight: 600; color: #9fb6d8; }
+:root[data-theme="bleu"] .masthead .eyebrow { color: #9fb6d8; }
+:root[data-theme="bleu"] .masthead h1 em { font-size: .55em; opacity: .7; font-weight: 500; }
+:root[data-theme="bleu"] body { font-variant-numeric: tabular-nums; }
+:root[data-theme="bleu"] .pump-panel .facts span, :root[data-theme="bleu"] .ro .lbl { text-transform: none; letter-spacing: 0; }
+
+/* pas d'animations d'entrée qui rebondissent ni de zoom permanent sur les photos */
+:root[data-theme="bleu"] .hb-photo, :root[data-theme="bleu"] .an-banner img, :root[data-theme="bleu"] .upload .up-bg { animation: none; transform: none; }
+:root[data-theme="bleu"] .hb-stats span, :root[data-theme="bleu"] .bx-facts div, :root[data-theme="bleu"] .bx-tile, :root[data-theme="bleu"] .bx-steps li { animation: none; }
+
+/* bandeau : bloc de chiffres sobre */
+:root[data-theme="bleu"] .hb-stats span { background: rgba(6, 16, 31, .55); border: 1px solid rgba(160, 190, 235, .22); backdrop-filter: blur(6px); }
+:root[data-theme="bleu"] .hb-stats span.warn { background: rgba(255, 107, 107, .18); border-color: rgba(255, 107, 107, .45); }
+:root[data-theme="bleu"] .hb-stats span.on { background: rgba(26, 109, 255, .3); border-color: rgba(56, 189, 248, .5); }
+
+/* la parcelle : une vraie photo à la place du dessin, l'état en étiquettes */
+
+/* jauge d'humidité : colonne nette, sans texture dessinée ni bulles */
+:root[data-theme="bleu"] .tank { box-shadow: inset 0 0 0 1px rgba(160, 190, 235, .45); background: #10284d; }
+:root[data-theme="bleu"] .tank-soil { background: repeating-linear-gradient(0deg, transparent 0 calc(10% - 1px), rgba(160, 190, 235, .16) calc(10% - 1px) 10%), #10284d; }
+:root[data-theme="bleu"] .tank::before, :root[data-theme="bleu"] .bubble, :root[data-theme="bleu"] .wave.w2 { display: none; }
+:root[data-theme="bleu"] .tank-water { background: linear-gradient(180deg, #2e8bff, #1a5fd0); }
+:root[data-theme="bleu"] .wave path { fill: #2e8bff; }
+:root[data-theme="bleu"] .wave.w1 { height: 8px; top: -7px; animation-duration: 9s; }
+:root[data-theme="bleu"] .tank-zone { background: rgba(61, 220, 151, .08); border-inline-start: 3px solid var(--vital); }
+:root[data-theme="bleu"] .tank-line { border-top: 1px dashed rgba(234, 242, 255, .7); }
+:root[data-theme="bleu"] .tank-line span { border-radius: 4px; box-shadow: none; font-weight: 600; }
+:root[data-theme="bleu"] .tank-line.tgt span { background: #1f9d6b; }
+
+/* panneaux : verre plus discret */
+:root[data-theme="bleu"] .panel, :root[data-theme="bleu"] .kpi { background: rgba(10, 24, 48, .82); backdrop-filter: blur(10px); }
+:root[data-theme="bleu"] .panel-photo { border-radius: 8px; }

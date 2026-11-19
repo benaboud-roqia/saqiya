@@ -1,0 +1,825 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sāqiya — Parcelle</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="motion.css">
+  <link rel="stylesheet" href="themes.css">
+  <link rel="stylesheet" href="modern.css">
+  <link rel="stylesheet" href="ultra.css">
+  <link rel="stylesheet" href="device.css">
+  <link rel="stylesheet" href="pages.css">
+  <link rel="stylesheet" href="tank.css">
+  <link rel="stylesheet" href="accounts.css">
+  <link rel="stylesheet" href="extras.css">
+  <link rel="stylesheet" href="sensor.css">
+  <link rel="stylesheet" href="i18n.css">
+  <link rel="stylesheet" href="bleu.css">
+  <link rel="stylesheet" href="scene-real.css">
+  <link rel="stylesheet" href="about.css">
+  <script>
+    /* applique le thème mémorisé avant l'affichage, pour éviter un flash. « Bleu nuit » est le thème par défaut. */
+    (function () {
+      var t = "bleu";
+      try {
+        if (localStorage.getItem("saqiya-design") !== "bleu-2") { localStorage.setItem("saqiya-design", "bleu-2"); localStorage.setItem("saqiya-theme", "bleu"); }
+        t = localStorage.getItem("saqiya-theme") || "bleu";
+      } catch (e) {}
+      if (t !== "auto") document.documentElement.dataset.theme = t;
+    })();
+    try { if (localStorage.getItem("saqiya-lang") === "ar") { document.documentElement.lang = "ar"; document.documentElement.dir = "rtl"; } } catch (e) {}
+  </script>
+</head>
+<body>
+
+<!-- Icônes -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-field" viewBox="0 0 24 24"><path d="M3 20h18M5 20c0-5 3-8 7-9M19 20c0-5-3-8-7-9M12 11V4m0 3c-2 0-3.5-1-4-3 2 0 3.5 1 4 3Zm0 0c2 0 3.5-1 4-3-2 0-3.5 1-4 3Z"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4V5Z"/><path d="M8 9.5h8M8 12.5h5"/></symbol>
+    <symbol id="i-log" viewBox="0 0 24 24"><path d="M6 3h9l3 3v15H6z"/><path d="M9 9h6M9 13h6M9 17h3"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></symbol>
+    <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/></symbol>
+    <symbol id="i-rain" viewBox="0 0 24 24"><path d="M7 15a4 4 0 0 1-.5-8A5.5 5.5 0 0 1 17 7.5 3.75 3.75 0 0 1 17 15H7Z"/><path d="M9 18l-1 2M13 18l-1 2M17 18l-1 2"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M4 12h13M12 6l6 6-6 6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V4M4 20h16"/><path d="M8 16v-4M12 16V8M16 16v-6"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-chip" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
+  </defs>
+</svg>
+
+<div class="app">
+  <!-- ===== Navigation ===== -->
+  <aside class="rail">
+    <a class="mark" href="/" title="Retour au site de présentation" target="_top">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15"/><path d="M16 7s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/><path d="M16 24v-7m0 3-3-2.5"/></svg>
+      <div><b>Sāqiya</b><span lang="ar">الساقية</span></div>
+    </a>
+    <button class="kbar-btn" id="kbar-btn" type="button"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Rechercher<kbd>Ctrl K</kbd></button>
+    <nav>
+      <button class="nav active" data-view="overview"><svg><use href="#i-field"/></svg><span>Parcelle</span></button>
+      <button class="nav" data-view="analytics"><svg><use href="#i-chart"/></svg><span>Analyses</span></button>
+      <button class="nav" data-view="photos"><svg><use href="#i-camera"/></svg><span>Maladies</span></button>
+      <button class="nav" data-view="chat"><svg><use href="#i-chat"/></svg><span>Conseiller</span></button>
+      <button class="nav" data-view="history"><svg><use href="#i-log"/></svg><span>Journal</span></button>
+      <button class="nav" data-view="device"><svg><use href="#i-chip"/></svg><span>Boîtier</span></button>
+      <button class="nav" data-view="settings"><svg><use href="#i-sliders"/></svg><span>Réglages</span></button>
+    </nav>
+    <div class="theme-dots" role="radiogroup" aria-label="Thème">
+      <span>Thème</span>
+      <button data-theme-set="bleu" role="radio" title="Bleu nuit" style="--c:linear-gradient(135deg,#1a6dff,#38bdf8)"></button>
+      <button data-theme-set="auto" role="radio" title="Automatique" style="--c:linear-gradient(135deg,#f2eee4 50%,#1f231c 50%)"></button>
+      <button data-theme-set="carnet" role="radio" title="Clair" style="--c:#f2f5f0"></button>
+      <button data-theme-set="nuit" role="radio" title="Nuit" style="--c:#1f231c"></button>
+      <button data-theme-set="oasis" role="radio" title="Oasis" style="--c:#1d7a68"></button>
+      <button data-theme-set="desert" role="radio" title="Désert" style="--c:#c4850f"></button>
+    </div>
+    <div class="me" id="me" hidden>
+      <span class="me-av" id="me-av"></span>
+      <div><b id="me-name"></b><span id="me-role"></span></div>
+      <button type="button" class="me-out" id="me-out" title="Se déconnecter" aria-label="Se déconnecter"><svg viewBox="0 0 24 24"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l-5-5 5-5M5 12h11"/></svg></button>
+    </div>
+    <div class="device">
+      <span id="device-dot" class="dot"></span>
+      <div><b id="device-label">Capteur</b><span id="device-seen">—</span></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <!-- ===== En-tête ===== -->
+    <header class="masthead">
+      <div class="hb-photo" id="hb-photo" aria-hidden="true"></div>
+      <div>
+        <p class="eyebrow" id="today">—</p>
+        <h1><span id="crop-name">Parcelle</span> <em id="crop-ar" lang="ar"></em></h1>
+        <p class="meta"><span id="soil-name">—</span><span class="sep"></span><span id="weather-now">—</span></p>
+        <div class="hb-stats" id="hb-stats"></div>
+      </div>
+      <div class="mode" role="radiogroup" aria-label="Mode d'irrigation">
+        <button data-mode="auto" role="radio">Automatique</button>
+        <button data-mode="manuel" role="radio">Manuel</button>
+      </div>
+      <button class="lang-btn" id="lang-btn" type="button" lang="ar" aria-label="Langue">العربية</button>
+    </header>
+
+    <!-- ===== aucun boîtier réel : on n'affiche aucune donnée inventée ===== -->
+    <section class="nodev" id="nodev" hidden>
+      <svg class="nodev-ic" viewBox="0 0 48 48" aria-hidden="true"><rect x="8" y="12" width="20" height="26" rx="4"/><circle cx="18" cy="31" r="2.5"/><path d="M28 24h6a4 4 0 0 1 4 4v10"/><path d="M34 38h8"/></svg>
+      <div class="nodev-t">
+        <h2>Aucun boîtier connecté</h2>
+        <p>Le tableau de bord n'affiche que les vraies mesures de votre parcelle. Branchez l'ESP32 au PC avec le câble USB (moniteur série Arduino fermé) ou reliez-le en WiFi : les chiffres apparaîtront ici tout seuls.</p>
+        <p class="nodev-usb" id="nodev-usb" data-noi18n><i></i><span>Recherche d'une carte branchée en USB…</span></p>
+      </div>
+      <button class="btn btn-ink" type="button" id="nodev-go">Relier le boîtier</button>
+    </section>
+
+    <!-- ===================== PARCELLE ===================== -->
+    <section class="view active" id="view-overview">
+
+      <figure class="scene" id="scene" aria-label="Vue animée de la parcelle">
+        <div class="ph day" aria-hidden="true"></div><div class="ph irr" aria-hidden="true"></div><div class="rain" aria-hidden="true"></div>
+        <svg id="scene-svg" viewBox="0 0 1200 320" preserveAspectRatio="xMidYMax slice"></svg>
+        <div class="scene-mon" id="scene-mon" hidden></div>
+        <div class="irr-hud" id="irr-hud" hidden data-noi18n></div>
+        <figcaption class="scene-tags">
+          <span id="tag-time">—</span>
+          <span id="tag-pump" class="tag-pump">Pompe arrêtée</span>
+          <span id="tag-sky">—</span>
+        </figcaption>
+      </figure>
+
+      <div class="hero">
+        <div class="panel gauge-panel">
+          <div class="panel-h"><h2>Humidité du sol</h2><span class="hint" id="gauge-range">—</span></div>
+          <div class="tank-wrap" id="tank-wrap" data-state="wait">
+            <div class="tank" id="tank" role="img" aria-label="Jauge d'humidité du sol">
+              <div class="tank-soil"></div>
+              <div class="tank-water">
+                <svg class="wave w1" viewBox="0 0 200 20" preserveAspectRatio="none" aria-hidden="true"><path d="M0 10 Q 25 0 50 10 T 100 10 T 150 10 T 200 10 V 20 H 0 Z"/></svg>
+                <svg class="wave w2" viewBox="0 0 200 20" preserveAspectRatio="none" aria-hidden="true"><path d="M0 10 Q 25 20 50 10 T 100 10 T 150 10 T 200 10 V 20 H 0 Z"/></svg>
+                <i class="bubble" style="--x:22%;--d:0s"></i><i class="bubble" style="--x:58%;--d:1.2s"></i><i class="bubble" style="--x:78%;--d:2.3s"></i>
+              </div>
+              <div class="tank-zone" id="tank-zone"></div>
+              <div class="tank-line thr" id="tank-thr"><span>Arroser sous <b id="t-thr">—</b></span></div>
+              <div class="tank-line tgt" id="tank-tgt"><span>Objectif <b id="t-tgt">—</b></span></div>
+            </div>
+            <div class="tank-read">
+              <span class="tank-num"><b id="gauge-value">—</b><small>%</small></span>
+              <span class="tank-state" id="gauge-state">—</span>
+              <p class="tank-tip" id="tank-tip"></p>
+              <div class="tank-scale"><span>Sec</span><i></i><span>Mouillé</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel pump-panel">
+          <div class="panel-h">
+            <h2>Irrigation</h2>
+            <span class="pump-tag" id="pump-tag">Pompe arrêtée</span>
+          </div>
+          <p class="decision" id="decision">En attente des premières mesures.</p>
+          <dl class="facts">
+            <div><dt>Prochain arrosage</dt><dd id="next-irr">—</dd></div>
+            <div><dt>Eau sur 24 h</dt><dd id="water-24">—</dd></div>
+            <div><dt>Débit appris</dt><dd id="calib">—</dd></div>
+          </dl>
+          <div class="pump-progress" id="pump-progress" hidden>
+            <div class="bar"><div id="pump-bar"></div></div>
+            <span id="pump-left">—</span>
+          </div>
+          <div class="controls">
+            <div class="stepper" aria-label="Durée de l'arrosage manuel">
+              <button type="button" data-step="-1" aria-label="Moins">−</button>
+              <output id="dur-out">5 min</output>
+              <button type="button" data-step="1" aria-label="Plus">+</button>
+            </div>
+            <button class="btn btn-water" id="btn-on"><svg><use href="#i-drop"/></svg>Arroser maintenant</button>
+            <button class="btn btn-line" id="btn-off" hidden>Arrêter la pompe</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-h"><h2>Les 12 prochaines heures</h2><span class="hint" id="forecast-sum">—</span></div>
+        <div class="forecast" id="forecast"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-h"><h2>Relevés</h2><span class="hint" id="readings-time">—</span></div>
+        <div class="readouts" id="readouts"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-h">
+          <h2>Évolution</h2>
+          <div class="seg" id="range">
+            <button data-h="6">6 h</button><button data-h="24" class="on">24 h</button><button data-h="72">3 j</button>
+          </div>
+        </div>
+        <div class="chart-legend">
+          <span><i style="background:var(--water)"></i>Humidité du sol</span>
+          <span><i style="background:var(--ink-3)"></i>Humidité de l'air</span>
+          <span><i style="background:var(--clay)"></i>Température</span>
+          <span><i class="sq"></i>Pompe en marche</span>
+        </div>
+        <div class="chart" id="chart"><div class="tip" id="chart-tip" hidden></div></div>
+      </div>
+
+      <div class="panel sensor-panel">
+        <div class="panel-h">
+          <h2>Capteur du sol</h2>
+          <span class="hint" id="sx-hint">courbe de chaque mesure · zone verte = bon niveau</span>
+        </div>
+        <div class="sx-tabs" id="sx-tabs" role="tablist"></div>
+        <div class="sx-body">
+          <div class="sx-now" id="sx-now"></div>
+          <div class="chart sx-chart" id="sx-chart"><div class="tip" id="sx-tip" hidden></div></div>
+        </div>
+      </div>
+
+      <div class="split">
+        <div class="panel">
+          <figure class="panel-photo"><img src="https://images.unsplash.com/photo-1692481060581-98c224124f12?auto=format&fit=crop&w=900&h=300&q=70" alt="" loading="lazy"><figcaption>Santé des plantes<small>prévision des maladies</small></figcaption></figure>
+          <div class="panel-h"><h2>Risques</h2><span class="hint" id="health-sum">—</span></div>
+          <div id="diseases"></div>
+          <p class="foot" id="model-foot"></p>
+        </div>
+        <div class="panel">
+          <figure class="panel-photo"><img src="https://images.unsplash.com/photo-1590682680695-43b964a3ae17?auto=format&fit=crop&w=900&h=300&q=70" alt="" loading="lazy"><figcaption>Fertilité du sol<small>pH, salinité, azote, phosphore, potassium</small></figcaption></figure>
+          <div class="panel-h"><h2>Analyse du sol</h2></div>
+          <div id="soil"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-h"><h2>Alertes</h2><span class="hint" id="alert-count">—</span></div>
+        <ol class="journal" id="alerts"></ol>
+      </div>
+    </section>
+
+    <!-- ===================== ANALYSES ===================== -->
+    <section class="view" id="view-analytics">
+      <div class="an-banner">
+        <img src="https://images.unsplash.com/photo-1647432460909-153f77f1630f?auto=format&fit=crop&w=1800&h=400&q=70" alt="">
+        <div><h2>La semaine de la parcelle</h2><p>Eau, humidité, climat, maladies et nutriments sur 7 jours.</p></div>
+        <a class="an-report" href="report.html" target="_blank" rel="noopener">Rapport PDF</a>
+      </div>
+      <div class="kpi-row" id="kpis"></div>
+
+      <div class="split">
+        <div class="panel">
+          <div class="panel-h"><h2>Eau d'irrigation par jour</h2><span class="hint" id="water-hint">litres estimés</span></div>
+          <div class="viz" id="viz-water"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-h"><h2>Humidité du sol par jour</h2><span class="hint">minimum, maximum et moyenne</span></div>
+          <div class="viz" id="viz-moisture"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-h"><h2>Humidité de l'air, heure par heure</h2><span class="hint">les cases foncées favorisent les maladies</span></div>
+        <div class="heat" id="viz-heat"></div>
+        <div class="heat-scale"><span>sec</span><i></i><span>saturé</span></div>
+      </div>
+
+      <div class="split">
+        <div class="panel">
+          <div class="panel-h"><h2>Profil de risque</h2><span class="hint">maladies de la culture</span></div>
+          <div class="viz radar" id="viz-radar"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-h"><h2>Températures</h2><span class="hint">écart jour / nuit</span></div>
+          <div class="viz" id="viz-temp"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-h"><h2>Éléments nutritifs</h2><span class="hint">moyenne journalière, mg/kg</span></div>
+        <div class="npk-trend" id="viz-npk"></div>
+      </div>
+    </section>
+
+    <!-- ===================== PHOTOS ===================== -->
+    <section class="view" id="view-photos">
+      <div class="panel upload dz-up">
+        <img class="up-bg" src="https://images.unsplash.com/photo-1692481060581-98c224124f12?auto=format&fit=crop&w=1800&h=500&q=70" alt="">
+        <div class="upload-text">
+          <h2>Détection des maladies des plantes</h2>
+          <p class="hint">Photographiez une feuille ou un fruit qui vous inquiète. Le système reconnaît la plante, les symptômes et la maladie probable, puis vous dit quoi faire.</p>
+          <ol class="dz-tips">
+            <li><b>De près</b><span>une seule feuille, bien nette</span></li>
+            <li><b>À la lumière du jour</b><span>sans flash, sans contre-jour</span></li>
+            <li><b>Face malade visible</b><span>taches, jaunissement, feutrage</span></li>
+          </ol>
+        </div>
+        <form id="photo-form" class="photo-form">
+          <select name="kind" aria-label="Partie photographiée">
+            <option value="feuilles" selected>Feuille</option>
+            <option value="fruits">Fruit</option>
+            <option value="parcelle">Plante entière</option>
+          </select>
+          <input name="caption" placeholder="Note (facultatif) : rang, variété…" maxlength="300">
+          <label class="btn btn-ink file-btn"><svg><use href="#i-camera"/></svg>Photographier une feuille
+            <input type="file" id="photo-input" accept="image/*" capture="environment" hidden>
+          </label>
+        </form>
+      </div>
+      <div class="dz-bar">
+        <h3>Diagnostics</h3>
+        <div class="filters" id="photo-filters">
+          <button class="on" data-k="">Tous</button>
+          <button data-k="malade">Malades</button><button data-k="surveiller">À surveiller</button>
+          <button data-k="sain">Saines</button><button data-k="attente">En cours</button>
+        </div>
+      </div>
+      <div class="dz-list" id="gallery"></div>
+      <section class="dz-watch">
+        <h3>Maladies surveillées pour votre culture <small id="dz-watch-note">risque calculé avec les mesures du capteur</small></h3>
+        <div class="dz-watch-grid" id="dz-watch"></div>
+      </section>
+    </section>
+
+    <!-- ===================== CONSEILLER ===================== -->
+    <section class="view" id="view-chat">
+      <div class="panel chat">
+        <div class="chat-head">
+          <img class="ch-bg" src="https://images.unsplash.com/photo-1791395275735-82660050e797?auto=format&fit=crop&w=1600&h=360&q=70" alt="">
+          <div class="avatar" aria-hidden="true">خ</div>
+          <div>
+            <h2>Le conseiller <span lang="ar">الخبير الفلاحي</span></h2>
+            <p class="hint" id="advisor-status">—</p>
+          </div>
+          <button class="icon-btn" id="chat-clear" title="Nouvelle conversation"><svg><use href="#i-trash"/></svg></button>
+        </div>
+        <div class="chat-log" id="chat-log"></div>
+        <div class="chat-bottom">
+          <div class="prompts" id="prompts">
+            <button lang="ar">هل يجب أن أسقي اليوم؟</button>
+            <button lang="ar">لماذا تتحول أوراق النبات إلى الأصفر؟</button>
+            <button lang="ar">ما نوع السماد الذي يجب استخدامه؟</button>
+            <button>Y a-t-il un risque de maladie cette semaine ?</button>
+          </div>
+          <form class="composer" id="chat-form">
+            <textarea id="chat-input" rows="1" dir="auto" placeholder="Votre question… · اكتب سؤالك"></textarea>
+            <button class="send" type="submit" aria-label="Envoyer"><svg><use href="#i-send"/></svg></button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== JOURNAL ===================== -->
+    <section class="view" id="view-history">
+      <div class="jr-head">
+        <div>
+          <h2 class="jr-title">Journal d'irrigation</h2>
+          <p class="hint">Chaque arrosage, avec la raison et le résultat.</p>
+        </div>
+        <div class="jr-tools">
+          <div class="seg" id="jr-period" aria-label="Période">
+            <button type="button" data-d="1">24 h</button><button type="button" data-d="7" class="on">7 j</button><button type="button" data-d="30">30 j</button>
+          </div>
+          <div class="seg" id="jr-mode" aria-label="Type d'arrosage">
+            <button type="button" data-m="" class="on">Tous</button><button type="button" data-m="auto">Automatique</button><button type="button" data-m="manuel">Manuel</button>
+          </div>
+          <button type="button" class="btn btn-line jr-export" id="jr-export"><svg><use href="#i-log"/></svg>Exporter (CSV)</button>
+        </div>
+      </div>
+
+      <div class="jr-kpis" id="jr-kpis"></div>
+
+      <div class="panel jr-chart">
+        <div class="panel-h"><h2 id="jr-chart-title">Eau par jour</h2><span class="hint">litres estimés</span></div>
+        <div class="jr-bars" id="jr-bars"></div>
+      </div>
+
+      <div class="jr-timeline" id="jr-timeline"></div>
+    </section>
+
+    <!-- ===================== BOÎTIER ===================== -->
+    <section class="view" id="view-device">
+      <div class="bx" id="bx" data-state="wait">
+
+        <div class="bx-top">
+          <div class="bx-lang" role="radiogroup" aria-label="Langue">
+            <button data-lang="fr" role="radio">Français</button>
+            <button data-lang="ar" role="radio" lang="ar">العربية</button>
+          </div>
+        </div>
+
+        <!-- ===== état en une phrase + illustration animée ===== -->
+        <div class="bx-hero">
+          <svg class="bx-scene" viewBox="0 0 640 220" aria-hidden="true">
+            <!-- boîtier -->
+            <g class="bx-box" transform="translate(70 70)">
+              <g class="bx-waves"><path d="M70 -6 a26 26 0 0 1 0 36"/><path d="M82 -18 a42 42 0 0 1 0 60"/><path d="M94 -30 a58 58 0 0 1 0 84"/></g>
+              <path d="M30 0 V -26" class="bx-ant"/><circle cx="30" cy="-28" r="4" class="bx-ant-tip"/>
+              <rect x="0" y="0" width="60" height="80" rx="12" class="bx-case"/>
+              <rect x="10" y="12" width="40" height="24" rx="5" class="bx-screen"/>
+              <circle cx="30" cy="58" r="7" class="bx-led"/>
+              <path d="M12 80 v26 M48 80 v26" class="bx-legs"/>
+              <path d="M-10 106 h80" class="bx-ground"/>
+            </g>
+            <!-- liaison -->
+            <path id="bx-link" d="M190 110 C 270 60, 370 60, 450 110" class="bx-link"/>
+            <g class="bx-dots">
+              <circle r="5"><animateMotion dur="2.2s" repeatCount="indefinite"><mpath href="#bx-link"/></animateMotion></circle>
+              <circle r="5"><animateMotion dur="2.2s" begin="-.73s" repeatCount="indefinite"><mpath href="#bx-link"/></animateMotion></circle>
+              <circle r="5"><animateMotion dur="2.2s" begin="-1.46s" repeatCount="indefinite"><mpath href="#bx-link"/></animateMotion></circle>
+            </g>
+            <g class="bx-usb-tag" transform="translate(296 86)"><rect width="48" height="22" rx="6"/><text x="24" y="16" text-anchor="middle">USB</text></g>
+            <g class="bx-break" transform="translate(320 72)"><circle r="18"/><path d="M-7 -7 L7 7 M7 -7 L-7 7"/></g>
+            <g class="bx-search" transform="translate(320 72)"><circle r="18"/><text y="6" text-anchor="middle">?</text></g>
+            <!-- ordinateur -->
+            <g class="bx-pc" transform="translate(470 72)">
+              <rect x="0" y="0" width="110" height="72" rx="8" class="bx-case"/>
+              <rect x="8" y="8" width="94" height="56" rx="4" class="bx-screen"/>
+              <path d="M18 48 l18 -14 l16 8 l22 -20 l18 10" class="bx-graph"/>
+              <path d="M-12 80 h134 l-10 10 h-114 z" class="bx-base"/>
+            </g>
+          </svg>
+          <div class="bx-say">
+            <span class="bx-badge" id="bx-badge"></span>
+            <h2 id="bx-title"></h2>
+            <p id="bx-sub"></p>
+            <div class="bx-facts" id="bx-facts"></div>
+          </div>
+        </div>
+
+        <p class="bx-alert" id="bx-alert" hidden></p>
+
+        <!-- ===== mesures du capteur en direct ===== -->
+        <section class="bx-live" id="bx-live" hidden>
+          <div class="bx-live-h"><h3 class="bx-h" data-t="live_title"></h3><small id="bx-live-ago"></small></div>
+          <div class="bx-tiles" id="bx-tiles"></div>
+        </section>
+
+        <!-- ===== relier le boîtier : USB ou WiFi ===== -->
+        <h3 class="bx-h" data-t="steps_title"></h3>
+        <div class="bx-mode" role="tablist">
+          <button data-link="usb" role="tab"><svg viewBox="0 0 24 24"><path d="M12 3v13M8 7l4-4 4 4M7 12v2a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-2"/><circle cx="12" cy="19" r="2"/></svg><span data-t="m_usb"></span></button>
+          <button data-link="wifi" role="tab"><svg viewBox="0 0 24 24"><path d="M2 9a15 15 0 0 1 20 0M5.5 12.5a10 10 0 0 1 13 0M9 16a5 5 0 0 1 6 0"/><circle cx="12" cy="19.5" r="1"/></svg><span data-t="m_wifi"></span></button>
+        </div>
+        <ol class="bx-steps" data-mode="usb">
+          <li>
+            <span class="bx-num">1</span>
+            <svg viewBox="0 0 120 90" class="bx-ill" aria-hidden="true">
+              <rect x="10" y="22" width="30" height="40" rx="7" class="i-case"/><circle cx="25" cy="52" r="4" class="i-led"/>
+              <path d="M40 42 H78" class="i-wire"/><rect x="78" y="30" width="34" height="24" rx="4" class="i-case"/><rect x="83" y="35" width="24" height="14" rx="2" class="i-screen"/>
+            </svg>
+            <b data-t="u1"></b><p data-t="u1d"></p>
+          </li>
+          <li>
+            <span class="bx-num">2</span>
+            <svg viewBox="0 0 120 90" class="bx-ill" aria-hidden="true">
+              <rect x="22" y="14" width="76" height="56" rx="6" class="i-case"/><rect x="28" y="22" width="64" height="40" rx="3" class="i-screen"/>
+              <path d="M52 34 l16 16 M68 34 l-16 16" class="i-wire" style="stroke:var(--clay)"/>
+            </svg>
+            <b data-t="u2"></b><p data-t="u2d"></p>
+          </li>
+          <li class="wide">
+            <span class="bx-num">3</span>
+            <b data-t="u3"></b><p data-t="u3d"></p>
+          </li>
+        </ol>
+        <ol class="bx-steps" data-mode="wifi">
+          <li>
+            <span class="bx-num">1</span>
+            <svg viewBox="0 0 120 90" class="bx-ill" aria-hidden="true">
+              <rect x="18" y="20" width="34" height="46" rx="8" class="i-case"/><circle cx="35" cy="54" r="5" class="i-led fast"/>
+              <path d="M52 43 h22 q8 0 8 8 v6" class="i-wire"/><rect x="74" y="56" width="18" height="16" rx="3" class="i-plug"/><path d="M78 72 v8 M88 72 v8" class="i-wire"/>
+            </svg>
+            <b data-t="s1"></b><p data-t="s1d"></p>
+          </li>
+          <li>
+            <span class="bx-num">2</span>
+            <svg viewBox="0 0 120 90" class="bx-ill" aria-hidden="true">
+              <rect x="40" y="6" width="40" height="78" rx="8" class="i-case"/><rect x="45" y="14" width="30" height="58" rx="3" class="i-screen"/>
+              <g class="i-wifi"><path d="M50 42 q10 -10 20 0"/><path d="M46 36 q14 -15 28 0"/><circle cx="60" cy="48" r="2.5"/></g>
+            </svg>
+            <b data-t="s2"></b><p data-t="s2d"></p>
+            <div class="bx-wifi"><span data-t="network"></span><code>Saqiya-Config</code><span data-t="password"></span><code>saqiya1234</code></div>
+          </li>
+          <li class="wide">
+            <span class="bx-num">3</span>
+            <b data-t="s3"></b><p data-t="s3d"></p>
+            <div class="bx-codes">
+              <div class="bx-code">
+                <span data-t="address"></span>
+                <code id="bx-url" dir="ltr">—</code>
+                <button class="bx-copy" data-copy="url"><svg><use href="#i-copy"/></svg><i data-t="copy"></i></button>
+              </div>
+              <div class="bx-code">
+                <span data-t="key"></span>
+                <code id="bx-key" dir="ltr">••••••••••••</code>
+                <button class="bx-copy ghost" id="bx-show"><svg><use href="#i-eye"/></svg><i data-t="show"></i></button>
+                <button class="bx-copy" data-copy="key"><svg><use href="#i-copy"/></svg><i data-t="copy"></i></button>
+              </div>
+            </div>
+          </li>
+        </ol>
+        <p class="bx-done" data-mode="wifi"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span data-t="done"></span></p>
+
+        <!-- ===== voyant (programme WiFi) ===== -->
+        <h3 class="bx-h" data-t="led_title" data-mode="wifi"></h3>
+        <div class="bx-leds" data-mode="wifi">
+          <div><i class="led slow"></i><span data-t="led_slow"></span></div>
+          <div><i class="led fast"></i><span data-t="led_fast"></span></div>
+          <div><i class="led double"></i><span data-t="led_double"></span></div>
+          <div><i class="led fixed"></i><span data-t="led_fixed"></span></div>
+        </div>
+        <p class="bx-help" data-mode="wifi"><b data-t="trouble"></b> <span data-t="trouble_d"></span></p>
+        <p class="bx-help" data-mode="usb"><b data-t="trouble"></b> <span data-t="trouble_usb"></span></p>
+
+        <!-- ===== technicien ===== -->
+        <details class="bx-tech">
+          <summary data-t="tech"></summary>
+          <div class="bx-tech-body" dir="ltr" lang="fr" data-noi18n>
+            <h4>Boîtiers vus par le serveur</h4>
+            <ul class="dev-list" id="bx-list"></ul>
+
+            <h4>Pare-feu Windows (une seule fois, PowerShell administrateur)</h4>
+            <div class="cmd"><code id="fw-cmd">New-NetFirewallRule -DisplayName "Saqiya serveur" -Direction Inbound -Protocol TCP -LocalPort 8000 -RemoteAddress LocalSubnet -Action Allow</code><button class="icon-btn" data-copy="fw" title="Copier"><svg><use href="#i-copy"/></svg></button></div>
+
+            <h4>Programme de la carte</h4>
+            <p><b>Liaison USB</b> (programme de test du capteur 7-en-1, 115200 bauds) : le serveur détecte la carte tout seul et lit les lignes
+              <code>Humidite :</code>, <code>Temperature :</code>, <code>EC :</code>, <code>pH :</code>, <code>Azote(N) :</code>, <code>Phosphore(P) :</code>, <code>Potassium(K) :</code>.
+              Le moniteur série de l'IDE Arduino doit être fermé. Pas de commande de pompe dans ce mode.</p>
+            <p><b>Liaison WiFi</b> : <code>firmware/saqiya_capteur_7en1/saqiya_capteur_7en1.ino</code> (bibliothèques <code>WiFiManager</code>, <code>ArduinoJson</code> v7), carte « ESP32 Dev Module ».
+              Câblage MAX485 : RO→GPIO16, DI→GPIO17, DE+RE→GPIO4 ; capteur en 12 V avec masse commune ; relais de pompe sur GPIO26.</p>
+            <p id="bx-usb-diag"></p>
+
+            <h4>Clé du boîtier</h4>
+            <p>Générer une nouvelle clé déconnecte le boîtier jusqu'à ce qu'elle soit saisie dans son portail (BOOT 3 s).</p>
+            <button class="btn btn-ink" id="bx-newkey">Générer une nouvelle clé</button>
+
+            <h4>Repartir de zéro</h4>
+            <p>Efface mesures, arrosages, alertes et boîtiers (démonstration comprise). Réglages et photos conservés ; sauvegarde dans <code>data/sauvegardes/</code>.</p>
+            <button class="btn btn-line" id="bx-reset">Effacer les mesures…</button>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- ===================== RÉGLAGES ===================== -->
+    <section class="view" id="view-settings">
+      <div class="jr-head">
+        <div>
+          <h2 class="jr-title">Paramètres</h2>
+          <p class="hint">Réglez votre parcelle une fois : le système s'occupe du reste.</p>
+        </div>
+      </div>
+      <nav class="st-tabs" id="st-tabs" role="tablist" aria-label="Rubriques des réglages">
+        <button type="button" data-tab="parcelle"><svg><use href="#i-field"/></svg><span>Ma parcelle</span></button>
+        <button type="button" data-tab="arrosage"><svg><use href="#i-drop"/></svg><span>Arrosage</span></button>
+        <button type="button" data-tab="couts"><svg><use href="#i-chart"/></svg><span>Coûts</span></button>
+        <button type="button" data-tab="comptes" class="owner-only"><svg><use href="#i-log"/></svg><span>Comptes</span></button>
+        <button type="button" data-tab="apparence"><svg><use href="#i-sliders"/></svg><span>Apparence</span></button>
+        <button type="button" data-tab="apropos"><svg><use href="#i-camera"/></svg><span>À propos</span></button>
+      </nav>
+
+
+      <form id="settings-form" class="st" novalidate>
+        <input type="hidden" name="crop"><input type="hidden" name="soil_type"><input type="hidden" name="mode">
+
+        <section class="st-card st-wide" data-sec="parcelle">
+          <header><span class="st-ic"><svg><use href="#i-field"/></svg></span><div><h3>Ma culture</h3><p>Les seuils d'arrosage et la surveillance des maladies s'adaptent à la culture.</p></div></header>
+          <div class="crop-pick" id="crop-pick" role="radiogroup" aria-label="Culture"></div>
+        </section>
+
+        <section class="st-card st-wide" data-sec="parcelle">
+          <header><span class="st-ic"><svg><use href="#i-drop"/></svg></span><div><h3>Mon sol</h3><p>Un sol sableux sèche vite, un sol argileux garde l'eau longtemps.</p></div></header>
+          <div class="soil-pick" id="soil-pick" role="radiogroup" aria-label="Type de sol"></div>
+        </section>
+
+        <section class="st-card" data-sec="arrosage">
+          <header><span class="st-ic"><svg><use href="#i-sliders"/></svg></span><div><h3>Mode d'arrosage</h3><p>En automatique, la pompe démarre seule quand le sol est sec.</p></div></header>
+          <div class="mode-pick" id="mode-pick" role="radiogroup" aria-label="Mode d'arrosage">
+            <button type="button" data-v="auto"><b>Automatique</b><small>Le système décide</small></button>
+            <button type="button" data-v="manuel"><b>Manuel</b><small>Vous décidez</small></button>
+          </div>
+          <div class="st-row">
+            <div class="st-label"><span>Seuil de déclenchement</span><output id="o-thr">—</output></div>
+            <label class="st-check"><input type="checkbox" id="thr-auto"> <span>Automatique selon le sol et la culture</span></label>
+            <input type="range" id="thr" min="10" max="70" step="1">
+            <input type="hidden" name="threshold_override">
+          </div>
+        </section>
+
+        <section class="st-card" data-sec="arrosage">
+          <header><span class="st-ic"><svg><use href="#i-log"/></svg></span><div><h3>Durées et pompe</h3><p>Des limites pour ne jamais trop arroser.</p></div></header>
+          <div class="st-row">
+            <div class="st-label"><span>Durée maximale d'un arrosage</span><output id="o-max">—</output></div>
+            <input type="range" id="max-min" min="1" max="30" step="1">
+            <input type="hidden" name="max_duration_s">
+          </div>
+          <div class="st-row">
+            <div class="st-label"><span>Pause entre deux arrosages</span><output id="o-pause">—</output></div>
+            <input type="range" name="min_interval_min" min="0" max="240" step="5">
+          </div>
+          <div class="st-row">
+            <div class="st-label"><span>Débit de la pompe</span></div>
+            <div class="st-stepper"><button type="button" data-step="-0.5" data-for="pump_flow_lpm">−</button><input name="pump_flow_lpm" type="number" step="0.5" min="0.5" inputmode="decimal"><span>L / min</span><button type="button" data-step="0.5" data-for="pump_flow_lpm">+</button></div>
+          </div>
+        </section>
+
+        <section class="st-card" data-sec="arrosage">
+          <header><span class="st-ic"><svg><use href="#i-rain"/></svg></span><div><h3>Pluie</h3><p>Si la pluie est annoncée, le système attend et économise l'eau.</p></div></header>
+          <div class="st-row">
+            <div class="st-label"><span>Ne pas arroser si la pluie prévue dépasse</span><output id="o-mm">—</output></div>
+            <input type="range" name="rain_mm_skip" min="0" max="20" step="0.5">
+          </div>
+          <div class="st-row">
+            <div class="st-label"><span>ou si la probabilité de pluie dépasse</span><output id="o-prob">—</output></div>
+            <input type="range" name="rain_prob_skip" min="0" max="100" step="5">
+          </div>
+        </section>
+
+        <section class="st-card" data-sec="parcelle">
+          <header><span class="st-ic"><svg><use href="#i-field"/></svg></span><div><h3>Position de la parcelle</h3><p>Sert aux prévisions de pluie de votre région.</p></div></header>
+          <div class="st-geo">
+            <label><span>Latitude</span><input name="latitude" type="number" step="0.0001" inputmode="decimal"></label>
+            <label><span>Longitude</span><input name="longitude" type="number" step="0.0001" inputmode="decimal"></label>
+          </div>
+          <button type="button" class="btn btn-line st-gps" id="st-gps"><svg><use href="#i-field"/></svg>Utiliser ma position</button>
+          <p class="st-hint" id="st-gps-msg"></p>
+        </section>
+
+        <section class="st-card" data-sec="apparence">
+          <header><span class="st-ic st-ic-lang">ع</span><div><h3>Langue</h3><p>Langue de tout le tableau de bord.</p></div></header>
+          <div class="lang-pick" id="lang-pick">
+            <button type="button" data-lang="fr"><b>Français</b><small>Interface en français</small></button>
+            <button type="button" data-lang="ar" lang="ar"><b>العربية</b><small>الواجهة بالعربية</small></button>
+          </div>
+        </section>
+
+        <section class="st-card st-wide" data-sec="arrosage">
+          <header><span class="st-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+            <div><h3>Programmation horaire</h3><p>Choisissez quand la pompe a le droit de tourner, et programmez des arrosages à heure fixe.</p></div></header>
+          <div class="sch-grid">
+            <div>
+              <label class="sw-row"><span><b>Arroser seulement dans ces créneaux</b><small>Évite d'arroser en plein soleil (l'eau s'évapore).</small></span>
+                <input type="checkbox" class="switch" id="win-on"></label>
+              <ul class="win-list" id="win-list"></ul>
+              <button type="button" class="btn btn-line sm" id="win-add">+ Ajouter un créneau</button>
+            </div>
+            <div>
+              <div class="sw-row"><span><b>Arrosages programmés</b><small>Lancés à l'heure dite, même en mode manuel.</small></span></div>
+              <ul class="sch-list" id="sch-list"></ul>
+              <button type="button" class="btn btn-line sm" id="sch-add">+ Programmer un arrosage</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="st-card" data-sec="couts">
+          <header><span class="st-ic"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h3"/></svg></span>
+            <div><h3>Coûts</h3><p>Pour estimer ce que coûte l'arrosage (rapport et analyses).</p></div></header>
+          <div class="cost-grid">
+            <label><span>Prix de l'eau</span><div class="unit-in"><input name="water_price_m3" type="number" step="0.001" min="0" inputmode="decimal"><em class="cur">DA</em><em>/ m³</em></div></label>
+            <label><span>Prix de l'électricité</span><div class="unit-in"><input name="electricity_price_kwh" type="number" step="0.001" min="0" inputmode="decimal"><em class="cur">DA</em><em>/ kWh</em></div></label>
+            <label><span>Puissance de la pompe</span><div class="unit-in"><input name="pump_power_kw" type="number" step="0.05" min="0" inputmode="decimal"><em>kW</em></div></label>
+            <label><span>Monnaie</span><div class="unit-in"><input name="currency" maxlength="6"></div></label>
+          </div>
+          <a class="btn btn-ink report-btn" href="report.html" target="_blank" rel="noopener">Ouvrir le rapport (PDF)</a>
+        </section>
+
+
+        <details class="st-card st-wide st-adv" data-sec="arrosage">
+          <summary>Réglages avancés</summary>
+          <div class="st-row">
+            <div class="st-label"><span>Réponse du sol (secondes de pompe pour +1 % d'humidité)</span></div>
+            <div class="st-stepper"><button type="button" data-step="-1" data-for="sec_per_percent">−</button><input name="sec_per_percent" type="number" step="0.1" min="1"><span>s</span><button type="button" data-step="1" data-for="sec_per_percent">+</button></div>
+            <p class="st-hint">Cette valeur s'ajuste seule après chaque arrosage. Ne la changez que si vous savez pourquoi.</p>
+          </div>
+        </details>
+
+        <div class="st-save" id="st-save" hidden>
+          <span class="st-dot"></span><span>Modifications non enregistrées</span>
+          <button type="button" class="btn btn-line" id="st-cancel">Annuler</button>
+          <button type="submit" class="btn btn-ink">Enregistrer</button>
+        </div>
+      </form>
+
+
+      <section class="st-card st-wide acc" id="acc" hidden data-sec="comptes">
+        <header><span class="st-ic"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5M16 4.5a3.5 3.5 0 0 1 0 7M18 13.8c2.1.7 3.5 2.8 3.5 5.2"/></svg></span>
+          <div><h3>Comptes</h3><p>Les personnes qui ont un compte. Vous pouvez suspendre ou supprimer un compte à tout moment.</p></div></header>
+        <ul class="acc-list" id="acc-list"></ul>
+      </section>
+
+      <div class="panel" data-sec="apparence">
+        <div class="panel-h"><h2>Apparence</h2><span class="hint">mémorisée sur cet appareil</span></div>
+        <div class="theme-picker" role="radiogroup" aria-label="Thème">
+          <button class="theme-card" data-theme-set="bleu" role="radio" style="--pv-rail:#0a1a34;--pv-paper:#06101f;--pv-ink:#eaf2ff">
+            <div class="pv"><div class="side"></div><div class="body"><span class="ln"></span><span class="ln" style="width:40%;opacity:.4"></span><span class="sw"><i style="background:#1a6dff"></i><i style="background:#38bdf8"></i><i style="background:#3ddc97"></i></span></div></div>
+            <b>Bleu nuit</b><small>photo, verre et bleu électrique (par défaut)</small>
+          </button>
+          <button class="theme-card" data-theme-set="auto" role="radio">
+            <div class="pv auto"><div style="background:#f2eee4;color:#1d211b">Aa</div><div style="background:#1f231c;color:#ece8dc">Aa</div></div>
+            <b>Automatique</b><small>suit le mode clair / sombre de l'appareil</small>
+          </button>
+          <button class="theme-card" data-theme-set="carnet" role="radio" style="--pv-rail:#123f2f;--pv-paper:#f2f5f0;--pv-ink:#0e1a14">
+            <div class="pv"><div class="side"></div><div class="body"><span class="ln"></span><span class="ln" style="width:40%;opacity:.4"></span><span class="sw"><i style="background:#1f7a4a"></i><i style="background:#df6438"></i><i style="background:#2a84c4"></i></span></div></div>
+            <b>Clair</b><small>blanc, vert profond, bleu eau</small>
+          </button>
+          <button class="theme-card" data-theme-set="nuit" role="radio" style="--pv-rail:#1c1f19;--pv-paper:#161813;--pv-ink:#ece8dc">
+            <div class="pv"><div class="side"></div><div class="body"><span class="ln"></span><span class="ln" style="width:40%;opacity:.4"></span><span class="sw"><i style="background:#9bb86a"></i><i style="background:#e08559"></i><i style="background:#6fb2d2"></i></span></div></div>
+            <b>Nuit</b><small>sombre, reposant le soir</small>
+          </button>
+          <button class="theme-card" data-theme-set="oasis" role="radio" style="--pv-rail:#0f3b35;--pv-paper:#ecf3f0;--pv-ink:#0f2f2b">
+            <div class="pv"><div class="side"></div><div class="body"><span class="ln"></span><span class="ln" style="width:40%;opacity:.4"></span><span class="sw"><i style="background:#1d7a68"></i><i style="background:#c4643c"></i><i style="background:#1c6da3"></i></span></div></div>
+            <b>Oasis</b><small>turquoise, menthe, eau</small>
+          </button>
+          <button class="theme-card" data-theme-set="desert" role="radio" style="--pv-rail:#eadbbf;--pv-paper:#f3e8d4;--pv-ink:#3a2315">
+            <div class="pv"><div class="side"></div><div class="body"><span class="ln"></span><span class="ln" style="width:40%;opacity:.4"></span><span class="sw"><i style="background:#c4850f"></i><i style="background:#b5401b"></i><i style="background:#1a6b7c"></i></span></div></div>
+            <b>Désert</b><small>sable, ocre, brun profond</small>
+          </button>
+        </div>
+      </div>
+      <section class="about ab2" id="about" data-sec="apropos">
+        <div class="ab2-hero">
+          <img class="ab2-bg" src="https://images.unsplash.com/photo-1771684512143-88bdb34782fa?auto=format&fit=crop&w=1800&q=70" alt="">
+          <div class="ab2-hero-in">
+            <svg class="ab-logo" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15"/><path class="d" d="M16 7s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/><path d="M16 24v-7m0 3-3-2.5"/></svg>
+            <p class="ab2-kicker">À propos</p>
+            <h2>Sāqiya <span lang="ar">الساقية</span></h2>
+            <p class="ab2-tag">Startup algérienne de l'irrigation intelligente : le sol parle, Sāqiya l'écoute et arrose au bon moment.</p>
+            <div class="ab2-stats">
+              <div><b data-count="7">7</b><span>mesures du sol en direct</span></div>
+              <div><b data-count="30">30</b><span>secondes entre deux relevés</span></div>
+              <div><b data-count="3">3</b><span>langues : arabe, darija, français</span></div>
+            </div>
+          </div>
+          <span class="ab-ver">Version 2.0</span>
+        </div>
+
+        <div class="ab2-block">
+          <h3 class="ab2-h">Comment ça marche</h3>
+          <ol class="ab2-flow">
+            <li><span class="ab2-ic"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></svg></span><b>Le capteur mesure</b><p>Humidité, température, pH, salinité, azote, phosphore et potassium du sol.</p></li>
+            <li><span class="ab2-ic"><svg viewBox="0 0 24 24"><path d="M4 7h16v10H4z"/><path d="M8 21h8M12 17v4"/></svg></span><b>Le serveur analyse</b><p>Il croise les mesures avec la météo réelle et la culture choisie.</p></li>
+            <li><span class="ab2-ic"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 7v5l3 2"/><path d="M17 3h4v4"/></svg></span><b>Il décide</b><p>Arroser maintenant, attendre la pluie, ou prévenir d'un risque de maladie.</p></li>
+            <li><span class="ab2-ic"><svg viewBox="0 0 24 24"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/></svg></span><b>La parcelle est arrosée</b><p>La pompe s'ouvre juste le temps qu'il faut : moins d'eau, moins d'électricité.</p></li>
+          </ol>
+        </div>
+
+        <div class="ab2-block ab2-teams">
+          <div class="ab2-team">
+            <h3 class="ab2-h">Équipe de travail</h3>
+            <p class="ab2-sub">Conception et réalisation du projet</p>
+            <div class="ab2-people" data-noi18n>
+              <figure class="ab2-p"><span class="ab2-av" style="--h:205">SF</span><figcaption><b>Sigha Fares</b><small>Équipe de travail</small></figcaption></figure>
+              <figure class="ab2-p"><span class="ab2-av" style="--h:160">BR</span><figcaption><b>Benaboud Roqia</b><small>Équipe de travail</small></figcaption></figure>
+            </div>
+          </div>
+          <div class="ab2-team">
+            <h3 class="ab2-h">Équipe de supervision</h3>
+            <p class="ab2-sub">Encadrement scientifique</p>
+            <div class="ab2-people" data-noi18n>
+              <figure class="ab2-p"><span class="ab2-av" style="--h:225">MS</span><figcaption><b>Dr Merabeti Sana</b><small>Supervision</small></figcaption></figure>
+              <figure class="ab2-p"><span class="ab2-av" style="--h:265">IN</span><figcaption><b>Dr Ibtisem Nasseh</b><small>Supervision</small></figcaption></figure>
+              <figure class="ab2-p"><span class="ab2-av" style="--h:185">ZS</span><figcaption><b>Dr Zeral Soumia</b><small>Supervision</small></figcaption></figure>
+              <figure class="ab2-p"><span class="ab2-av" style="--h:140">NM</span><figcaption><b>Dr Nassim Melal</b><small>Supervision</small></figcaption></figure>
+            </div>
+          </div>
+        </div>
+
+        <div class="ab2-block">
+          <h3 class="ab2-h">Sur le terrain</h3>
+          <div class="ab2-gal">
+            <figure><img src="https://images.unsplash.com/photo-1748432171507-c1d62fe2e859?auto=format&fit=crop&w=900&q=70" alt="Goutte-à-goutte au pied des plants" loading="lazy"><figcaption>Goutte-à-goutte au pied des plants</figcaption></figure>
+            <figure><img src="https://images.unsplash.com/photo-1599508266124-804fc6eecf09?auto=format&fit=crop&w=900&q=70" alt="Cartes électroniques" loading="lazy"><figcaption>Le boîtier ESP32</figcaption></figure>
+            <figure><img src="https://images.unsplash.com/photo-1758552219061-5148ccb5bc5d?auto=format&fit=crop&w=900&q=70" alt="Tomates mûres sur pied" loading="lazy"><figcaption>Des récoltes protégées</figcaption></figure>
+            <figure><img src="https://images.unsplash.com/photo-1640677117376-573b9dbb8ea8?auto=format&fit=crop&w=900&q=70" alt="Jeunes plants en rangs" loading="lazy"><figcaption>Chaque goutte compte</figcaption></figure>
+          </div>
+        </div>
+
+        <div class="ab2-block ab2-made">
+          <div>
+            <h3 class="ab2-h">Fabriqué en Algérie</h3>
+            <p>Boîtier, serveur et tableau de bord conçus et développés en Algérie, pour nos cultures (Mitidja, Hauts Plateaux, oasis du Sud) et notre climat.</p>
+          </div>
+          <div class="ab-tech"><i>ESP32</i><i>Capteur 7-en-1 RS485</i><i>Python</i><i>IA Groq</i><i>Open-Meteo</i></div>
+        </div>
+
+        <p class="ab-foot">© <span id="ab-year">2026</span> Sāqiya · Photos : Unsplash (licence Unsplash) · Prévisions météo : Open-Meteo</p>
+      </section>
+    </section>
+  </main>
+</div>
+
+<div class="lightbox" id="lightbox" hidden>
+  <button class="lb-close" id="lb-close" aria-label="Fermer"><svg><use href="#i-close"/></svg></button>
+  <div class="lb-wrap">
+    <figure><img id="lb-img" alt=""><figcaption id="lb-cap"></figcaption></figure>
+    <aside class="lb-diag" id="lb-diag"></aside>
+  </div>
+  <button class="btn btn-line lb-del" id="lb-del">Supprimer la photo</button>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
+<script src="i18n.js"></script>
+<script src="irrigation-anim.js"></script>
+<script src="about.js" defer></script>
+<script src="scene.js"></script>
+<script src="app.js"></script>
+<script src="analytics.js"></script>
+<script src="photos.js"></script>
+<script src="ultra.js"></script>
+<script src="device.js"></script>
+<script src="journal.js"></script>
+<script src="settings.js"></script>
+<script src="extras.js"></script>
+<script src="accounts.js"></script>
+</body>
+</html>

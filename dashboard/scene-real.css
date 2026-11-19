@@ -1,0 +1,145 @@
+/* Sāqiya — la parcelle en vrai : photo réelle, ambiance selon l'heure / la pluie / l'arrosage,
+   et un moniteur des mesures du capteur posé sur la photo. Valable pour tous les thèmes. */
+
+.scene { position: relative; overflow: hidden; isolation: isolate; background: #0a1a31; border: 0; }
+.scene svg { display: none; }
+
+/* photo (deux calques pour un fondu doux quand l'état change) */
+.scene .ph { position: absolute; inset: 0; z-index: -2; background: center 62% / cover no-repeat; transition: opacity 1.2s ease, filter 1.5s ease; }
+.scene .ph.day { background-image: url("https://images.unsplash.com/photo-1748432171507-c1d62fe2e859?auto=format&fit=crop&w=1600&q=72"); }
+.scene .ph.irr { background-image: url("https://images.unsplash.com/photo-1771684512143-88bdb34782fa?auto=format&fit=crop&w=1600&q=72"); opacity: 0; }
+
+/* étalonnage des couleurs selon le moment, comme un vrai appareil photo */
+.scene[data-phase="jour"] .ph { filter: none; }
+.scene[data-phase="aube"] .ph { filter: brightness(.85) saturate(.9) sepia(.25) hue-rotate(-8deg); }
+.scene[data-phase="soir"] .ph { filter: brightness(.78) saturate(1.05) sepia(.35) hue-rotate(-12deg) contrast(1.05); }
+.scene[data-phase="nuit"] .ph { filter: brightness(.52) saturate(.4) contrast(1.08) hue-rotate(185deg) sepia(.12); }
+.scene.rainy .ph { filter: brightness(.62) saturate(.55) contrast(.95); }
+.scene[data-phase="nuit"].rainy .ph { filter: brightness(.3) saturate(.3) hue-rotate(185deg); }
+.scene.dry:not(.pumping) .ph.day { filter: saturate(.7) sepia(.12); }
+.scene[data-phase="nuit"].dry .ph.day { filter: brightness(.5) saturate(.32) contrast(1.08) hue-rotate(185deg) sepia(.12); }
+
+/* voile pour la lisibilité des étiquettes */
+.scene::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(180deg, rgba(5, 12, 24, .5) 0%, rgba(5, 12, 24, 0) 32%, rgba(5, 12, 24, 0) 55%, rgba(5, 12, 24, .7) 100%); }
+.scene[data-phase="nuit"]::after { background: radial-gradient(120% 90% at 50% 120%, rgba(30, 60, 110, .25), transparent 60%), linear-gradient(180deg, rgba(3, 8, 20, .55), rgba(3, 8, 20, .2) 45%, rgba(3, 8, 20, .75)); }
+.scene[data-phase="soir"]::after, .scene[data-phase="aube"]::after { background: linear-gradient(180deg, rgba(60, 30, 10, .35), rgba(5, 12, 24, 0) 45%, rgba(5, 12, 24, .7)); }
+
+/* pluie : fines stries qui tombent */
+.scene .rain { position: absolute; inset: -40px 0 0; z-index: -1; pointer-events: none; opacity: 0; transition: opacity 1s;
+  background:
+    repeating-linear-gradient(104deg, transparent 0 22px, rgba(220, 235, 255, .28) 22px 23px, transparent 23px 47px),
+    repeating-linear-gradient(100deg, transparent 0 37px, rgba(220, 235, 255, .18) 37px 38px, transparent 38px 71px);
+  background-size: 120px 140px, 170px 190px; animation: rainfall .55s linear infinite; }
+.scene.rainy .rain { opacity: 1; }
+@keyframes rainfall { to { background-position: -30px 140px, -42px 190px; } }
+
+/* étiquettes */
+.scene-tags { z-index: 1; }
+.scene-tags span { background: rgba(5, 12, 24, .7); color: #eef4ff; border: 1px solid rgba(255, 255, 255, .16); border-radius: 6px;
+  padding: 5px 10px; font-weight: 600; backdrop-filter: blur(6px); }
+.scene-tags .tag-pump.on { background: #1a6dff; border-color: #1a6dff; }
+.scene.dry:not(.pumping) .tag-pump { background: rgba(220, 70, 60, .85); border-color: transparent; }
+
+/* moniteur des mesures du capteur (en bas à gauche) */
+.scene-mon { position: absolute; z-index: 1; inset-inline-start: 14px; bottom: 14px; min-width: 230px; max-width: calc(100% - 28px);
+  padding: 10px 12px 9px; border-radius: 8px; background: rgba(5, 12, 24, .78); color: #eef4ff;
+  border: 1px solid rgba(255, 255, 255, .14); backdrop-filter: blur(8px); font-variant-numeric: tabular-nums; }
+.scene-mon[hidden] { display: none; }
+.scene-mon .hd { display: flex; justify-content: space-between; gap: 12px; font-size: .74rem; color: #9fb3d1; margin-bottom: 6px; }
+.scene-mon .hd b { color: #eef4ff; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+.scene-mon .hd b::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #3ddc97; }
+.scene-mon.stale .hd b::before { background: #ff8a5c; }
+.scene-mon .grid { display: grid; grid-template-columns: repeat(4, auto); gap: 2px 16px; }
+.scene-mon .m span { display: block; font-size: .7rem; color: #9fb3d1; }
+.scene-mon .m b { font-size: 1.15rem; font-weight: 700; }
+.scene-mon .m b small { font-size: .7rem; color: #9fb3d1; font-weight: 600; margin-inline-start: 2px; }
+.scene-mon .m.low b { color: #ffb15c; } .scene-mon .m.high b { color: #ff8a7a; } .scene-mon .m.ok b { color: #5fe0a8; }
+@media (max-width: 560px) {
+  .scene-mon { min-width: 0; inset-inline-end: 14px; }
+  .scene-mon .grid { grid-template-columns: repeat(2, auto); }
+}
+@media (prefers-reduced-motion: reduce) { .scene .rain { animation: none; } }
+
+/* ---------- aucun boîtier réel ---------- */
+.nodev { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 18px; align-items: center; margin: 0 0 16px;
+  padding: 18px 20px; border-radius: 12px; background: var(--sheet); border: 1px solid var(--rule-2); border-inline-start: 4px solid var(--ochre); }
+:root[data-theme="bleu"] .nodev { background: rgba(10, 24, 48, .85); border-color: rgba(160, 190, 235, .2); border-inline-start-color: #ffb547; }
+body:not([data-view="overview"]):not([data-view="analytics"]):not([data-view="history"]) .nodev { display: none; }
+.nodev-ic { width: 46px; height: 46px; fill: none; stroke: var(--ochre); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.nodev h2 { margin: 0 0 4px; font-size: 1.15rem; }
+.nodev p { margin: 0; color: var(--ink-2); max-width: 75ch; }
+.nodev-usb { display: flex; align-items: center; gap: 8px; margin-top: 8px !important; font-size: .88rem; font-weight: 600; }
+.nodev-usb i { width: 8px; height: 8px; border-radius: 50%; background: var(--ochre); animation: nodevp 1.4s ease-in-out infinite; }
+.nodev-usb.found i { background: #3ddc97; animation: none; }
+.nodev-usb.busy i { background: var(--clay); animation: none; }
+@keyframes nodevp { 50% { opacity: .25; } }
+@media (max-width: 700px) { .nodev { grid-template-columns: auto minmax(0, 1fr); } .nodev .btn { grid-column: 1 / -1; } }
+
+/* sans boîtier : les panneaux de mesures sont masqués (pas de « — » partout) */
+body.no-device #view-overview .gauge-panel, body.no-device #view-overview .panel:has(#readouts),
+body.no-device #view-overview .panel:has(#chart), body.no-device #view-overview .sensor-panel,
+body.no-device #view-overview .panel:has(#diseases), body.no-device #view-overview .panel:has(#soil),
+body.no-device .hb-stats span:nth-child(-n+2), body.no-device .scene-mon { display: none !important; }
+@media (min-width: 1100px) {
+  body.no-device #view-overview .scene, body.no-device #view-overview .pump-panel,
+  body.no-device #view-overview .panel:has(#forecast) { grid-column: 1 / -1; }
+  body.no-device #view-overview .pump-panel { grid-row: auto; }
+}
+
+/* ---------- arrosage en cours : animation sur la photo + compteur ---------- */
+.irr-canvas { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.irr-canvas[hidden] { display: none; }
+.scene.pumping .ph.day { filter: saturate(1.05) brightness(.97); }
+.irr-hud { position: absolute; z-index: 1; inset-inline-end: 14px; bottom: 14px; width: 260px; max-width: calc(100% - 28px);
+  padding: 10px 12px; border-radius: 8px; background: rgba(5, 12, 24, .8); color: #eef4ff;
+  border: 1px solid rgba(90, 160, 255, .45); backdrop-filter: blur(8px); font-variant-numeric: tabular-nums; }
+.irr-hud[hidden] { display: none; }
+.irr-hud .hd { display: flex; justify-content: space-between; gap: 8px; font-size: .76rem; color: #9fb3d1; margin-bottom: 6px; }
+.irr-hud .hd b { color: #eef4ff; display: inline-flex; align-items: center; gap: 6px; }
+.irr-hud .hd b::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #3aa0ff; animation: nodevp 1s ease-in-out infinite; }
+.irr-hud .row { display: grid; grid-template-columns: auto 1fr auto 1fr; gap: 2px 8px; align-items: baseline; font-size: .74rem; color: #9fb3d1; }
+.irr-hud .row b { color: #fff; font-size: 1.05rem; }
+.irr-hud .bar { margin-top: 8px; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, .12); overflow: hidden; }
+.irr-hud .bar i { display: block; height: 100%; background: #3aa0ff; transition: width 1s linear; }
+@media (max-width: 700px) {
+  .scene.pumping .scene-mon { display: none; }
+  .irr-hud { inset-inline-start: 14px; width: auto; }
+}
+
+/* ---------- page « Détection des maladies » ---------- */
+.dz-tips { list-style: none; display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 12px 0 4px; padding: 0; counter-reset: t; }
+.dz-tips li { display: flex; gap: 8px; align-items: baseline; counter-increment: t; font-size: .9rem; }
+.dz-tips li::before { content: counter(t); width: 20px; height: 20px; flex: none; border-radius: 50%; display: grid; place-items: center; font: 700 .75rem var(--sans); background: rgba(255, 255, 255, .18); color: #fff; }
+.dz-tips b { color: #fff; } .dz-tips span { color: rgba(255, 255, 255, .7); }
+.dz-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin: 6px 0 12px; }
+.dz-bar h3, .dz-watch h3 { margin: 0; font-size: 1.1rem; }
+.dz-bar .filters { margin: 0; }
+.dz-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; margin-bottom: 26px; }
+.dz-card { display: grid; grid-template-columns: 120px minmax(0, 1fr); border-radius: 10px; overflow: hidden; cursor: pointer;
+  background: var(--sheet); border: 1px solid var(--rule); border-inline-start: 4px solid var(--rule-2); transition: transform .15s, border-color .2s; }
+.dz-card:hover { transform: translateY(-2px); }
+.dz-card.bad { border-inline-start-color: #e5484d; } .dz-card.warn { border-inline-start-color: #f5a524; }
+.dz-card.ok { border-inline-start-color: #30a46c; } .dz-card.wait { border-inline-start-color: #3a8bff; }
+.dz-img img { width: 100%; height: 100%; min-height: 120px; object-fit: cover; display: block; }
+.dz-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.dz-chip { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; border-radius: 5px; font-weight: 700; font-size: .86rem; }
+.dz-chip.bad { background: rgba(229, 72, 77, .15); color: #e5484d; } .dz-chip.warn { background: rgba(245, 165, 36, .15); color: #d68a00; }
+.dz-chip.ok { background: rgba(48, 164, 108, .15); color: #30a46c; } .dz-chip.wait { background: rgba(58, 139, 255, .15); color: #3a8bff; }
+.dz-chip.unk { background: var(--paper-2); color: var(--ink-2); }
+.dz-chip i { width: 8px; height: 8px; border-radius: 50%; background: currentColor; animation: nodevp 1s infinite; }
+.dz-urg { font-size: .76rem; font-weight: 700; color: var(--ink-3); } .dz-urg.haute { color: #e5484d; }
+.dz-body p { margin: 0; font-size: .88rem; color: var(--ink-2); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.dz-body small { color: var(--ink-3); font-size: .76rem; margin-top: auto; }
+.dz-none { color: var(--ink-3); }
+.dz-list .gallery-empty { grid-column: 1 / -1; }
+.dz-watch h3 small { font-weight: 500; font-size: .8rem; color: var(--ink-3); margin-inline-start: 8px; }
+.dz-watch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; margin-top: 12px; }
+.dz-w { padding: 12px 14px; border-radius: 10px; background: var(--sheet); border: 1px solid var(--rule); }
+.dz-w-h { display: flex; justify-content: space-between; gap: 8px; } .dz-w-h span { font-weight: 700; font-variant-numeric: tabular-nums; }
+.dz-w-bar { height: 4px; border-radius: 2px; background: var(--rule); margin: 8px 0; overflow: hidden; }
+.dz-w-bar i { display: block; height: 100%; background: #30a46c; }
+.dz-w:not(.lv-faible) .dz-w-bar i { background: #f5a524; } .dz-w.lv-élevé .dz-w-bar i { background: #e5484d; }
+.dz-w p { margin: 0; font-size: .82rem; color: var(--ink-2); }
+:root[data-theme="bleu"] .dz-card, :root[data-theme="bleu"] .dz-w { background: rgba(10, 24, 48, .82); border-color: rgba(160, 190, 235, .18); }
+@media (max-width: 560px) { .dz-list { grid-template-columns: 1fr; } .dz-card { grid-template-columns: 96px minmax(0, 1fr); } }

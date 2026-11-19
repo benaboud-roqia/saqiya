@@ -1,0 +1,56 @@
+/* Sāqiya — arabe : police, droite à gauche, et éléments qui doivent rester de gauche à droite */
+
+.lang-btn {
+  height: 38px; padding: 0 16px; border-radius: 999px; cursor: pointer; font: 700 .95rem var(--ar);
+  color: #fff; background: rgba(255, 255, 255, .14); border: 1px solid rgba(255, 255, 255, .25); backdrop-filter: blur(10px);
+  transition: background .2s;
+}
+.lang-btn:hover { background: rgba(255, 255, 255, .26); }
+.lang-btn[lang="fr"] { font-family: var(--sans); }
+.masthead { flex-wrap: wrap; }
+.masthead > .mode { margin-inline-start: auto; }
+
+/* police arabe */
+html[lang="ar"] {
+  --sans: "IBM Plex Sans Arabic", "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
+  --serif: "IBM Plex Sans Arabic", "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
+}
+html[lang="ar"] body { letter-spacing: 0; line-height: 1.7; }
+html[lang="ar"] h1, html[lang="ar"] h2, html[lang="ar"] h3, html[lang="ar"] legend,
+html[lang="ar"] .kpi .n, html[lang="ar"] .ro .v, html[lang="ar"] .decision, html[lang="ar"] .masthead h1 { letter-spacing: 0; }
+html[lang="ar"] .eyebrow, html[lang="ar"] .kpi .l, html[lang="ar"] .facts dt, html[lang="ar"] th, html[lang="ar"] .inspo h3 { text-transform: none; letter-spacing: 0; }
+
+/* doublons français/arabe : en arabe on garde seulement l'arabe */
+html[lang="ar"] #crop-ar, html[lang="ar"] .dz .name span, html[lang="ar"] .mark span[lang="ar"],
+html[lang="ar"] .crop-pick small[lang="ar"], html[lang="ar"] .soil-pick small[lang="ar"] { display: none; }
+html[dir="rtl"] .st-adv summary::before { content: ""; }
+html[dir="rtl"] .st-adv summary::after { content: "  ⚙"; }
+
+/* éléments techniques qui restent de gauche à droite */
+html[dir="rtl"] svg, html[dir="rtl"] .chart, html[dir="rtl"] .viz, html[dir="rtl"] .ph-scale, html[dir="rtl"] .ph-axis,
+html[dir="rtl"] .nut .lane, html[dir="rtl"] .scene, html[dir="rtl"] code, html[dir="rtl"] kbd { direction: ltr; }
+html[dir="rtl"] .viz .empty, html[dir="rtl"] .chart .empty { direction: rtl; }
+html[dir="rtl"] .scene-tags { direction: rtl; }
+html[dir="rtl"] .heat { direction: ltr; }
+
+/* barre latérale à droite */
+@media (min-width: 761px) {
+  html[dir="rtl"] .rail { margin: 12px 12px 12px 0; }
+}
+html[dir="rtl"] .nav.active { box-shadow: inset -3px 0 0 var(--lime); }
+html[dir="rtl"] .kbar-btn kbd { margin-inline-start: auto; }
+
+/* dégradés de lisibilité inversés (le texte est à droite) */
+html[dir="rtl"] .masthead::before { background: linear-gradient(260deg, rgba(8, 24, 17, .86) 0%, rgba(8, 24, 17, .55) 45%, rgba(8, 24, 17, .1) 100%), linear-gradient(0deg, rgba(8, 24, 17, .55), transparent 55%); }
+html[dir="rtl"] .an-banner::before, html[dir="rtl"] .upload::before, html[dir="rtl"] .chat-head::before { background: linear-gradient(270deg, rgba(8, 24, 17, .85), rgba(8, 24, 17, .3)); }
+html[dir="rtl"] .panel-photo figcaption { left: auto; right: 20px; }
+html[dir="rtl"] .kpi::before { left: auto; right: 0; }
+html[dir="rtl"] .kpi svg.mini { right: auto; left: 14px; }
+html[dir="rtl"] .hb-photo { transform-origin: 40% 40%; }
+
+/* bulles du conseiller : la réponse en arabe s'aligne à droite */
+html[dir="rtl"] .msg.bot { border-radius: 18px 4px 18px 18px; }
+html[dir="rtl"] .msg.user { border-radius: 18px 18px 18px 4px; }
+
+/* journal et tableau */
+html[dir="rtl"] td.mono { direction: ltr; text-align: right; }

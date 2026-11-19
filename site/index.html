@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sāqiya — l'irrigation qui écoute le sol</title>
+  <meta name="description" content="Un boîtier IoT et un tableau de bord qui arrosent au bon moment, préviennent les maladies et conseillent l'agriculteur en arabe et en français.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://images.unsplash.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site.css">
+  <link rel="stylesheet" href="video.css">
+</head>
+<body>
+
+<header class="top" id="top">
+  <a class="brand" href="#top" aria-label="Sāqiya, accueil">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15"/><path class="d" d="M16 7s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/><path d="M16 24v-7m0 3-3-2.5"/></svg>
+    <span>Sāqiya <em lang="ar">الساقية</em></span>
+  </a>
+  <nav class="links" id="links">
+    <a href="#video">Vidéo</a>
+    <a href="#constat">Le constat</a>
+    <a href="#fonctionnement">Fonctionnement</a>
+    <a href="#fonctions">Fonctions</a>
+    <a href="#boitier">Le boîtier</a>
+    <a href="#questions">Questions</a>
+  </nav>
+  <a class="btn btn-dark" href="/app/">Ouvrir le tableau de bord</a>
+  <button class="burger" id="burger" aria-label="Menu" aria-expanded="false"><i></i><i></i></button>
+</header>
+
+<main>
+  <!-- ============ OUVERTURE ============ -->
+  <section class="hero">
+    <div class="hero-text">
+      <p class="kicker">Startup algérienne 🇩🇿 · Irrigation intelligente IoT et IA</p>
+      <h1>Arroser quand<br>le sol <em>le demande</em>,<br>pas à heure fixe.</h1>
+      <p class="lede">Un boîtier planté dans la parcelle mesure l'humidité, le sol et l'air. Le système décide seul
+        d'ouvrir l'eau, attend la pluie quand elle est annoncée, repère les conditions des maladies avant les premières
+        taches, et répond aux questions de l'agriculteur en arabe, en darija ou en français.</p>
+      <div class="cta">
+        <a class="cta-main" href="/app/">
+          <span class="cta-live" aria-hidden="true"><i></i></span>
+          <span class="cta-txt"><b>Voir la parcelle en direct</b><small>Tableau de bord · <span lang="ar">لوحة التحكم</span></small></span>
+          <svg class="cta-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+        </a>
+        <a class="cta-alt" href="#video">
+          <span class="cta-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+          <span class="cta-txt"><b>Comment ça marche</b><small>Vidéo d'une minute</small></span>
+        </a>
+      </div>
+      <div class="live" id="live" hidden>
+        <span class="pulse" aria-hidden="true"></span>
+        <span class="live-label">En ce moment, parcelle de démonstration</span>
+        <dl>
+          <div><dt>Sol</dt><dd id="lv-soil">—</dd></div>
+          <div><dt>Air</dt><dd id="lv-air">—</dd></div>
+          <div><dt>Pompe</dt><dd id="lv-pump">—</dd></div>
+        </dl>
+        <p id="lv-decision"></p>
+      </div>
+    </div>
+    <figure class="hero-photo">
+      <img src="https://images.unsplash.com/photo-1748432171507-c1d62fe2e859?auto=format&fit=crop&w=1400&q=75"
+           srcset="https://images.unsplash.com/photo-1748432171507-c1d62fe2e859?auto=format&fit=crop&w=800&q=75 800w, https://images.unsplash.com/photo-1748432171507-c1d62fe2e859?auto=format&fit=crop&w=1400&q=75 1400w, https://images.unsplash.com/photo-1748432171507-c1d62fe2e859?auto=format&fit=crop&w=2000&q=75 2000w"
+           sizes="(max-width: 900px) 100vw, 55vw" alt="Jeunes plants alimentés par une ligne de goutte-à-goutte" fetchpriority="high">
+      <figcaption>Goutte-à-goutte : l'eau va au pied de la plante, pas dans l'allée.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ VIDÉO ============ -->
+  <section class="film" id="video">
+    <header class="sec-head">
+      <p class="kicker">Sāqiya en une minute</p>
+      <h2>Regardez comment l'eau arrive au bon moment.<br><span lang="ar">شاهد كيف يصل الماء في الوقت المناسب</span></h2>
+    </header>
+    <div class="player" id="player" data-lang="fr">
+      <div class="stage" id="stage" aria-live="off">
+        <!-- 1 -->
+        <div class="sc sc-photo" data-d="5.5">
+          <img src="https://images.unsplash.com/photo-1748432171507-c1d62fe2e859?auto=format&fit=crop&w=1600&q=70" alt="">
+          <div class="cap big"><span data-fr="Chaque goutte compte." data-ar="كل قطرة مهمة."></span></div>
+        </div>
+        <!-- 2 -->
+        <div class="sc sc-photo" data-d="6">
+          <img src="https://images.unsplash.com/photo-1771684512143-88bdb34782fa?auto=format&fit=crop&w=1600&q=70" alt="">
+          <div class="cap"><b class="stat">70 %</b><span data-fr="de l'eau douce du monde part dans l'agriculture." data-ar="من المياه العذبة في العالم تذهب إلى الفلاحة."></span><small>FAO · AQUASTAT</small></div>
+        </div>
+        <!-- 3 -->
+        <div class="sc sc-photo" data-d="6">
+          <img src="https://images.unsplash.com/photo-1647432460909-153f77f1630f?auto=format&fit=crop&w=1600&q=70" alt="">
+          <div class="cap"><span data-fr="En Algérie, chaque saison sèche rend l'eau plus précieuse." data-ar="في الجزائر، كل موسم جاف يجعل الماء أثمن."></span></div>
+        </div>
+        <!-- 4 -->
+        <div class="sc sc-photo" data-d="6">
+          <img src="https://images.unsplash.com/photo-1599508266124-804fc6eecf09?auto=format&fit=crop&w=1600&q=70" alt="">
+          <div class="cap"><span data-fr="Un petit boîtier mesure le sol toutes les 30 secondes." data-ar="جهاز صغير يقيس التربة كل 30 ثانية."></span>
+            <div class="chips"><i data-fr="Humidité" data-ar="الرطوبة"></i><i data-fr="Température" data-ar="الحرارة"></i><i>pH</i><i>N · P · K</i><i data-fr="Pluie" data-ar="المطر"></i></div></div>
+        </div>
+        <!-- 5 : animation de l'eau -->
+        <div class="sc sc-anim sc-tank" data-d="7">
+          <div class="mini-tank"><div class="mt-water"><svg viewBox="0 0 200 20" preserveAspectRatio="none"><path d="M0 10 Q 25 0 50 10 T 100 10 T 150 10 T 200 10 V 20 H 0 Z"/></svg></div><div class="mt-line"><span data-fr="Arroser sous 32 %" data-ar="اسقِ تحت 32 %"></span></div></div>
+          <div class="cap side"><span data-fr="Le sol est sec ? La pompe s'ouvre, puis se ferme à l'objectif." data-ar="التربة جافة؟ تشتغل المضخة ثم تتوقف عند الهدف."></span><b class="counter"><em>12</em> % → <em>47</em> %</b></div>
+        </div>
+        <!-- 6 : pluie -->
+        <div class="sc sc-anim sc-rain" data-d="6">
+          <div class="rainfield"></div>
+          <svg class="cloud" viewBox="0 0 200 110"><path d="M50 95a40 40 0 0 1 4-79 52 52 0 0 1 96 12 34 34 0 0 1 0 67Z"/></svg>
+          <div class="cap"><span data-fr="Pluie annoncée ? Le système attend, et vous économisez l'eau." data-ar="مطر متوقع؟ ينتظر النظام وتوفر الماء."></span></div>
+        </div>
+        <!-- 7 -->
+        <div class="sc sc-photo" data-d="6">
+          <img src="https://images.unsplash.com/photo-1692481060581-98c224124f12?auto=format&fit=crop&w=1600&q=70" alt="">
+          <div class="cap"><span data-fr="Il repère les conditions des maladies avant les premières taches." data-ar="يرصد ظروف الأمراض قبل ظهور أول البقع."></span>
+            <div class="risk"><i style="--w:72%"></i><b data-fr="Mildiou 72 %" data-ar="البياض الزغبي 72 %"></b></div></div>
+        </div>
+        <!-- 8 : conseiller -->
+        <div class="sc sc-anim sc-chat" data-d="7">
+          <div class="phone">
+            <div class="ph-top" data-fr="الخبير الفلاحي · Conseiller" data-ar="الخبير الفلاحي"></div>
+            <p class="b q">هل يجب أن أسقي اليوم؟</p>
+            <p class="b a" data-fr="Pas encore : le sol est à 35 %, au-dessus du seuil. Aucune pluie annoncée." data-ar="ليس بعد: التربة عند 35 %، فوق العتبة. لا مطر متوقع."></p>
+            <div class="notif"><b>Sāqiya</b><span data-fr="💧 Arrosage automatique démarré — 7 min" data-ar="💧 بدأ السقي التلقائي — 7 دقائق"></span></div>
+          </div>
+          <div class="cap side"><span data-fr="Il répond en arabe, en darija ou en français. Et il vous prévient sur votre téléphone." data-ar="يجيب بالعربية أو الدارجة أو الفرنسية، وينبهك على هاتفك."></span></div>
+        </div>
+        <!-- 9 : fin -->
+        <div class="sc sc-end" data-d="6">
+          <svg class="logo" viewBox="0 0 32 32"><circle cx="16" cy="16" r="15"/><path class="d" d="M16 7s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/><path d="M16 24v-7m0 3-3-2.5"/></svg>
+          <h3>Sāqiya <span lang="ar">الساقية</span></h3>
+          <p data-fr="Startup algérienne de l'irrigation intelligente." data-ar="شركة ناشئة جزائرية للسقي الذكي."></p>
+          <span class="flag" aria-hidden="true">🇩🇿</span>
+        </div>
+      </div>
+
+      <button class="big-play" id="big-play" aria-label="Lire la vidéo"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="ctrl">
+        <button id="v-play" aria-label="Lecture / pause"><svg viewBox="0 0 24 24" class="i-play"><path d="M8 5v14l11-7z"/></svg><svg viewBox="0 0 24 24" class="i-pause"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg></button>
+        <div class="track" id="v-track"><div class="fill" id="v-fill"></div><div class="ticks" id="v-ticks"></div></div>
+        <span class="time" id="v-time">0:00</span>
+        <button id="v-lang" class="txt" aria-label="Langue des sous-titres">ع</button>
+        <button id="v-full" aria-label="Plein écran"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LE CONSTAT ============ -->
+  <section class="constat" id="constat">
+    <div class="constat-photo reveal">
+      <img src="https://images.unsplash.com/photo-1771684512143-88bdb34782fa?auto=format&fit=crop&w=1200&q=75" alt="Asperseurs arrosant un champ en plein jour" loading="lazy">
+    </div>
+    <div class="constat-text">
+      <p class="kicker">Le constat</p>
+      <h2>L'eau est la première ressource de la ferme, et la plus mal mesurée.</h2>
+      <div class="big-stat reveal">
+        <span class="num" data-count="70">0</span><span class="pct">%</span>
+        <p>des prélèvements d'eau douce dans le monde vont à l'agriculture.<cite>FAO, AQUASTAT</cite></p>
+      </div>
+      <p>Dans la plupart des exploitations, on arrose encore à l'heure fixe ou « au jugé » : trop après une nuit de
+        pluie, pas assez pendant un coup de chaleur. L'excès d'eau abîme les racines et favorise les champignons ;
+        le manque fait chuter le rendement. Personne n'a le temps de vérifier le sol trois fois par jour.
+        Un capteur, si.</p>
+    </div>
+  </section>
+
+  <!-- ============ FONCTIONNEMENT ============ -->
+  <section class="steps" id="fonctionnement">
+    <header class="sec-head">
+      <p class="kicker">Fonctionnement</p>
+      <h2>Mesurer, décider, agir.<br><span lang="ar">قياس، قرار، تنفيذ</span></h2>
+    </header>
+    <ol class="step-list">
+      <li class="reveal">
+        <figure><img src="https://images.unsplash.com/photo-1590682680695-43b964a3ae17?auto=format&fit=crop&w=900&h=700&q=75" alt="Mains plantant un jeune plant dans une terre sombre" loading="lazy"></figure>
+        <span class="n">01</span>
+        <h3>Mesurer</h3>
+        <p>Toutes les 30 secondes, le boîtier relève l'humidité et la température du sol, le pH, la salinité,
+          l'azote, le phosphore et le potassium, la température et l'humidité de l'air, et la pluie.</p>
+      </li>
+      <li class="reveal">
+        <figure><img src="https://images.unsplash.com/photo-1640677117376-573b9dbb8ea8?auto=format&fit=crop&w=900&h=700&q=75" alt="Rangée de jeunes plants dans un sol travaillé" loading="lazy"></figure>
+        <span class="n">02</span>
+        <h3>Décider</h3>
+        <p>Le serveur compare ces mesures aux besoins de la culture et au type de sol, consulte les prévisions de pluie
+          des 12 prochaines heures, puis calcule s'il faut arroser, et combien de temps.</p>
+      </li>
+      <li class="reveal">
+        <figure><img src="https://images.unsplash.com/photo-1738598665806-7ecc32c3594c?auto=format&fit=crop&w=900&h=700&q=75" alt="Tuyau d'irrigation posé entre les plants" loading="lazy"></figure>
+        <span class="n">03</span>
+        <h3>Agir</h3>
+        <p>Le relais ouvre la pompe pour la durée calculée, puis la referme dès que l'humidité cible est atteinte.
+          Après chaque arrosage, le système apprend la réponse réelle de la parcelle et ajuste la suivante.</p>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ============ FONCTIONS ============ -->
+  <section class="features" id="fonctions">
+    <article class="feat reveal">
+      <figure><img src="https://images.unsplash.com/photo-1524486361537-8ad15938e1a3?auto=format&fit=crop&w=1200&q=75" alt="Rangs de tomates dans une serre vitrée" loading="lazy"></figure>
+      <div class="feat-text">
+        <p class="kicker">01 · Irrigation automatique <span lang="ar">الري الأوتوماتيكي</span></p>
+        <h2>La pompe s'ouvre quand le sol passe sous le seuil, et seulement s'il ne va pas pleuvoir.</h2>
+        <p>Le seuil dépend du sol (sableux, limoneux, argileux) et de la culture : un olivier supporte un sol plus sec
+          qu'une fraise. Si plus de 3 mm de pluie sont annoncés, l'arrosage attend.</p>
+        <div class="rule" aria-label="Exemple de règle de décision">
+          <span>humidité <b>26 %</b> &lt; seuil <b>32 %</b></span>
+          <span>pluie prévue <b>0 mm</b></span>
+          <span class="go">→ 7 min de pompe</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="feat flip reveal">
+      <figure><img src="https://images.unsplash.com/photo-1692481060581-98c224124f12?auto=format&fit=crop&w=1200&q=75" alt="Gros plan d'une feuille tachée de brun" loading="lazy"></figure>
+      <div class="feat-text">
+        <p class="kicker">02 · Prévention des maladies <span lang="ar">التنبؤ بالأمراض</span></p>
+        <h2>Les champignons ont besoin de conditions précises. Le système les voit arriver.</h2>
+        <p>Mildiou, oïdium, pourriture grise, rouille, pourriture des racines : chacune apparaît avec une combinaison
+          d'humidité, de température et d'heures de feuillage mouillé. Un modèle statistique estime le risque
+          chaque minute et prévient l'agriculteur avant les premiers symptômes.</p>
+        <ul class="risk-demo">
+          <li><span>Mildiou</span><i style="--w:72%" class="hi"></i><b>72 %</b></li>
+          <li><span>Oïdium</span><i style="--w:31%"></i><b>31 %</b></li>
+          <li><span>Botrytis</span><i style="--w:12%"></i><b>12 %</b></li>
+        </ul>
+        <p class="fine">Exemple d'affichage. Les valeurs réelles sont dans le tableau de bord.</p>
+      </div>
+    </article>
+
+    <article class="feat reveal">
+      <figure><img src="https://images.unsplash.com/photo-1791395275735-82660050e797?auto=format&fit=crop&w=1200&q=75" alt="Agricultrice sur un tracteur au lever du soleil" loading="lazy"></figure>
+      <div class="feat-text">
+        <p class="kicker">03 · Le conseiller <span lang="ar">الخبير الفلاحي</span></p>
+        <h2>Une question, dans sa langue. Une réponse qui connaît la parcelle.</h2>
+        <p>Le conseiller lit les mesures en direct et une base de connaissances sur les cultures, les maladies et les
+          engrais. Il répond simplement, avec des chiffres du champ.</p>
+        <div class="chat-demo" dir="auto">
+          <p class="q" lang="ar">هل يجب أن أسقي اليوم؟</p>
+          <p class="a">Pas tout de suite : le sol est à 35 %, au-dessus du seuil de 32 %, et aucune pluie n'est annoncée.
+            Le prochain arrosage est estimé dans environ 3 heures.</p>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============ CULTURES ============ -->
+  <section class="crops">
+    <header class="sec-head">
+      <p class="kicker">Cultures prises en charge</p>
+      <h2>Huit cultures de nos régions, de la Mitidja aux Hauts Plateaux, chacune avec ses seuils.</h2>
+    </header>
+    <div class="crop-strip">
+      <figure class="reveal"><img src="https://images.unsplash.com/photo-1758552219061-5148ccb5bc5d?auto=format&fit=crop&w=700&h=900&q=75" alt="Tomates mûres sur pied" loading="lazy"><figcaption>Tomate <span lang="ar">طماطم</span></figcaption></figure>
+      <figure class="reveal"><img src="https://images.unsplash.com/photo-1785440944109-4021897d9e13?auto=format&fit=crop&w=700&h=900&q=75" alt="Oliveraie avec un mur de pierre" loading="lazy"><figcaption>Olivier <span lang="ar">زيتون</span></figcaption></figure>
+      <figure class="reveal"><img src="https://images.unsplash.com/photo-1647432460909-153f77f1630f?auto=format&fit=crop&w=700&h=900&q=75" alt="Champ de blé au coucher du soleil" loading="lazy"><figcaption>Blé <span lang="ar">قمح</span></figcaption></figure>
+      <figure class="reveal"><img src="https://images.unsplash.com/photo-1748432171507-c1d62fe2e859?auto=format&fit=crop&w=700&h=900&q=75" alt="Planche de légumes irriguée" loading="lazy"><figcaption>Maraîchage <span lang="ar">خضروات</span></figcaption></figure>
+    </div>
+    <p class="crop-list">Tomate · Pomme de terre · Blé · Olivier · Agrumes · Poivron · Fraise · Vigne</p>
+  </section>
+
+  <!-- ============ LE BOÎTIER ============ -->
+  <section class="device" id="boitier">
+    <div class="device-text">
+      <p class="kicker">Le boîtier</p>
+      <h2>Des composants courants, un code ouvert.</h2>
+      <p>Le boîtier repose sur une carte ESP32 avec WiFi. Les capteurs se trouvent chez n'importe quel revendeur
+        d'électronique, et le programme est fourni. S'il perd la connexion, la pompe se coupe d'elle-même à la fin de
+        la durée prévue : jamais d'arrosage sans limite.</p>
+      <table class="spec">
+        <tbody>
+          <tr><th>Humidité du sol</th><td>capteur capacitif v1.2</td></tr>
+          <tr><th>Température du sol</th><td>sonde étanche DS18B20</td></tr>
+          <tr><th>Air</th><td>DHT22, température et humidité</td></tr>
+          <tr><th>pH et salinité</th><td>sondes analogiques pH et EC</td></tr>
+          <tr><th>N · P · K</th><td>capteur RS485 Modbus</td></tr>
+          <tr><th>Pluie</th><td>module de détection YL-83</td></tr>
+          <tr><th>Pompe</th><td>relais 5 V, pompe ou électrovanne</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <figure class="device-photo reveal">
+      <img src="https://images.unsplash.com/photo-1599508266124-804fc6eecf09?auto=format&fit=crop&w=1100&q=75" alt="Cartes électroniques posées sur un fond bleu" loading="lazy">
+    </figure>
+  </section>
+
+  <!-- ============ TABLEAU DE BORD ============ -->
+  <section class="preview">
+    <header class="sec-head">
+      <p class="kicker">Le tableau de bord</p>
+      <h2>Ce n'est pas une maquette. C'est la parcelle, maintenant.</h2>
+      <p>Jauge d'humidité, scène animée, analyses sur 7 jours, photos, conseiller : tout est accessible depuis un
+        ordinateur ou un téléphone.</p>
+    </header>
+    <div class="frame reveal">
+      <div class="frame-bar"><i></i><i></i><i></i><span>localhost:8000/app</span></div>
+      <div class="frame-body"><iframe src="/app/" title="Tableau de bord en direct" loading="lazy" tabindex="-1"></iframe></div>
+      <a class="frame-link" href="/app/">Ouvrir en plein écran</a>
+    </div>
+  </section>
+
+  <!-- ============ QUESTIONS ============ -->
+  <section class="faq" id="questions">
+    <header class="sec-head">
+      <p class="kicker">Questions</p>
+      <h2>Ce qu'on nous demande le plus souvent.</h2>
+    </header>
+    <div class="faq-list">
+      <details><summary>Qui est derrière Sāqiya ?</summary>
+        <p>Une startup algérienne de l'agriculture intelligente. Le boîtier, le serveur et le tableau de bord sont conçus et
+          développés en Algérie, pour les cultures, le climat et les agriculteurs d'ici, en arabe, en darija et en français.</p></details>
+      <details><summary>Faut-il une connexion Internet ?</summary>
+        <p>Le boîtier a besoin du WiFi pour joindre le serveur, qui peut tourner sur un simple ordinateur de la ferme.
+          Internet sert seulement aux prévisions météo et au conseiller complet. Sans Internet, l'irrigation continue
+          avec le capteur de pluie, et le conseiller donne des réponses de base.</p></details>
+      <details><summary>Et si le serveur s'arrête pendant un arrosage ?</summary>
+        <p>Le boîtier connaît la durée prévue et coupe la pompe lui-même à l'échéance. Au redémarrage, le serveur
+          clôt proprement l'arrosage interrompu dans le journal.</p></details>
+      <details><summary>Peut-on arroser à la main ?</summary>
+        <p>Oui. Le mode manuel suspend les décisions automatiques ; un bouton lance un arrosage de 1 à 15 minutes.</p></details>
+      <details><summary>Comment la prédiction des maladies est-elle construite ?</summary>
+        <p>Par un classifieur bayésien entraîné sur les conditions connues de chaque maladie. Le jeu de données fourni est
+          synthétique : il est conçu pour être remplacé par les observations réelles de l'exploitation.</p></details>
+      <details><summary>Dans quelles langues fonctionne le conseiller ?</summary>
+        <p>Arabe standard, darija et français. Il répond dans la langue de la question.</p></details>
+    </div>
+  </section>
+
+  <!-- ============ APPEL FINAL ============ -->
+  <section class="final">
+    <img src="https://images.unsplash.com/photo-1647432460909-153f77f1630f?auto=format&fit=crop&w=2000&q=70" alt="" loading="lazy">
+    <div class="final-text reveal">
+      <h2>La parcelle de démonstration tourne en ce moment.</h2>
+      <a class="btn btn-light" href="/app/">Ouvrir le tableau de bord</a>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div>
+    <b>Sāqiya <span lang="ar">الساقية</span></b>
+    <p>Startup algérienne de l'irrigation intelligente : IoT, prévision des maladies et conseiller agricole. Conçu et développé en Algérie 🇩🇿</p>
+  </div>
+  <div class="credits">
+    <b>Photographies</b>
+    <p>Unsplash, licence Unsplash :
+      <a href="https://unsplash.com/photos/3f7AWW0YWAA">goutte-à-goutte</a>,
+      <a href="https://unsplash.com/photos/yCOmQ65e5xY">asperseurs</a>,
+      <a href="https://unsplash.com/photos/bYZn_C-RswQ">plantation</a>,
+      <a href="https://unsplash.com/photos/tlRkBCY9vsI">jeunes plants</a>,
+      <a href="https://unsplash.com/photos/8rjUDamgljI">tuyau</a>,
+      <a href="https://unsplash.com/photos/1q75BReKpms">serre</a>,
+      <a href="https://unsplash.com/photos/Re5rjFVkhfU">feuille</a>,
+      <a href="https://unsplash.com/photos/RavdjkRrDhs">tracteur</a>,
+      <a href="https://unsplash.com/photos/hQXXWiG68YQ">tomates</a>,
+      <a href="https://unsplash.com/photos/k_tUO1kGvxc">oliveraie</a>,
+      <a href="https://unsplash.com/photos/AtC1boy0w_I">blé</a>,
+      <a href="https://unsplash.com/photos/VNfiAyRoKv4">électronique</a>.
+    </p>
+  </div>
+  <a class="to-top" href="#top">Haut de page ↑</a>
+</footer>
+
+<script src="site.js"></script>
+<script src="video.js"></script>
+</body>
+</html>

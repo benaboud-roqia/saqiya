@@ -1,0 +1,51 @@
+/* Sāqiya — utilisateur connecté et gestion des comptes */
+.me { display: flex; align-items: center; gap: 10px; padding: 12px 10px 4px; margin-top: 8px; border-top: 1px solid rgba(255, 255, 255, .1); }
+.me-av { width: 34px; height: 34px; border-radius: 50%; flex: none; display: grid; place-items: center; object-fit: cover;
+  background: var(--lime, #b5e05b); color: #0e1a14; font-weight: 800; }
+.me div { min-width: 0; flex: 1; }
+.me b { display: block; color: #fff; font-size: .86rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.me div span { font-size: .74rem; color: #8fbfa5; }
+.me-out { width: 34px; height: 34px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, .15); background: rgba(255, 255, 255, .06); color: #cfe3d7; display: grid; place-items: center; cursor: pointer; flex: none; }
+.me-out:hover { background: rgba(223, 100, 56, .3); color: #fff; }
+.me-out svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+html[dir="rtl"] .me-out svg { transform: scaleX(-1); }
+
+.nav[data-badge]:not([data-badge=""])::after { content: attr(data-badge); margin-inline-start: auto; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px;
+  background: var(--clay); color: #fff; font: 800 .72rem var(--sans); display: grid; place-items: center; animation: pop .4s both; }
+
+.acc { margin-bottom: 16px; }
+.acc .st-ic svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+.acc-list { list-style: none; margin: 0 0 14px; padding: 0; display: grid; gap: 8px; }
+.acc-list li { display: grid; grid-template-columns: auto 1fr auto auto; gap: 12px; align-items: center; padding: 12px 14px; border-radius: 16px; background: var(--paper); animation: chip .4s both; }
+.acc-list li.pending { background: var(--ochre-soft); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--ochre) 40%, transparent); }
+.acc-av { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; object-fit: cover; background: var(--olive); color: #fff; font-weight: 800; }
+.acc-who { min-width: 0; }
+.acc-who b { display: block; }
+.acc-who small { color: var(--ink-3); font-size: .8rem; overflow-wrap: anywhere; }
+.acc-tag { font: 700 .75rem var(--sans); padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+.acc-tag.owner { background: var(--forest, var(--olive)); color: #fff; }
+.acc-tag.ok { background: var(--olive-soft); color: var(--olive); }
+.acc-tag.wait { background: var(--ochre); color: #fff; animation: blink 1.6s infinite; }
+.acc-act { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.acc-act .btn { height: 36px; padding: 0 14px; font-size: .85rem; }
+.acc-google { border-top: 1px solid var(--rule); padding-top: 12px; }
+.acc-google summary { cursor: pointer; font-weight: 700; color: var(--ink-2); }
+.acc-google ol { color: var(--ink-2); font-size: .9rem; line-height: 1.6; padding-inline-start: 20px; }
+.acc-google code { font: .85em var(--mono); background: var(--paper); padding: 1px 6px; border-radius: 5px; }
+.acc-gid { display: flex; gap: 8px; flex-wrap: wrap; }
+.acc-gid input { flex: 1; min-width: 220px; height: 42px; border: 1px solid var(--rule-2); border-radius: 12px; padding: 0 12px; background: var(--paper); font: .9rem var(--mono); color: var(--ink); }
+
+@media (max-width: 760px) {
+  .me { display: none; }
+  .acc-list li { grid-template-columns: auto 1fr; }
+  .acc-tag, .acc-act { grid-column: 2; justify-self: start; }
+}
+
+/* connexion Gmail : état et étapes */
+.acc-gstate { display: flex; align-items: center; gap: 8px; margin: 10px 0; padding: 10px 12px; border-radius: 8px; font-weight: 600; font-size: .9rem; }
+.acc-gstate i { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+.acc-gstate.on { background: rgba(48, 164, 108, .14); color: #30a46c; } .acc-gstate.on i { background: #30a46c; }
+.acc-gstate.off { background: rgba(245, 165, 36, .14); color: #c98500; } .acc-gstate.off i { background: #f5a524; }
+.acc-gsteps { display: grid; gap: 8px; padding-inline-start: 22px; }
+.acc-gsteps li { line-height: 1.5; }
+.acc-gsteps code { font-size: .85em; }

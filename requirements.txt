@@ -1,0 +1,4 @@
+# Le serveur fonctionne avec la seule bibliothèque standard Python (3.10+).
+# Paquets optionnels :
+pyserial      # lecture du boîtier ESP32 branché en USB (programme du capteur 7-en-1)
+anthropic     # seulement si vous utilisez Claude au lieu de Groq pour l'IA

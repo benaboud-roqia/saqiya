@@ -1,0 +1,28 @@
+# Secrets : clés Groq / Google (utiliser .env.example comme modèle)
+.env
+.env.*
+!.env.example
+
+# Données réelles de la parcelle : comptes, sessions, mesures, clé du boîtier, photos, sauvegardes
+data/*.db
+data/*.db-journal
+data/*.db-wal
+data/*.db-shm
+data/photos/
+data/sauvegardes/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Système / éditeurs
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Arduino
+firmware/**/build/

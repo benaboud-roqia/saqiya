@@ -1,0 +1,113 @@
+{
+  "soil_types": {
+    "sableux":         {"label": "Sableux (رملية)",            "threshold": 20, "target": 32},
+    "limoneux":        {"label": "Limoneux (طميية)",           "threshold": 30, "target": 45},
+    "limono_argileux": {"label": "Limono-argileux (طينية طميية)", "threshold": 34, "target": 50},
+    "argileux":        {"label": "Argileux (طينية)",           "threshold": 38, "target": 55}
+  },
+
+  "crops": {
+    "tomate": {
+      "label": "Tomate (طماطم)", "moisture_offset": 2, "ph": [6.0, 7.0], "ec_max": 2.5,
+      "diseases": ["mildiou", "oidium", "botrytis", "pourriture_racinaire"],
+      "needs": "Besoins élevés en K pendant la fructification, N modéré. Arrosage régulier pour éviter la nécrose apicale."
+    },
+    "pomme_de_terre": {
+      "label": "Pomme de terre (بطاطا)", "moisture_offset": 3, "ph": [5.2, 6.5], "ec_max": 1.7,
+      "diseases": ["mildiou", "pourriture_racinaire"],
+      "needs": "Besoins élevés en K et P à la tubérisation. Sensible à l'excès d'eau."
+    },
+    "ble": {
+      "label": "Blé (قمح)", "moisture_offset": -3, "ph": [6.0, 7.5], "ec_max": 6.0,
+      "diseases": ["rouille", "oidium"],
+      "needs": "Besoins forts en N au tallage et à la montaison, P au semis."
+    },
+    "olivier": {
+      "label": "Olivier (زيتون)", "moisture_offset": -8, "ph": [6.5, 8.5], "ec_max": 4.0,
+      "diseases": ["pourriture_racinaire"],
+      "needs": "Tolère la sécheresse. K et N modérés, apport de bore utile à la floraison."
+    },
+    "agrumes": {
+      "label": "Agrumes (حمضيات)", "moisture_offset": 0, "ph": [6.0, 7.5], "ec_max": 1.7,
+      "diseases": ["pourriture_racinaire", "oidium"],
+      "needs": "N régulier, sensible aux carences en fer et zinc (chlorose) en sol calcaire."
+    },
+    "poivron": {
+      "label": "Poivron / Piment (فلفل)", "moisture_offset": 2, "ph": [6.0, 7.0], "ec_max": 1.5,
+      "diseases": ["oidium", "botrytis", "pourriture_racinaire"],
+      "needs": "Besoins réguliers en K et Ca. Sensible à la salinité."
+    },
+    "fraise": {
+      "label": "Fraise (فراولة)", "moisture_offset": 5, "ph": [5.5, 6.5], "ec_max": 1.0,
+      "diseases": ["botrytis", "oidium", "pourriture_racinaire"],
+      "needs": "Très sensible au sel. K important pour la qualité des fruits."
+    },
+    "vigne": {
+      "label": "Vigne (كروم)", "moisture_offset": -5, "ph": [6.0, 7.5], "ec_max": 1.5,
+      "diseases": ["mildiou", "oidium", "botrytis"],
+      "needs": "K modéré, éviter l'excès de N (favorise les maladies)."
+    }
+  },
+
+  "diseases": {
+    "mildiou": {
+      "label": "Mildiou (البياض الزغبي / اللفحة المتأخرة)",
+      "conditions": "Humidité de l'air > 90 %, températures douces 10–25 °C, feuillage mouillé plus de 10 h.",
+      "symptoms": "Taches huileuses brun-vert sur les feuilles, duvet blanc au revers, brunissement rapide.",
+      "prevention": "Aérer la culture, irriguer au goutte-à-goutte et le matin, éviter de mouiller le feuillage, éliminer les plants atteints.",
+      "treatment": "Traitement préventif à base de cuivre (bouillie bordelaise) ou fongicide homologué, en respectant l'étiquette et le délai avant récolte."
+    },
+    "oidium": {
+      "label": "Oïdium (البياض الدقيقي)",
+      "conditions": "Températures 20–30 °C, humidité moyenne 50–75 %, temps sec le jour avec nuits humides.",
+      "symptoms": "Feutrage blanc poudreux sur les feuilles, jaunissement puis dessèchement.",
+      "prevention": "Espacer les plants, éviter l'excès d'azote, supprimer les feuilles atteintes.",
+      "treatment": "Soufre (mouillable ou poudrage) ou bicarbonate de potassium ; fongicide homologué si nécessaire."
+    },
+    "botrytis": {
+      "label": "Pourriture grise / Botrytis (العفن الرمادي)",
+      "conditions": "Humidité très élevée > 92 %, 15–25 °C, longues périodes d'humectation, mauvaise aération.",
+      "symptoms": "Pourriture molle couverte d'un feutrage gris sur fruits, fleurs et tiges.",
+      "prevention": "Ventiler les serres, réduire l'humidité, éviter les blessures, retirer les débris végétaux.",
+      "treatment": "Retirer les organes atteints, fongicide anti-botrytis homologué, produits biologiques à base de Bacillus."
+    },
+    "rouille": {
+      "label": "Rouille (الصدأ)",
+      "conditions": "15–24 °C, humidité 85–95 %, rosée nocturne de 6 à 10 h.",
+      "symptoms": "Pustules orange-brun sur les feuilles et les tiges.",
+      "prevention": "Variétés résistantes, rotation des cultures, éviter l'excès d'azote.",
+      "treatment": "Fongicide homologué (triazoles) dès les premières pustules, selon les seuils du technicien."
+    },
+    "pourriture_racinaire": {
+      "label": "Pourriture des racines / Asphyxie (تعفن الجذور)",
+      "conditions": "Sol saturé en eau de façon prolongée, température du sol 20–30 °C, mauvais drainage.",
+      "symptoms": "Flétrissement malgré un sol humide, jaunissement, racines brunes et molles.",
+      "prevention": "Réduire l'irrigation, améliorer le drainage, éviter l'eau stagnante.",
+      "treatment": "Laisser ressuyer le sol, arracher les plants très atteints, traitement biologique (Trichoderma)."
+    }
+  },
+
+  "nutrients": {
+    "N": {"low": 20, "high": 60, "unit": "mg/kg",
+          "role": "Croissance des feuilles",
+          "fertilizer_low": "Urée 46 % ou ammonitrate 33,5 %, fractionné en 2–3 apports ; ou compost / fumier bien décomposé.",
+          "excess": "Excès d'azote : feuillage trop dense, sensibilité accrue aux maladies. Suspendre les apports azotés."},
+    "P": {"low": 15, "high": 50, "unit": "mg/kg",
+          "role": "Développement des racines et floraison",
+          "fertilizer_low": "Superphosphate triple (TSP 45 %) ou DAP 18-46-0 au plus près des racines.",
+          "excess": "Excès de phosphore : peut bloquer le zinc et le fer."},
+    "K": {"low": 120, "high": 300, "unit": "mg/kg",
+          "role": "Résistance aux maladies et aux stress, qualité des fruits",
+          "fertilizer_low": "Sulfate de potasse (K2SO4 50 %) — préférable au chlorure en sol salé ; nitrate de potasse en fertigation.",
+          "excess": "Excès de potassium : peut induire une carence en magnésium."}
+  },
+
+  "yellow_leaves": [
+    "Carence en azote (N) : jaunissement des vieilles feuilles du bas.",
+    "Excès d'eau / asphyxie racinaire : jaunissement général avec sol constamment humide.",
+    "Chlorose ferrique : jaunissement entre les nervures des jeunes feuilles, fréquent quand le pH > 7,5.",
+    "Carence en magnésium : jaunissement entre les nervures des vieilles feuilles.",
+    "Salinité élevée (EC) : bord des feuilles jaune puis brûlé.",
+    "Maladie (mildiou, oïdium, rouille) : taches localisées plutôt que jaunissement uniforme."
+  ]
+}

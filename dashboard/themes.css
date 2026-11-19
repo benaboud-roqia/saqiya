@@ -1,0 +1,80 @@
+/* Sāqiya — thèmes.
+   Sans attribut data-theme : thème « Carnet » qui suit le mode clair/sombre de l'appareil.
+   data-theme="carnet" force le clair, "nuit" le sombre, "oasis" et "desert" sont des ambiances. */
+
+:root[data-theme="nuit"] {
+  --paper: #161813; --paper-2: #1c1f19; --sheet: #1f231c;
+  --ink: #ece8dc; --ink-2: #bdb9ad; --ink-3: #868a7e;
+  --rule: #2e3329; --rule-2: #3a4034;
+  --olive: #9bb86a; --olive-soft: #283120;
+  --clay: #e08559; --clay-soft: #3a2519;
+  --ochre: #dcb158; --ochre-soft: #352c17;
+  --water: #6fb2d2; --water-soft: #1b2d35;
+  --pump-band: rgba(111, 178, 210, .10);
+  color-scheme: dark;
+}
+
+:root[data-theme="oasis"] {
+  --paper: #ecf3f0; --paper-2: #dfeae6; --sheet: #fafdfc;
+  --ink: #0f2f2b; --ink-2: #3b5a55; --ink-3: #7d9691;
+  --rule: #d0e0db; --rule-2: #bad0c9;
+  --olive: #1d7a68; --olive-soft: #d3ebe4;
+  --clay: #c4643c; --clay-soft: #f6e0d5;
+  --ochre: #c2962a; --ochre-soft: #f3e9cf;
+  --water: #1c6da3; --water-soft: #d4e6f2;
+  --pump-band: rgba(28, 109, 163, .10);
+  --serif: "Fraunces", Georgia, serif;
+  color-scheme: light;
+}
+:root[data-theme="oasis"] .rail { background: #0f3b35; border-color: #0f3b35; }
+:root[data-theme="oasis"] .rail .nav, :root[data-theme="oasis"] .rail .device span { color: #a9cfc6; }
+:root[data-theme="oasis"] .rail .nav:hover { background: #164a43; color: #fff; }
+:root[data-theme="oasis"] .rail .nav.active { background: #1d5a51; color: #fff; box-shadow: none; }
+:root[data-theme="oasis"] .rail .nav.active svg { stroke: #7fe0c8; }
+:root[data-theme="oasis"] .rail .mark b, :root[data-theme="oasis"] .rail .device b { color: #f2fbf8; }
+:root[data-theme="oasis"] .rail .mark svg { stroke: #f2fbf8; }
+:root[data-theme="oasis"] .rail .mark span { color: #7fb5a9; }
+:root[data-theme="oasis"] .rail .device { border-color: #1d5a51; }
+:root[data-theme="oasis"] .theme-dots { border-color: #1d5a51; }
+:root[data-theme="oasis"] .theme-dots span { color: #7fb5a9; }
+
+:root[data-theme="desert"] {
+  --paper: #f3e8d4; --paper-2: #eadbbf; --sheet: #fcf6ea;
+  --ink: #3a2315; --ink-2: #6b4931; --ink-3: #a3876e;
+  --rule: #e4d3b4; --rule-2: #d4bd95;
+  --olive: #75762a; --olive-soft: #ebe8cc;
+  --clay: #b5401b; --clay-soft: #f5d8c6;
+  --ochre: #c4850f; --ochre-soft: #f5e4bd;
+  --water: #1a6b7c; --water-soft: #d2e6e8;
+  --pump-band: rgba(26, 107, 124, .10);
+  color-scheme: light;
+}
+:root[data-theme="desert"] .masthead h1 { font-weight: 500; }
+:root[data-theme="desert"] .panel, :root[data-theme="desert"] .kpi { border-radius: 2px; }
+
+/* ---------------- sélecteur ---------------- */
+.theme-picker { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.theme-card { border: 1.5px solid var(--rule); border-radius: var(--r); background: var(--sheet); padding: 0; overflow: hidden; text-align: start; transition: border-color .2s, transform .2s; }
+.theme-card:hover { transform: translateY(-2px); border-color: var(--ink-3); }
+.theme-card[aria-checked="true"] { border-color: var(--ink); box-shadow: 0 0 0 2px var(--sheet), 0 0 0 3.5px var(--ink); }
+.theme-card .pv { height: 74px; display: grid; grid-template-columns: 26% 1fr; }
+.theme-card .pv .side { background: var(--pv-rail); }
+.theme-card .pv .body { background: var(--pv-paper); padding: 10px; display: flex; flex-direction: column; gap: 6px; }
+.theme-card .pv .ln { height: 6px; border-radius: 3px; background: var(--pv-ink); width: 60%; }
+.theme-card .pv .sw { display: flex; gap: 5px; margin-top: auto; }
+.theme-card .pv .sw i { width: 16px; height: 16px; border-radius: 50%; }
+.theme-card .pv.auto { grid-template-columns: 1fr 1fr; }
+.theme-card .pv.auto > div { display: grid; place-items: center; }
+.theme-card b { display: block; padding: 9px 12px 0; font-weight: 600; font-size: .92rem; }
+.theme-card small { display: block; padding: 0 12px 10px; color: var(--ink-3); font-size: .78rem; }
+
+.theme-dots { margin-top: auto; display: flex; align-items: center; gap: 7px; padding: 12px 10px 0; border-top: 1px solid var(--rule); }
+.theme-dots span { font-size: .75rem; color: var(--ink-3); margin-inline-end: auto; }
+.theme-dots button { width: 18px; height: 18px; border-radius: 50%; border: 0; padding: 0; background: var(--c); box-shadow: inset 0 0 0 1px rgba(0,0,0,.15); transition: transform .15s; }
+.theme-dots button:hover { transform: scale(1.15); }
+.theme-dots button[aria-checked="true"] { box-shadow: 0 0 0 2px var(--paper-2), 0 0 0 3.5px var(--ink); }
+.rail .device { margin-top: 0; border-top: 0; padding-top: 4px; }
+@media (max-width: 760px) { .theme-dots { display: none; } }
+
+/* transition douce au changement de thème */
+html.theme-anim, html.theme-anim * { transition: background-color .45s ease, color .45s ease, border-color .45s ease, fill .45s ease, stroke .45s ease !important; }

@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sāqiya — Connexion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/auth/auth.css">
+  <script>
+    try { if (localStorage.getItem("saqiya-lang") === "ar") { document.documentElement.lang = "ar"; document.documentElement.dir = "rtl"; } } catch (e) {}
+  </script>
+</head>
+<body>
+<div class="au">
+  <!-- ===== photo et parcelle en direct ===== -->
+  <aside class="au-side">
+    <img class="au-photo" src="https://images.unsplash.com/photo-1524486361537-8ad15938e1a3?auto=format&fit=crop&w=1400&q=70" alt="">
+    <div class="au-side-in">
+      <a class="au-brand" href="/">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15"/><path class="d" d="M16 7s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/><path d="M16 24v-7m0 3-3-2.5"/></svg>
+        <span>Sāqiya <em lang="ar">الساقية</em></span>
+      </a>
+      <span class="au-badge"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/></svg><span data-t="badge"></span></span>
+      <div class="au-pitch">
+        <h1><span data-t="pitch"></span> <span class="hl" data-t="pitch_hl"></span></h1>
+        <p data-t="pitch_d"></p>
+      </div>
+      <ul class="au-feats">
+        <li><i><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></svg></i><div><b data-t="f1"></b><span data-t="f1d"></span></div></li>
+        <li><i><svg viewBox="0 0 24 24"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/></svg></i><div><b data-t="f2"></b><span data-t="f2d"></span></div></li>
+        <li><i><svg viewBox="0 0 24 24"><path d="M3 20h18M5 20c0-5 3-8 7-9M19 20c0-5-3-8-7-9M12 11V4"/></svg></i><div><b data-t="f3"></b><span data-t="f3d"></span></div></li>
+      </ul>
+      <div class="au-live" id="au-live" hidden>
+        <div><span data-t="live_soil"></span><b id="lv-soil">—</b></div>
+        <div><span data-t="live_air"></span><b id="lv-air">—</b></div>
+        <div><span data-t="live_pump"></span><b id="lv-pump">—</b></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===== formulaire ===== -->
+  <main class="au-main">
+    <div class="au-top">
+      <a href="/" class="au-back" data-t="back"></a>
+      <button class="au-lang" id="au-lang" type="button"></button>
+    </div>
+
+    <!-- connexion / inscription -->
+    <section class="au-card" id="v-form">
+      <h2 id="f-title"></h2>
+      <p class="au-sub" id="f-sub"></p>
+
+      <div class="au-tabs" role="tablist" id="tabs">
+        <button type="button" role="tab" data-tab="login" data-t="tab_login"></button>
+        <button type="button" role="tab" data-tab="register" data-t="tab_register"></button>
+        <i class="au-tab-ink"></i>
+      </div>
+
+      <div class="au-google">
+        <div id="g-btn"></div>
+        <button type="button" class="au-gfake" id="g-fake" hidden>
+          <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 38.2 44 33 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
+          <span data-t="google"></span>
+        </button>
+        <p class="au-note" id="g-note" hidden data-t="google_off"></p>
+      </div>
+
+      <div class="au-or"><span data-t="or"></span></div>
+
+      <form id="f" novalidate>
+        <label class="au-field" id="fld-name"><span data-t="name"></span><input name="name" autocomplete="name" maxlength="60"></label>
+        <label class="au-field"><span data-t="email"></span><input name="email" type="email" autocomplete="email" dir="ltr" inputmode="email"></label>
+        <label class="au-field au-pw"><span data-t="password"></span>
+          <input name="password" type="password" autocomplete="current-password" dir="ltr">
+          <button type="button" class="au-eye" id="eye" aria-label="Afficher le mot de passe"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </label>
+        <div class="au-meter" id="meter" hidden><i></i><i></i><i></i><i></i><span id="meter-t"></span></div>
+        <p class="au-err" id="err" role="alert" hidden></p>
+        <button class="au-submit" type="submit" id="submit"><span id="submit-t"></span><i class="spin"></i></button>
+      </form>
+      <p class="au-foot" id="f-foot"></p>
+    </section>
+
+    <!-- compte en attente -->
+    <section class="au-card au-wait" id="v-wait" hidden>
+      <div class="au-seed" aria-hidden="true">
+        <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="56" class="ring"/><path class="stem" d="M60 92 V58"/><path class="leaf l1" d="M60 70 C 44 70 38 58 40 48 C 52 48 60 56 60 70Z"/><path class="leaf l2" d="M60 62 C 76 62 82 50 80 40 C 68 40 60 48 60 62Z"/><path class="soil" d="M30 94 Q 60 86 90 94"/></svg>
+      </div>
+      <h2 data-t="wait_title"></h2>
+      <p class="au-sub" data-t="wait_d"></p>
+      <div class="au-who" id="who"></div>
+      <p class="au-pulse"><i></i><span data-t="wait_check"></span></p>
+      <button type="button" class="au-link" id="logout" data-t="logout"></button>
+    </section>
+  </main>
+</div>
+<script src="/auth/auth.js"></script>
+</body>
+</html>

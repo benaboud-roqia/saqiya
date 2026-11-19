@@ -1,0 +1,75 @@
+/* Sāqiya — graphique « Capteur du sol » et page Boîtier (mesures en direct, USB / WiFi) */
+
+/* ---------- onglets des mesures ---------- */
+.sx-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.sx-tabs button {
+  display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 14px; border-radius: 999px;
+  border: 1px solid var(--rule-2); background: var(--paper); color: var(--ink-2); font: 700 .86rem var(--sans); cursor: pointer;
+  transition: background .2s, color .2s, border-color .2s, transform .2s;
+}
+.sx-tabs button:hover { transform: translateY(-1px); border-color: var(--olive); }
+.sx-tabs button i { width: 9px; height: 9px; border-radius: 50%; background: var(--c, var(--olive)); }
+.sx-tabs button b { font-variant-numeric: tabular-nums; color: var(--ink); }
+.sx-tabs button[aria-selected="true"] { background: var(--c, var(--olive)); border-color: transparent; color: #fff; }
+.sx-tabs button[aria-selected="true"] b { color: #fff; }
+.sx-tabs button[aria-selected="true"] i { background: #fff; }
+
+.sx-body { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 18px; align-items: stretch; }
+.sx-now { display: flex; flex-direction: column; justify-content: center; gap: 6px; padding: 18px; border-radius: 18px; background: var(--paper); }
+.sx-now .lbl { font-size: .8rem; font-weight: 700; color: var(--ink-3); }
+.sx-now .big { font: 800 2.6rem/1 var(--sans); letter-spacing: -.03em; color: var(--ink); font-variant-numeric: tabular-nums; }
+.sx-now .big small { font-size: .95rem; font-weight: 700; color: var(--ink-3); margin-inline-start: 4px; }
+.sx-now .verdict { align-self: flex-start; padding: 4px 10px; border-radius: 999px; font-weight: 800; font-size: .8rem; background: var(--olive-soft); color: var(--olive); }
+.sx-now .verdict.low { background: var(--ochre-soft); color: var(--ochre); }
+.sx-now .verdict.high { background: var(--clay-soft); color: var(--clay); }
+.sx-now .mm { font-size: .8rem; color: var(--ink-3); line-height: 1.5; }
+.sx-now .mm b { color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.sx-chart { height: 240px; }
+.sx-chart .zone { fill: color-mix(in srgb, var(--olive) 14%, transparent); }
+.sx-chart .zone-l { stroke: color-mix(in srgb, var(--olive) 55%, transparent); stroke-dasharray: 4 4; stroke-width: 1; }
+.sx-chart .area { opacity: .16; }
+.sx-chart .line { fill: none; stroke-width: 2.4; stroke-linejoin: round; stroke-linecap: round; }
+.sx-chart .now { stroke: var(--paper); stroke-width: 2.5; }
+@media (max-width: 760px) {
+  .sx-body { grid-template-columns: minmax(0, 1fr); }
+  .sx-now { flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: 10px; }
+}
+
+/* ---------- page Boîtier : liaison USB ---------- */
+.bx.usb .bx-waves, .bx.usb .bx-ant, .bx.usb .bx-ant-tip { display: none; }
+.bx.usb .bx-link { stroke-dasharray: none; stroke-width: 6; stroke: color-mix(in srgb, var(--st) 60%, var(--ink)); }
+.bx-usb-tag { display: none; }
+.bx.usb .bx-usb-tag { display: inline; }
+.bx-usb-tag rect { fill: var(--ink); }
+.bx-usb-tag text { fill: var(--paper); font: 800 13px var(--sans); }
+.bx-facts .bad { color: var(--clay); }
+.bx-facts .good { color: var(--olive); }
+
+/* choix USB / WiFi */
+.bx-mode { display: inline-flex; padding: 4px; border-radius: 999px; background: var(--sheet); box-shadow: var(--shadow); margin: 0 0 16px; }
+.bx-mode button { border: 0; background: none; padding: 9px 18px; border-radius: 999px; font: 700 .92rem var(--sans); color: var(--ink-2); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+.bx-mode button[aria-selected="true"] { background: var(--forest, var(--olive)); color: #fff; }
+.bx-mode svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.bx[data-link="usb"] [data-mode="wifi"], .bx[data-link="wifi"] [data-mode="usb"], .bx:not([data-link]) [data-mode="usb"] { display: none !important; }
+
+/* ---------- mesures en direct ---------- */
+.bx-live { margin: 0 0 30px; }
+.bx-live-h { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 6px 0 14px; }
+.bx-live-h h3 { margin: 0; }
+.bx-live-h small { color: var(--ink-3); font-weight: 600; display: inline-flex; align-items: center; gap: 8px; }
+.bx-live-h small::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--olive); animation: pulse 1.6s ease-in-out infinite; }
+.bx-live-h small.stale::before { background: var(--clay); animation: none; }
+.bx-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.bx-tile { position: relative; padding: 16px; border-radius: 18px; background: var(--sheet); box-shadow: var(--shadow); overflow: hidden; animation: chip .45s both; }
+.bx-tile::before { content: ""; position: absolute; inset-block: 0; inset-inline-start: 0; width: 4px; background: var(--c, var(--olive)); }
+.bx-tile .t { display: block; font-size: .82rem; font-weight: 700; color: var(--ink-3); }
+.bx-tile .v { display: block; margin: 6px 0 4px; font: 800 1.9rem/1 var(--sans); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.bx-tile .v small { font-size: .8rem; color: var(--ink-3); font-weight: 700; margin-inline-start: 3px; }
+.bx-tile .s { font-size: .78rem; font-weight: 800; color: var(--olive); }
+.bx-tile .s.low { color: var(--ochre); } .bx-tile .s.high { color: var(--clay); } .bx-tile .s.na { color: var(--ink-3); font-weight: 600; }
+.bx-tile.flash { animation: tileflash 1s ease; }
+@keyframes tileflash { 0% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--olive) 55%, transparent); } 100% { box-shadow: var(--shadow); } }
+@keyframes pulse { 50% { opacity: .3; transform: scale(.8); } }
+.bx-alert { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 16px; background: var(--clay-soft); color: var(--ink); margin: 0 0 16px; font-weight: 600; }
+.bx-alert b { color: var(--clay); }
+.bx-alert[hidden] { display: none !important; }

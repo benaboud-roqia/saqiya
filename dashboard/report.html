@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sāqiya — Rapport</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+  <script>try { if (localStorage.getItem("saqiya-lang") === "ar") { document.documentElement.lang = "ar"; document.documentElement.dir = "rtl"; } } catch (e) {}</script>
+  <style>
+    :root { --ink: #0e1a14; --ink-2: #4b5a52; --ink-3: #8b978f; --rule: #e1e7df; --paper: #f2f5f0; --forest: #0f3a2a; --olive: #1f7a4a; --water: #2a84c4; --clay: #df6438; --ochre: #e0a01c;
+      --sans: "Plus Jakarta Sans", "IBM Plex Sans Arabic", system-ui, sans-serif; }
+    html[lang="ar"] { --sans: "IBM Plex Sans Arabic", "Plus Jakarta Sans", system-ui, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #e9ede7; color: var(--ink); font: 14px/1.5 var(--sans); }
+    .bar { position: sticky; top: 0; z-index: 2; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 12px 20px; background: var(--forest); color: #fff; }
+    .bar a { color: #cfe3d7; text-decoration: none; font-weight: 600; margin-inline-end: auto; }
+    .bar label { display: flex; gap: 6px; align-items: center; font-size: .85rem; }
+    .bar input { height: 36px; border-radius: 10px; border: 0; padding: 0 10px; font: inherit; }
+    .bar button { height: 38px; padding: 0 18px; border-radius: 999px; border: 0; background: #b5e05b; color: #0e1a14; font-weight: 800; cursor: pointer; }
+    .page { width: min(210mm, 100%); margin: 20px auto 40px; background: #fff; padding: 16mm 15mm; box-shadow: 0 10px 40px -10px rgba(0,0,0,.25); }
+    header.r { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; border-bottom: 3px solid var(--forest); padding-bottom: 12px; margin-bottom: 16px; }
+    header.r h1 { margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -.02em; }
+    header.r p { margin: 2px 0 0; color: var(--ink-2); }
+    .brand { text-align: end; font-weight: 800; color: var(--forest); }
+    .brand small { display: block; font-weight: 500; color: var(--ink-3); }
+    h2 { font-size: 15px; margin: 18px 0 8px; font-weight: 800; color: var(--forest); }
+    .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .k { border: 1px solid var(--rule); border-radius: 10px; padding: 8px 10px; }
+    .k span { display: block; font-size: 11px; color: var(--ink-3); font-weight: 600; }
+    .k b { font-size: 19px; font-weight: 800; }
+    .k small { color: var(--ink-3); margin-inline-start: 3px; }
+    .k.money { background: #f4f9ef; border-color: #cfe5bd; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th, td { padding: 5px 6px; border-bottom: 1px solid var(--rule); text-align: start; }
+    th { color: var(--ink-3); font-weight: 700; font-size: 11px; }
+    td.n, th.n { text-align: end; font-variant-numeric: tabular-nums; }
+    tfoot td { font-weight: 800; border-top: 2px solid var(--ink); }
+    svg.chart { width: 100%; height: 170px; direction: ltr; }
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .note { color: var(--ink-2); font-size: 12px; }
+    ul.al { margin: 0; padding-inline-start: 18px; font-size: 12px; }
+    footer.r { margin-top: 18px; padding-top: 8px; border-top: 1px solid var(--rule); color: var(--ink-3); font-size: 11px; display: flex; justify-content: space-between; }
+    .empty { padding: 30px; text-align: center; color: var(--ink-3); }
+    @media print {
+      @page { size: A4; margin: 12mm; }
+      body { background: #fff; }
+      .bar { display: none; }
+      .page { box-shadow: none; margin: 0; padding: 0; width: auto; }
+      h2 { break-after: avoid; }
+      tr, .k { break-inside: avoid; }
+    }
+    @media (max-width: 700px) { .kpis { grid-template-columns: 1fr 1fr; } .two { grid-template-columns: 1fr; } .page { padding: 16px; } }
+  </style>
+</head>
+<body>
+  <div class="bar">
+    <a href="/app/">← Retour au tableau de bord</a>
+    <label>Du <input type="date" id="from"></label>
+    <label>au <input type="date" id="to"></label>
+    <button id="go" type="button">Afficher</button>
+    <button id="print" type="button">Imprimer / Enregistrer en PDF</button>
+  </div>
+  <article class="page" id="page"><div class="empty">Chargement du rapport…</div></article>
+  <script src="i18n.js"></script>
+  <script>
+  (function () {
+    const $ = (s) => document.querySelector(s);
+    const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const num = (v, d = 0) => v == null ? "—" : (+v).toFixed(d).replace(".", ",");
+    const LOCF = () => (window.LOC ? LOC() : "fr-FR");
+    const iso = (d) => d.toISOString().slice(0, 10);
+    const today = new Date();
+    const first = new Date(today.getFullYear(), today.getMonth(), 1);
+    $("#from").value = new URLSearchParams(location.search).get("from") || iso(new Date(first - 0 + 12 * 3600e3));
+    $("#to").value = new URLSearchParams(location.search).get("to") || iso(today);
+    const fmtDay = (d) => new Date(d + "T12:00:00").toLocaleDateString(LOCF(), { weekday: "short", day: "numeric", month: "short" });
+    const dur = (s) => s ? `${Math.floor(s / 3600) ? Math.floor(s / 3600) + " h " : ""}${Math.round((s % 3600) / 60)} min` : "—";
+
+    function chart(days) {
+      if (!days.length) return "";
+      const W = 700, H = 170, L = 34, B = 22, T = 8, bw = (W - L) / days.length;
+      const maxL = Math.max(10, ...days.map((d) => d.litres || 0)) * 1.1;
+      const Y = (v) => T + (1 - v / maxL) * (H - T - B), YM = (v) => T + (1 - v / 80) * (H - T - B);
+      let s = "";
+      for (let i = 0; i <= 3; i++) { const v = maxL / 3 * i; s += `<line x1="${L}" x2="${W}" y1="${Y(v)}" y2="${Y(v)}" stroke="#e1e7df"/><text x="${L - 4}" y="${Y(v) + 3}" font-size="9" text-anchor="end" fill="#8b978f">${Math.round(v)}</text>`; }
+      days.forEach((d, i) => {
+        const x = L + i * bw, h = (d.litres || 0) / maxL * (H - T - B);
+        s += `<rect x="${x + bw * .18}" y="${H - B - h}" width="${bw * .64}" height="${Math.max(h, .5)}" rx="2" fill="#2a84c4"/>`;
+        if (days.length <= 16 || i % Math.ceil(days.length / 12) === 0) s += `<text x="${x + bw / 2}" y="${H - 6}" font-size="9" text-anchor="middle" fill="#8b978f">${new Date(d.day + "T12:00:00").getDate()}</text>`;
+      });
+      const pts = days.filter((d) => d.m_avg != null).map((d) => `${L + days.indexOf(d) * bw + bw / 2},${YM(d.m_avg)}`).join(" ");
+      if (pts) s += `<polyline points="${pts}" fill="none" stroke="#1f7a4a" stroke-width="2"/>`;
+      return `<svg class="chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${s}</svg>
+        <p class="note">■ <span style="color:#2a84c4">Eau d'irrigation par jour (litres)</span> · — <span style="color:#1f7a4a">Humidité moyenne du sol</span></p>`;
+    }
+
+    async function load() {
+      const r = await fetch(`/api/report?from=${$("#from").value}&to=${$("#to").value}`, { cache: "no-store" });
+      if (r.status === 401) return location.replace("/login?next=/app/report.html");
+      const d = await r.json();
+      if (!r.ok) { $("#page").innerHTML = `<div class="empty">${esc(d.error)}</div>`; return; }
+      const t = d.totals, c = t.currency, s = d.settings;
+      const from = new Date(d.period.from * 1000), to = new Date(d.period.to * 1000 - 1);
+      const period = `${from.toLocaleDateString(LOCF(), { day: "numeric", month: "long", year: "numeric" })} – ${to.toLocaleDateString(LOCF(), { day: "numeric", month: "long", year: "numeric" })}`;
+      const modeName = { auto: "Automatique", manuel: "Manuel", "programmé": "Programmé" };
+      const soil = d.soil || {};
+      $("#page").innerHTML = `
+        <header class="r">
+          <div><h1>Rapport d'irrigation</h1><p>${esc(period)}</p><p>${esc(d.crop_label)} · ${esc(d.soil_label)}</p></div>
+          <div class="brand">Sāqiya <span lang="ar">الساقية</span><small>Irrigation intelligente</small></div>
+        </header>
+        <h2>En résumé</h2>
+        <div class="kpis">
+          <div class="k"><span>Arrosages</span><b>${t.irrigations}</b></div>
+          <div class="k"><span>Temps de pompage</span><b>${esc(dur(t.seconds))}</b></div>
+          <div class="k"><span>Eau utilisée</span><b>${num(t.litres)}</b><small>L</small></div>
+          <div class="k"><span>Électricité</span><b>${num(t.kwh, 1)}</b><small>kWh</small></div>
+          <div class="k money"><span>Coût de l'eau</span><b>${num(t.water_cost, 2)}</b><small>${esc(c)}</small></div>
+          <div class="k money"><span>Coût de l'électricité</span><b>${num(t.elec_cost, 2)}</b><small>${esc(c)}</small></div>
+          <div class="k money"><span>Coût total</span><b>${num(t.total_cost, 2)}</b><small>${esc(c)}</small></div>
+          <div class="k"><span>Eau par jour (moyenne)</span><b>${num(d.days.length ? t.litres / d.days.length : 0)}</b><small>L</small></div>
+        </div>
+        <h2>Eau et humidité, jour par jour</h2>
+        ${chart(d.days) || '<p class="note">Aucune donnée sur cette période.</p>'}
+        <table>
+          <thead><tr><th>Jour</th><th class="n">Arrosages</th><th class="n">Pompage</th><th class="n">Eau (L)</th><th class="n">Coût (${esc(c)})</th><th class="n">Humidité moy.</th><th class="n">T° min / max</th></tr></thead>
+          <tbody>${d.days.map((x) => `<tr><td>${esc(fmtDay(x.day))}</td><td class="n">${x.n || 0}</td><td class="n">${esc(dur(x.s))}</td><td class="n">${num(x.litres)}</td><td class="n">${num(x.total_cost, 2)}</td><td class="n">${x.m_avg != null ? num(x.m_avg, 1) + " %" : "—"}</td><td class="n">${x.t_min != null ? num(x.t_min, 0) + " / " + num(x.t_max, 0) + " °C" : "—"}</td></tr>`).join("")}</tbody>
+          <tfoot><tr><td>Total</td><td class="n">${t.irrigations}</td><td class="n">${esc(dur(t.seconds))}</td><td class="n">${num(t.litres)}</td><td class="n">${num(t.total_cost, 2)}</td><td></td><td></td></tr></tfoot>
+        </table>
+        <div class="two">
+          <div>
+            <h2>Types d'arrosage</h2>
+            <table><tbody>${d.modes.map((m) => `<tr><td>${esc(modeName[m.mode] || m.mode)}</td><td class="n">${m.n}</td><td class="n">${esc(dur(m.s))}</td></tr>`).join("") || '<tr><td>—</td></tr>'}</tbody></table>
+            <h2>Sol (moyennes)</h2>
+            <table><tbody>
+              <tr><td>pH</td><td class="n">${num(soil.ph, 1)}</td></tr><tr><td>Salinité (EC)</td><td class="n">${num(soil.ec, 2)} dS/m</td></tr>
+              <tr><td>Azote (N)</td><td class="n">${num(soil.n)} mg/kg</td></tr><tr><td>Phosphore (P)</td><td class="n">${num(soil.p)} mg/kg</td></tr><tr><td>Potassium (K)</td><td class="n">${num(soil.k)} mg/kg</td></tr>
+            </tbody></table>
+          </div>
+          <div>
+            <h2>Alertes de la période</h2>
+            ${d.alerts.length ? `<ul class="al">${d.alerts.slice(0, 18).map((a) => `<li>${esc(new Date(a.ts * 1000).toLocaleDateString(LOCF(), { day: "numeric", month: "short" }))} — ${esc(a.title)}</li>`).join("")}</ul>` : '<p class="note">Aucune alerte.</p>'}
+            <h2>Hypothèses de calcul</h2>
+            <p class="note">Débit de la pompe ${num(s.pump_flow_lpm, 1)} L/min · puissance ${num(s.pump_power_kw, 2)} kW · eau ${num(s.water_price_m3, 3)} ${esc(c)}/m³ · électricité ${num(s.electricity_price_kwh, 3)} ${esc(c)}/kWh. Modifiables dans Paramètres › Coûts.</p>
+          </div>
+        </div>
+        <footer class="r"><span>Généré le ${esc(new Date().toLocaleString(LOCF()))}</span><span>Sāqiya · système d'irrigation intelligent</span></footer>`;
+    }
+    $("#go").addEventListener("click", () => { history.replaceState(null, "", `?from=${$("#from").value}&to=${$("#to").value}`); load(); });
+    $("#print").addEventListener("click", () => window.print());
+    load();
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+/* Sāqiya — page « À propos » : photo, fonctionnement, équipes, galerie, animations à l'apparition. */
+.ab2 { border-radius: 14px; overflow: hidden; background: var(--sheet); border: 1px solid var(--rule); }
+
+/* bandeau photo */
+.ab2-hero { position: relative; isolation: isolate; color: #fff; padding: 34px 30px 28px; min-height: 300px; display: flex; align-items: flex-end; }
+.ab2-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; transform: scale(1.06); transition: transform 8s ease-out; }
+.ab2-bg { animation: abzoom 8s ease-out both; }
+@keyframes abzoom { from { transform: scale(1.08); } to { transform: scale(1); } }
+.ab2-hero::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(100deg, rgba(5, 14, 30, .92) 0%, rgba(5, 14, 30, .7) 45%, rgba(5, 14, 30, .25) 100%), linear-gradient(0deg, rgba(5, 14, 30, .6), transparent 50%); }
+html[dir="rtl"] .ab2-hero::before { background: linear-gradient(260deg, rgba(5, 14, 30, .92) 0%, rgba(5, 14, 30, .7) 45%, rgba(5, 14, 30, .25) 100%), linear-gradient(0deg, rgba(5, 14, 30, .6), transparent 50%); }
+.ab2-hero-in { max-width: 640px; }
+.ab2 .ab-logo { width: 56px; height: 56px; fill: none; stroke: #fff; stroke-width: 1.4; stroke-linecap: round; }
+.ab2 .ab-logo .d { fill: #2e8bff; stroke: none; }
+.ab2-kicker { margin: 12px 0 0; font-weight: 700; font-size: .85rem; color: #8cc4ff; }
+.ab2-hero h2 { margin: 2px 0 6px; font-size: clamp(1.9rem, 3.4vw, 2.6rem); font-weight: 800; letter-spacing: -.03em; color: #fff; }
+.ab2-hero h2 span { font: 600 .55em var(--ar); opacity: .75; letter-spacing: 0; }
+.ab2-tag { margin: 0; color: #d6e3f7; font-size: 1.02rem; max-width: 52ch; }
+.ab2-stats { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+.ab2-stats div { padding: 10px 14px; border-radius: 8px; background: rgba(5, 14, 30, .55); border: 1px solid rgba(255, 255, 255, .16); backdrop-filter: blur(8px); min-width: 140px; }
+.ab2-stats b { display: block; font-size: 1.6rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+.ab2-stats span { font-size: .78rem; color: #b9cbe6; }
+.ab2 .ab-ver { position: absolute; top: 18px; inset-inline-end: 18px; font: 700 .78rem var(--sans); padding: 5px 10px; border-radius: 6px; background: rgba(5, 14, 30, .6); border: 1px solid rgba(255, 255, 255, .2); color: #fff; }
+
+/* blocs */
+.ab2-block { padding: 26px 30px; border-top: 1px solid var(--rule); }
+.ab2-h { margin: 0 0 4px; font-size: 1.15rem; font-weight: 800; }
+.ab2-sub { margin: 0 0 16px; color: var(--ink-3); font-size: .9rem; }
+
+/* fonctionnement : 4 étapes reliées par un flux d'eau animé */
+.ab2-flow { list-style: none; margin: 18px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; position: relative; }
+.ab2-flow::before { content: ""; position: absolute; top: 26px; inset-inline: 12.5%; height: 2px; z-index: 0;
+  background: repeating-linear-gradient(90deg, #2e8bff 0 10px, transparent 10px 20px); background-size: 40px 2px; animation: abflow 1.2s linear infinite; opacity: .7; }
+html[dir="rtl"] .ab2-flow::before { animation-direction: reverse; }
+@keyframes abflow { to { background-position: 40px 0; } }
+.ab2-flow li { position: relative; z-index: 1; text-align: center; }
+.ab2-ic { width: 54px; height: 54px; margin: 0 auto 10px; border-radius: 50%; display: grid; place-items: center; background: var(--sheet); border: 2px solid #2e8bff; }
+.ab2-ic svg { width: 24px; height: 24px; fill: none; stroke: #2e8bff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.ab2-flow b { display: block; margin-bottom: 4px; }
+.ab2-flow p { margin: 0; font-size: .85rem; color: var(--ink-2); line-height: 1.5; }
+
+/* équipes */
+.ab2-teams { display: grid; grid-template-columns: 2fr 4fr; gap: 30px; }
+.ab2-people { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.ab2-p { margin: 0; padding: 18px 12px 14px; border-radius: 12px; background: var(--paper); border: 1px solid var(--rule); text-align: center; transition: transform .25s, border-color .25s; }
+.ab2-p:hover { transform: translateY(-4px); border-color: hsl(var(--h) 70% 55%); }
+.ab2-av { position: relative; width: 74px; height: 74px; margin: 0 auto 10px; border-radius: 50%; display: grid; place-items: center;
+  font: 800 1.35rem var(--sans); color: #fff; letter-spacing: .02em; background: linear-gradient(135deg, hsl(var(--h) 70% 48%), hsl(calc(var(--h) + 35) 65% 38%)); }
+.ab2-av::after { content: ""; position: absolute; inset: -5px; border-radius: 50%; border: 2px solid transparent;
+  border-top-color: hsl(var(--h) 75% 60%); border-right-color: hsl(var(--h) 75% 60% / .4); animation: abring 3.5s linear infinite; }
+.ab2-p:nth-child(2) .ab2-av::after { animation-duration: 4.2s; } .ab2-p:nth-child(3) .ab2-av::after { animation-duration: 3.1s; }
+@keyframes abring { to { transform: rotate(360deg); } }
+.ab2-p b { display: block; font-size: .95rem; }
+.ab2-p small { color: var(--ink-3); font-size: .78rem; }
+
+/* galerie */
+.ab2-gal { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 170px 170px; gap: 10px; margin-top: 14px; }
+.ab2-gal figure { position: relative; margin: 0; border-radius: 10px; overflow: hidden; }
+.ab2-gal figure:first-child { grid-row: span 2; }
+.ab2-gal figure:last-child { grid-column: span 2; }
+.ab2-gal img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s ease; }
+.ab2-gal figure:hover img { transform: scale(1.06); }
+.ab2-gal figcaption { position: absolute; inset: auto 0 0 0; padding: 26px 12px 10px; color: #fff; font-weight: 700; font-size: .88rem;
+  background: linear-gradient(0deg, rgba(0, 0, 0, .7), transparent); }
+
+.ab2-made { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
+.ab2-made p { margin: 0; color: var(--ink-2); max-width: 60ch; }
+.ab2 .ab-tech { display: flex; gap: 6px; flex-wrap: wrap; }
+.ab2 .ab-tech i { font: 700 .76rem var(--sans); font-style: normal; padding: 5px 10px; border-radius: 6px; background: rgba(46, 139, 255, .12); color: #2e8bff; }
+.ab2 .ab-foot { margin: 0; padding: 14px 30px; font-size: .8rem; color: var(--ink-3); border-top: 1px solid var(--rule); }
+
+/* apparition progressive */
+.ab2 .rv { animation: abrv .6s cubic-bezier(.2, .8, .2, 1) both; animation-delay: var(--d, 0ms); }
+@keyframes abrv { from { opacity: 0; transform: translateY(18px); } }
+
+/* thème bleu nuit */
+:root[data-theme="bleu"] .ab2 { background: rgba(10, 24, 48, .85); border-color: rgba(160, 190, 235, .18); }
+:root[data-theme="bleu"] .ab2-block, :root[data-theme="bleu"] .ab2 .ab-foot { border-color: rgba(160, 190, 235, .14); }
+:root[data-theme="bleu"] .ab2-p { background: rgba(6, 16, 31, .55); border-color: rgba(160, 190, 235, .16); }
+:root[data-theme="bleu"] .ab2-ic { background: #0a1a31; }
+
+@media (max-width: 900px) {
+  .ab2-teams { grid-template-columns: 1fr; gap: 22px; }
+  .ab2-flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ab2-flow::before { display: none; }
+}
+@media (max-width: 560px) {
+  .ab2-hero, .ab2-block { padding-inline: 18px; }
+  .ab2-gal { grid-template-columns: 1fr 1fr; grid-template-rows: 150px 120px 120px; }
+  .ab2-gal figure:first-child { grid-column: span 2; grid-row: auto; }
+  .ab2-gal figure:last-child { grid-column: auto; }
+  .ab2-people { grid-template-columns: 1fr 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ab2 .rv { animation: none; }
+  .ab2-av::after, .ab2-flow::before { animation: none; }
+}

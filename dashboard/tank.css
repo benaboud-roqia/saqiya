@@ -1,0 +1,73 @@
+/* Sāqiya — jauge « réservoir de sol » : l'eau monte et descend dans une colonne de terre */
+
+.tank-wrap { --st: var(--ink-3); --st-soft: var(--paper-2);
+  display: grid; grid-template-columns: minmax(118px, 42%) 1fr; gap: 22px; align-items: stretch; flex: 1; min-height: 290px; margin-top: 4px; }
+.tank-wrap[data-state="dry"] { --st: var(--clay); --st-soft: var(--clay-soft); }
+.tank-wrap[data-state="ok"]  { --st: var(--olive); --st-soft: var(--olive-soft); }
+.tank-wrap[data-state="wet"] { --st: var(--ochre); --st-soft: var(--ochre-soft); }
+
+/* colonne de terre */
+.tank { --level: 0%; position: relative; border-radius: 30px; overflow: hidden; min-height: 270px; isolation: isolate;
+  box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--ink) 10%, transparent), inset 0 -20px 40px rgba(0, 0, 0, .25), 0 14px 30px -14px rgba(60, 35, 15, .55); }
+.tank-soil { position: absolute; inset: 0; z-index: -2;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, .16) 1.5px, transparent 2.5px) 0 0 / 16px 18px,
+    radial-gradient(circle at 70% 60%, rgba(0, 0, 0, .22) 2px, transparent 3px) 0 0 / 13px 15px,
+    repeating-linear-gradient(176deg, transparent 0 34px, rgba(0, 0, 0, .08) 34px 37px),
+    linear-gradient(180deg, #c9a46b 0%, #a27a4b 35%, #7c5735 70%, #5b3d25 100%); }
+.tank::before { /* herbe en surface */
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 16px; z-index: 2;
+  background: radial-gradient(ellipse at 50% 100%, #6ea24a 55%, transparent 57%) 0 4px / 14px 16px repeat-x; opacity: .95; }
+
+/* l'eau */
+.tank-water { position: absolute; left: 0; right: 0; bottom: 0; height: var(--level); z-index: -1;
+  background: linear-gradient(180deg, rgba(110, 196, 240, .78), rgba(32, 112, 176, .92));
+  transition: height 1.2s cubic-bezier(.2, .8, .2, 1); }
+.wave { position: absolute; left: 0; width: 200%; height: 18px; top: -16px; }
+.wave path { fill: rgba(110, 196, 240, .78); }
+.wave.w1 { animation: wavex 4s linear infinite; }
+.wave.w2 { top: -12px; opacity: .55; animation: wavex 6.5s linear infinite reverse; }
+@keyframes wavex { to { transform: translateX(-50%); } }
+.bubble { position: absolute; bottom: 4px; left: var(--x); width: 6px; height: 6px; border-radius: 50%; border: 1.5px solid rgba(255, 255, 255, .7); animation: rise 3.4s ease-in infinite; animation-delay: var(--d); opacity: 0; }
+@keyframes rise { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: .9; } 100% { transform: translateY(-180px); opacity: 0; } }
+
+/* zone idéale et lignes */
+.tank-zone { position: absolute; left: 0; right: 0; z-index: 0; background: rgba(120, 200, 110, .16); border-inline-start: 5px solid #67b25a; transition: all .8s; }
+.tank-line { position: absolute; left: 0; right: 0; height: 0; border-top: 2px dashed rgba(255, 255, 255, .9); z-index: 1; transition: bottom .8s; }
+.tank-line span { position: absolute; inset-inline-end: 8px; transform: translateY(-50%); white-space: nowrap;
+  font: 700 .72rem var(--sans); padding: 3px 9px; border-radius: 999px; color: #fff; box-shadow: 0 2px 6px rgba(0, 0, 0, .25); }
+.tank-line.thr span { background: var(--clay); }
+.tank-line.tgt span { background: #3f8f3a; }
+.tank-line b { font-weight: 800; }
+
+/* pendant l'arrosage : gouttes qui tombent */
+.tank::after { content: ""; position: absolute; inset: 0; z-index: 1; opacity: 0; pointer-events: none; transition: opacity .5s;
+  background: radial-gradient(ellipse 2px 5px at 50% 50%, rgba(170, 220, 255, .95) 70%, transparent 72%) 0 0 / 22px 34px; }
+.tank-wrap.pumping .tank::after { opacity: 1; animation: drops .7s linear infinite; }
+@keyframes drops { to { background-position: 0 34px; } }
+
+/* lecture */
+.tank-read { display: flex; flex-direction: column; justify-content: center; gap: 10px; min-width: 0; }
+.tank-num { display: flex; align-items: baseline; gap: 4px; line-height: .9; }
+.tank-num b { font: 800 clamp(3rem, 5vw, 4.4rem) var(--sans); letter-spacing: -.05em; font-variant-numeric: tabular-nums; color: var(--ink); }
+.tank-num small { font: 700 1.4rem var(--sans); color: var(--ink-3); }
+.tank-state { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px;
+  background: var(--st-soft); color: var(--st); font-weight: 800; font-size: .95rem; transition: background .4s, color .4s; }
+.tank-state::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: currentColor; }
+.tank-wrap[data-state="dry"] .tank-state::before { animation: blink 1.2s infinite; }
+.tank-tip { margin: 0; color: var(--ink-2); font-size: .92rem; line-height: 1.5; }
+.tank-scale { display: flex; align-items: center; gap: 8px; font-size: .72rem; color: var(--ink-3); margin-top: 6px; }
+.tank-scale i { flex: 1; height: 6px; border-radius: 3px; background: linear-gradient(90deg, #c9a46b, #a27a4b, #4e9bd0, #1d6aa5); }
+html[dir="rtl"] .tank-scale i { transform: scaleX(-1); }
+
+@media (max-width: 1099px) {
+  .tank-wrap { grid-template-columns: 130px 1fr; min-height: 250px; }
+  .tank { min-height: 240px; }
+}
+@media (max-width: 420px) {
+  .tank-wrap { grid-template-columns: 108px 1fr; gap: 14px; }
+  .tank-line span { font-size: .64rem; padding: 2px 7px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wave, .bubble, .tank::after { animation: none !important; }
+}
