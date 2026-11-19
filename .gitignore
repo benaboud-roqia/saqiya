@@ -26,3 +26,10 @@ desktop.ini
 
 # Arduino
 firmware/**/build/
+
+# Outils locaux (cloudflared.exe…)
+outils/
+
+# Tunnel : journal et adresse du moment
+data/tunnel.log
+data/adresse_en_ligne.txt
