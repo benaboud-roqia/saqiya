@@ -107,3 +107,23 @@ img.brand-logo.ab-logo { width: 64px; height: 64px; border-radius: 24%; box-shad
   .irr-hud .row b:nth-of-type(2)::before { content: "·"; margin: 0 6px 0 2px; color: #9fb3d1; font-weight: 400; }
   .irr-hud .bar { flex: 1 0 100%; }
 }
+
+/* ---------- bannière « La semaine de la parcelle » : jamais coupée, bouton rapport net ---------- */
+.an-banner { height: auto; min-height: 170px; align-items: flex-end; justify-content: space-between; gap: 18px; padding: 28px 28px 24px; }
+.an-text { min-width: 0; }
+.an-kicker { display: inline-block; margin-bottom: 6px; padding: 3px 9px; border-radius: 999px; font-size: .72rem; font-weight: 700;
+  background: rgba(255, 255, 255, .16); border: 1px solid rgba(255, 255, 255, .25); }
+.an-banner h2 { line-height: 1.15; overflow-wrap: anywhere; }
+.an-report { flex: none; display: inline-flex; align-items: center; gap: 10px; height: auto; padding: 10px 16px 10px 12px; border-radius: 12px;
+  background: #fff; color: #0b1d33; text-decoration: none; box-shadow: 0 10px 26px -10px rgba(0, 0, 0, .6); transition: transform .2s, box-shadow .2s; white-space: nowrap; }
+.an-report:hover { transform: translateY(-2px); box-shadow: 0 14px 30px -10px rgba(0, 0, 0, .7); }
+.an-report svg { width: 30px; height: 30px; padding: 5px; border-radius: 8px; background: #1a6dff; fill: none; stroke: #fff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.an-r-t { display: flex; flex-direction: column; line-height: 1.15; }
+.an-r-t b { font-size: .92rem; }
+.an-r-t small { font-size: .7rem; color: #44566f; font-weight: 600; }
+@media (max-width: 760px) {
+  .an-banner { min-height: 0; flex-direction: column; align-items: stretch; padding: 20px 18px 18px; }
+  .an-banner h2 { font-size: 1.45rem; }
+  .an-banner p { font-size: .9rem; }
+  .an-report { align-self: flex-start; margin-inline-start: 0; }
+}

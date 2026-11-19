@@ -76,7 +76,7 @@
     // alertes
     "Alertes": "التنبيهات", "tout est lu": "تمت قراءة الكل", "Lu": "مقروء", "Rien à signaler.": "لا شيء للإبلاغ عنه.",
     // analyses
-    "La semaine de la parcelle": "أسبوع الحقل", "Eau, humidité, climat, maladies et nutriments sur 7 jours.": "الماء والرطوبة والمناخ والأمراض والعناصر الغذائية خلال 7 أيام.",
+    "La semaine de la parcelle": "أسبوع الحقل", "Analyses · 7 jours": "تحاليل · 7 أيام", "Eau, humidité, climat, maladies et nutriments sur 7 jours.": "الماء والرطوبة والمناخ والأمراض والعناصر الغذائية خلال 7 أيام.",
     "Eau utilisée · 7 j": "الماء المستعمل · 7 أيام", "Arrosages · 7 j": "عمليات السقي · 7 أيام", "Humidité moyenne du sol": "متوسط رطوبة التربة",
     "Risque principal": "الخطر الرئيسي", "Eau d'irrigation par jour": "ماء السقي في اليوم", "litres estimés": "لترات تقديرية",
     "Humidité du sol par jour": "رطوبة التربة في اليوم", "minimum, maximum et moyenne": "الأدنى والأقصى والمتوسط", "zone idéale": "المنطقة المثالية",
