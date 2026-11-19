@@ -168,10 +168,13 @@
           catch (err) { showErr(err.message); }
         },
       });
-      const w = Math.min(400, $("#g-btn").clientWidth || 360);
+      // largeur réelle de la carte (sur téléphone le bouton ne doit jamais dépasser l'écran)
+      const card = document.querySelector(".au-card");
+      const room = (card ? card.clientWidth - 48 : 0) || Math.min(window.innerWidth - 64, 360);
+      const w = Math.max(200, Math.min(400, room));
       $("#g-btn").innerHTML = "";
       google.accounts.id.renderButton($("#g-btn"), {
-        theme: matchMedia("(prefers-color-scheme: dark)").matches ? "filled_black" : "outline",
+        theme: "outline",
         size: "large", shape: "pill", width: w, text: tab === "register" ? "signup_with" : "continue_with", locale: lang,
       });
     };

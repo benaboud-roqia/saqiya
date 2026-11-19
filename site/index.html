@@ -11,6 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="site.css">
   <link rel="stylesheet" href="video.css">
+  <link rel="stylesheet" href="extra.css">
 </head>
 <body>
 
@@ -27,6 +28,7 @@
     <a href="#boitier">Le boîtier</a>
     <a href="#questions">Questions</a>
   </nav>
+  <button class="lang-toggle" type="button" data-site-lang lang="ar">العربية</button>
   <a class="btn btn-dark" href="/app/" data-app>Ouvrir le tableau de bord</a>
   <button class="burger" id="burger" aria-label="Menu" aria-expanded="false"><i></i><i></i></button>
 </header>
@@ -135,11 +137,13 @@
         </div>
       </div>
 
+      <span class="sound-hint" id="sound-hint">🎵 <span>Activer la musique</span></span>
       <button class="big-play" id="big-play" aria-label="Lire la vidéo"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
       <div class="ctrl">
         <button id="v-play" aria-label="Lecture / pause"><svg viewBox="0 0 24 24" class="i-play"><path d="M8 5v14l11-7z"/></svg><svg viewBox="0 0 24 24" class="i-pause"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg></button>
         <div class="track" id="v-track"><div class="fill" id="v-fill"></div><div class="ticks" id="v-ticks"></div></div>
         <span class="time" id="v-time">0:00</span>
+        <button id="v-sound" class="snd" aria-label="Son" aria-pressed="false"><svg viewBox="0 0 24 24" class="i-on"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg><svg viewBox="0 0 24 24" class="i-off"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg></button>
         <button id="v-lang" class="txt" aria-label="Langue des sous-titres">ع</button>
         <button id="v-full" aria-label="Plein écran"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
       </div>
@@ -338,33 +342,70 @@
   </section>
 </main>
 
-<footer class="foot">
-  <div>
-    <b>Sāqiya <span lang="ar">الساقية</span></b>
-    <p>Startup algérienne de l'irrigation intelligente : IoT, prévision des maladies et conseiller agricole. Conçu et développé en Algérie 🇩🇿</p>
+<footer class="xfoot">
+  <svg class="xf-wave" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+    <path class="w1" d="M0 40 C 240 90 480 0 720 40 S 1200 80 1440 30 V 90 H 0 Z"/>
+    <path class="w2" d="M0 55 C 300 20 540 90 840 50 S 1260 20 1440 60 V 90 H 0 Z"/>
+  </svg>
+  <div class="xf-bg" style="background-image:url('https://images.unsplash.com/photo-1771684512143-88bdb34782fa?auto=format&fit=crop&w=1800&q=60')" aria-hidden="true"></div>
+  <div class="xf-drops" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+  <div class="xf-top">
+    <div class="xf-brand">
+      <a class="xf-logo" href="#top" aria-label="Sāqiya, accueil">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15"/><path class="d" d="M16 7s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/><path d="M16 24v-7m0 3-3-2.5"/></svg>
+        <span>Sāqiya <em lang="ar">الساقية</em></span>
+      </a>
+      <p class="xf-slogan">L'irrigation qui écoute le sol.</p>
+      <p class="xf-desc">Startup algérienne de l'irrigation intelligente : capteurs, arrosage automatique, prévision des maladies et conseiller agricole en arabe, darija et français.</p>
+      <div class="xf-badges"><span>ESP32</span><span>IoT</span><span>IA</span><span>Open-Meteo</span></div>
+    </div>
+    <nav class="xf-col">
+      <b>Le produit</b>
+      <a href="#fonctions">Arrosage automatique</a>
+      <a href="#fonctions">Détection des maladies</a>
+      <a href="#fonctions">Conseiller agricole</a>
+      <a href="#boitier">Le boîtier ESP32</a>
+    </nav>
+    <nav class="xf-col">
+      <b>Ressources</b>
+      <a href="#video">La vidéo</a>
+      <a href="#questions">Questions fréquentes</a>
+      <a href="https://github.com/benaboud-roqia/saqiya" target="_blank" rel="noopener">Code source (GitHub)</a>
+      <a href="/app/" data-app>Ouvrir le tableau de bord</a>
+    </nav>
+    <div class="xf-col xf-team">
+      <b>L'équipe</b>
+      <small>Équipe de travail</small>
+      <span data-noi18n>Sigha Fares · Benaboud Roqia</span>
+      <small>Équipe de supervision</small>
+      <span data-noi18n>Dr Merabeti Sana · Dr Ibtisem Nasseh · Dr Zeral Soumia · Dr Nassim Melal</span>
+    </div>
   </div>
-  <div class="credits">
-    <b>Photographies</b>
-    <p>Unsplash, licence Unsplash :
-      <a href="https://unsplash.com/photos/3f7AWW0YWAA">goutte-à-goutte</a>,
-      <a href="https://unsplash.com/photos/yCOmQ65e5xY">asperseurs</a>,
-      <a href="https://unsplash.com/photos/bYZn_C-RswQ">plantation</a>,
-      <a href="https://unsplash.com/photos/tlRkBCY9vsI">jeunes plants</a>,
-      <a href="https://unsplash.com/photos/8rjUDamgljI">tuyau</a>,
-      <a href="https://unsplash.com/photos/1q75BReKpms">serre</a>,
-      <a href="https://unsplash.com/photos/Re5rjFVkhfU">feuille</a>,
-      <a href="https://unsplash.com/photos/RavdjkRrDhs">tracteur</a>,
-      <a href="https://unsplash.com/photos/hQXXWiG68YQ">tomates</a>,
-      <a href="https://unsplash.com/photos/k_tUO1kGvxc">oliveraie</a>,
-      <a href="https://unsplash.com/photos/AtC1boy0w_I">blé</a>,
-      <a href="https://unsplash.com/photos/VNfiAyRoKv4">électronique</a>.
-    </p>
+
+  <div class="xf-cta">
+    <div>
+      <b>Rester en contact</b>
+      <p>Suivez le projet sur GitHub ou ouvrez le tableau de bord pour voir la parcelle.</p>
+    </div>
+    <div class="xf-cta-btns">
+      <a class="xf-btn" href="https://github.com/benaboud-roqia/saqiya" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 3 .8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.6 9.6 0 0 1 5 0c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>GitHub</a>
+      <a class="xf-btn xf-btn-main" href="/app/" data-app>Ouvrir le tableau de bord</a>
+      <button class="xf-btn" type="button" data-site-lang lang="ar">العربية</button>
+    </div>
   </div>
-  <a class="to-top" href="#top">Haut de page ↑</a>
+
+  <div class="xf-bottom">
+    <span>© <span id="xf-year">2026</span> Sāqiya · Conçu et développé en Algérie 🇩🇿</span>
+    <span class="xf-credits">Photographies : Unsplash (licence Unsplash) · Météo : Open-Meteo</span>
+    <a class="xf-up" href="#top"><span>Haut de page</span> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></a>
+  </div>
 </footer>
 
 <script src="config.js"></script>
+<script src="site-i18n.js"></script>
 <script src="site.js"></script>
+<script src="music.js"></script>
 <script src="video.js"></script>
 </body>
 </html>

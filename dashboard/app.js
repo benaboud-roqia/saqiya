@@ -640,23 +640,23 @@ function bubble(role, text, ts, source, typed) {
 // réponse écrite lettre par lettre ; les longues réponses accélèrent (7 s au maximum)
 function typeOut(el, text, msg) {
   const chars = Array.from(text), log = $("#chat-log");
-  const perChar = Math.max(4, Math.min(28, 7000 / Math.max(1, chars.length)));
+  const total = Math.min(7000, Math.max(600, chars.length * 22));   // durée totale : 7 s au maximum
   msg.classList.add("typing-out");
-  let i = 0, last = performance.now(), acc = 0;
+  const t0 = Date.now();
+  let shown = 0;
   const stick = () => log.scrollHeight - log.scrollTop - log.clientHeight < 80;
-  (function step(now) {
-    acc += now - last; last = now;
-    const n = Math.floor(acc / perChar);
-    if (n > 0) {
-      acc -= n * perChar;
+  // basé sur le temps écoulé (et non sur requestAnimationFrame, mis en pause quand l'onglet est en arrière-plan) :
+  // la réponse se termine toujours, même si l'utilisateur change d'onglet pendant l'écriture
+  const timer = setInterval(() => {
+    const i = Math.min(chars.length, Math.ceil(((Date.now() - t0) / total) * chars.length));
+    if (i !== shown) {
       const follow = stick();
-      i = Math.min(chars.length, i + n);
+      shown = i;
       el.textContent = chars.slice(0, i).join("");
       if (follow) log.scrollTop = log.scrollHeight;
     }
-    if (i < chars.length) requestAnimationFrame(step);
-    else msg.classList.remove("typing-out");
-  })(last);
+    if (i >= chars.length) { clearInterval(timer); msg.classList.remove("typing-out"); }
+  }, 30);
 }
 async function loadChat() {
   const h = await api("/api/chat/history").catch(() => []);

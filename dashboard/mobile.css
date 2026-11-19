@@ -1,0 +1,65 @@
+/* Sāqiya — corrections téléphone : barre d'onglets défilante (avec indice animé), conseiller plein écran. */
+
+@media (max-width: 760px) {
+  /* ---------- barre d'onglets du bas : défile, et montre qu'il y a d'autres onglets ---------- */
+  .rail nav {
+    justify-content: flex-start; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity;
+    scrollbar-width: none; -webkit-overflow-scrolling: touch; gap: 2px;
+    -webkit-mask-image: linear-gradient(90deg, #000 82%, transparent);
+    mask-image: linear-gradient(90deg, #000 82%, transparent);
+  }
+  .rail nav::-webkit-scrollbar { display: none; }
+  .rail nav.at-end { -webkit-mask-image: linear-gradient(90deg, transparent, #000 18%); mask-image: linear-gradient(90deg, transparent, #000 18%); }
+  html[dir="rtl"] .rail nav { -webkit-mask-image: linear-gradient(270deg, #000 82%, transparent); mask-image: linear-gradient(270deg, #000 82%, transparent); }
+  .rail nav .nav { flex: 0 0 auto; min-width: 70px; scroll-snap-align: start; }
+  .rail nav.hint .nav { animation: navnudge 1.6s ease-in-out 2; }
+  .rail nav.hint .nav:nth-child(n+5) { animation-name: navnudge, navglow; }
+  @keyframes navnudge { 0%, 100% { transform: translateX(0); } 35% { transform: translateX(-26px); } 60% { transform: translateX(4px); } }
+  html[dir="rtl"] .rail nav.hint .nav { animation-name: navnudgertl; }
+  @keyframes navnudgertl { 0%, 100% { transform: translateX(0); } 35% { transform: translateX(26px); } 60% { transform: translateX(-4px); } }
+  @keyframes navglow { 50% { color: #7cc8ff; } }
+  .rail .more-arrow { position: absolute; inset-inline-end: 6px; top: 50%; width: 22px; height: 22px; margin-top: -11px; border-radius: 50%;
+    display: grid; place-items: center; background: rgba(46, 139, 255, .9); color: #fff; pointer-events: none;
+    animation: arrowpulse 1.4s ease-in-out infinite; transition: opacity .3s; }
+  .rail .more-arrow svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+  html[dir="rtl"] .rail .more-arrow svg { transform: scaleX(-1); }
+  .rail nav.at-end ~ .more-arrow { opacity: 0; }
+  @keyframes arrowpulse { 50% { transform: translateX(3px); box-shadow: 0 0 0 6px rgba(46, 139, 255, 0); } 0% { box-shadow: 0 0 0 0 rgba(46, 139, 255, .5); } }
+  .rail { position: fixed; }
+
+  /* ---------- conseiller : occupe l'écran réel, la zone de saisie reste au-dessus de la barre ---------- */
+  body[data-view="chat"] .masthead { display: none; }
+  body[data-view="chat"] .main { padding-top: 12px; }
+  .chat { height: calc(100vh - 118px); height: calc(100dvh - 118px - env(safe-area-inset-bottom)); min-height: 0; border-radius: 16px; }
+  .chat-head { padding: 12px 14px; gap: 10px; flex-wrap: nowrap; }
+  .chat-head .avatar { width: 38px; height: 38px; flex: none; font-size: 1rem; }
+  .chat-head > div:not(.ch-actions) { min-width: 0; }
+  .chat-head h2 { font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .chat-head h2 span { display: none; }
+  .chat-head .hint { font-size: .74rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .chat-head .ch-actions { gap: 6px; flex: none; }
+  .ch-btn { width: 36px; padding: 0; justify-content: center; }
+  .chat-log { padding: 14px 12px; gap: 12px; }
+  .msg { max-width: 92%; font-size: .94rem; }
+  .chat-bottom { padding: 8px 10px 10px; }
+  .composer { padding: 4px 4px 4px 14px; }
+  .composer textarea { font-size: 16px; }   /* évite le zoom automatique de l'iPhone */
+  .chat-hist { max-height: 45%; }
+}
+
+/* ---------- suggestions du conseiller : défilent avec un indice animé (tous écrans) ---------- */
+.prompts { position: relative; scroll-snap-type: x proximity; -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent); mask-image: linear-gradient(90deg, #000 85%, transparent); }
+html[dir="rtl"] .prompts { -webkit-mask-image: linear-gradient(270deg, #000 85%, transparent); mask-image: linear-gradient(270deg, #000 85%, transparent); }
+.prompts.at-end { -webkit-mask-image: none; mask-image: none; }
+.prompts button { scroll-snap-align: start; animation: promptin .5s cubic-bezier(.2, .8, .2, 1) both; }
+.prompts button:nth-child(2) { animation-delay: .08s; } .prompts button:nth-child(3) { animation-delay: .16s; } .prompts button:nth-child(4) { animation-delay: .24s; }
+@keyframes promptin { from { opacity: 0; transform: translateY(8px); } }
+.prompts.hint button { animation: promptin .5s both, promptnudge 1.8s ease-in-out .6s 2; }
+@keyframes promptnudge { 0%, 100% { transform: translateX(0); } 40% { transform: translateX(-34px); } 65% { transform: translateX(5px); } }
+html[dir="rtl"] .prompts.hint button { animation: promptin .5s both, promptnudgertl 1.8s ease-in-out .6s 2; }
+@keyframes promptnudgertl { 0%, 100% { transform: translateX(0); } 40% { transform: translateX(34px); } 65% { transform: translateX(-5px); } }
+.prompts button:hover { transform: translateY(-2px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .rail nav.hint .nav, .prompts button, .prompts.hint button, .rail .more-arrow { animation: none; }
+}

@@ -91,4 +91,16 @@
   } else {
     $("#live").hidden = true;   // pas de serveur derrière GitHub Pages
   }
+
+  // pied de page : apparition des colonnes, année
+  const foot = document.querySelector(".xfoot");
+  if (foot) {
+    const y = document.getElementById("xf-year");
+    if (y) y.textContent = new Date().getFullYear();
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver((es, o) => es.forEach((e) => { if (e.isIntersecting) { foot.classList.add("seen"); o.disconnect(); } }),
+        { threshold: 0.15 }).observe(foot);
+      setTimeout(() => foot.classList.add("seen"), 4000);   // au cas où l'observateur ne se déclenche pas
+    } else foot.classList.add("seen");
+  }
 })();

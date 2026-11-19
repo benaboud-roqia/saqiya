@@ -20,8 +20,25 @@
   // repères de chapitres
   document.getElementById("v-ticks").innerHTML = starts.slice(1).map((s) => `<i style="left:${(s / total) * 100}%"></i>`).join("");
 
+  // musique (music.js) : seulement après un clic de l'utilisateur, en même temps que la vidéo
+  let soundOn = false;
+  const sndBtn = document.getElementById("v-sound"), hint = document.getElementById("sound-hint");
+  const M = () => window.SaqiyaMusic;
+  function setSound(v) {
+    soundOn = v;
+    sndBtn.setAttribute("aria-pressed", String(v));
+    if (hint) hint.hidden = v;
+    player.classList.toggle("music", v && playing);
+    if (v && playing) M()?.start(); else M()?.stop();
+  }
+  // effets : reflet lumineux et fines gouttes sur l'image
+  const stage = document.getElementById("stage");
+  stage.insertAdjacentHTML("beforeend", '<i class="glow"></i><div class="fx-drops">' +
+    Array.from({ length: 14 }, (_, k) => `<i style="left:${(k * 7.3 + 3) % 100}%;animation-duration:${1.1 + (k % 5) * 0.25}s;animation-delay:-${(k * 0.37) % 1.5}s"></i>`).join("") + "</div>");
+
   function show(i) {
     if (i === cur) return;
+    if (cur !== -1 && soundOn) M()?.drop();      // « plic » de goutte à chaque changement de scène
     cur = i;
     scenes.forEach((s, k) => {
       if (k === i) { s.classList.remove("on"); void s.offsetWidth; s.classList.add("on"); }   // relance les animations
@@ -51,11 +68,17 @@
     render();
     requestAnimationFrame(frame);
   }
-  function play() { if (playing) return; playing = true; player.classList.add("playing"); last = performance.now(); requestAnimationFrame(frame); }
-  function pause() { playing = false; player.classList.remove("playing"); }
+  function play() {
+    if (playing) return;
+    playing = true; player.classList.add("playing"); last = performance.now(); requestAnimationFrame(frame);
+    if (soundOn) { M()?.start(); player.classList.add("music"); }
+  }
+  function pause() { playing = false; player.classList.remove("playing", "music"); M()?.stop(); }
   function seek(sec) { t = Math.max(0, Math.min(total - .01, sec)); cur = -1; render(); }
 
-  document.getElementById("big-play").addEventListener("click", play);
+  document.getElementById("big-play").addEventListener("click", (e) => { e.stopPropagation(); play(); setSound(true); });
+  sndBtn.addEventListener("click", (e) => { e.stopPropagation(); setSound(!soundOn); if (soundOn && !playing) play(); });
+  if (hint) hint.addEventListener("click", (e) => { e.stopPropagation(); if (!playing) play(); setSound(true); });
   document.getElementById("v-play").addEventListener("click", () => (playing ? pause() : play()));
   document.getElementById("stage").addEventListener("click", () => (playing ? pause() : play()));
   document.getElementById("v-track").addEventListener("click", (e) => {
@@ -77,6 +100,9 @@
       else if (!e.isIntersecting && playing) pause();
     }), { threshold: [0, .5] }).observe(player);
   }
+
+  // la langue choisie pour le site s'applique aussi aux sous-titres
+  window.addEventListener("saqiya-lang", (e) => { lang = e.detail === "ar" ? "ar" : "fr"; applyLang(); });
 
   applyLang();
   render();
