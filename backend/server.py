@@ -347,7 +347,7 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
 
     # ---------- contrôle d'accès ----------
-    PUBLIC_API = {"/api/public/summary", "/api/i18n/ar", "/api/device/ping"}
+    PUBLIC_API = {"/api/alive", "/api/public/summary", "/api/i18n/ar", "/api/device/ping"}
     OWNER_ONLY = {"/api/notify/detect", "/api/notify/test", "/api/notify/disconnect",
                   "/api/ai/key", "/api/ai/provider"}
 
@@ -475,6 +475,8 @@ class Handler(BaseHTTPRequestHandler):
         try:
             if self._deny(u.path, "GET"):
                 return
+            if u.path == "/api/alive":     # le site vitrine (Vercel) vérifie que le serveur du PC répond
+                return self._json({"ok": True}, headers={"Access-Control-Allow-Origin": "*"})
             if u.path == "/api/auth/config":
                 return self._json({"google_client_id": auth.google_client_id(), "has_users": db.count_users() > 0})
             if u.path == "/api/auth/me":

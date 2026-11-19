@@ -35,8 +35,9 @@
         document.querySelectorAll("[data-app]").forEach((a) => { a.href = url; });
         CFG.app = url;
         const ctl = new AbortController(); setTimeout(() => ctl.abort(), 8000);
-        await fetch(base + "/login", { mode: "no-cors", cache: "no-store", signal: ctl.signal });   // échoue si le tunnel est fermé
-        offline = false;
+        // échoue si le tunnel est fermé OU si le serveur du PC est arrêté (erreur 502 de Cloudflare, sans en-tête CORS)
+        const r = await fetch(base + "/api/alive", { cache: "no-store", signal: ctl.signal });
+        offline = !r.ok;
       })
       .catch(() => { offline = true; });
   }
