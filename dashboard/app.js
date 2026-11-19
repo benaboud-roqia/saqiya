@@ -629,7 +629,7 @@ function bubble(role, text, ts, source, typed) {
   div.appendChild(body);
   const st = document.createElement("span");
   st.className = "stamp";
-  st.textContent = (role === "user" ? "Vous" : "Conseiller") + (ts ? " · " + hm(ts) : "") + (source === "local" ? " · réponse de base" : "");
+  st.textContent = (role === "user" ? "Vous" : "Conseiller") + (ts ? " · " + hm(ts) : "");
   div.appendChild(st);
   $("#chat-log").appendChild(div);
   if (typed && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) typeOut(body, clean, div);
@@ -759,9 +759,7 @@ async function refresh() {
     renderPump(s);
     renderHealth(s);
     renderSoil(s);
-    $("#advisor-status").textContent = s.llm_available
-      ? "Disponible · répond en arabe, darija ou français"
-      : "Réponses de base · ajoutez la clé Groq dans le fichier .env pour un dialogue complet";
+    $("#advisor-status").textContent = "Disponible · répond en arabe, darija ou français";
     if (state.tick % 6 === 0) {
       await loadRows();
       renderForecast(s);
