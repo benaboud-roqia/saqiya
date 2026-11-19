@@ -54,8 +54,11 @@ try {
     if (Test-Path $tmp) { Remove-Item $tmp -Recurse -Force }
     New-Item -ItemType Directory $tmp | Out-Null
     Copy-Item (Join-Path $Root "site\*") $tmp -Recurse
-    $cfg = "/* site publié sur GitHub Pages : adresse du tableau de bord mise à jour par en_ligne.ps1 */`nwindow.SAQIYA = { app: `"$url/app/`", live: false, embed: false };`n"
+    $cfg = "/* site publié sur GitHub Pages : adresse du tableau de bord mise à jour par en_ligne.ps1 */`nwindow.SAQIYA = { app: `"$url/app/`", addr: `"https://raw.githubusercontent.com/benaboud-roqia/saqiya/gh-pages/adresse.json`", live: false, embed: false };`n"
     [IO.File]::WriteAllText((Join-Path $tmp "config.js"), $cfg, (New-Object Text.UTF8Encoding $false))
+    # adresse.json : lu par le site Vercel pour trouver le tableau de bord sans republier le site
+    $stamp = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+    [IO.File]::WriteAllText((Join-Path $tmp "adresse.json"), "{`"url`": `"$url`", `"maj`": `"$stamp`"}`n", (New-Object Text.UTF8Encoding $false))
     New-Item -ItemType File (Join-Path $tmp ".nojekyll") | Out-Null
     $name = git -C $Root config user.name; $mail = git -C $Root config user.email
     Push-Location $tmp

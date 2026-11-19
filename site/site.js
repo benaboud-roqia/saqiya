@@ -5,6 +5,41 @@
 
   // liens vers le tableau de bord : sur le PC « /app/ », sur GitHub Pages l'adresse choisie dans config.js
   document.querySelectorAll("[data-app]").forEach((a) => { a.href = CFG.app; });
+
+  // site en ligne (Vercel / GitHub) : l'adresse du tunnel change à chaque démarrage du PC,
+  // on lit donc la dernière adresse publiée par en_ligne.ps1, puis on vérifie que le PC répond.
+  if (CFG.addr) {
+    let offline = false;
+    const AR = () => document.documentElement.lang === "ar";
+    const note = () => {
+      let t = document.getElementById("app-offline");
+      if (!t) {
+        t = document.createElement("div"); t.id = "app-offline";
+        t.style.cssText = "position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:9999;max-width:min(92vw,440px);padding:12px 16px;border-radius:12px;background:#0b1d33;color:#fff;font:600 .9rem/1.4 system-ui,sans-serif;box-shadow:0 12px 30px -10px rgba(0,0,0,.6);text-align:center";
+        document.body.appendChild(t);
+      }
+      t.textContent = AR() ? "لوحة التحكم غير متاحة الآن: حاسوب المزرعة مطفأ. أعد المحاولة لاحقاً."
+                           : "Le tableau de bord est hors ligne pour le moment (PC de la parcelle éteint). Réessayez plus tard.";
+      t.hidden = false; clearTimeout(note.h); note.h = setTimeout(() => { t.hidden = true; }, 5000);
+    };
+    document.addEventListener("click", (e) => {
+      const a = e.target.closest && e.target.closest("[data-app]");
+      if (a && offline) { e.preventDefault(); note(); }
+    }, true);
+    fetch(CFG.addr + "?t=" + Date.now(), { cache: "no-store" })
+      .then((r) => r.json())
+      .then(async (j) => {
+        const base = String(j.url || "").replace(/\/$/, "");
+        if (!/^https:\/\//.test(base)) throw new Error("adresse");
+        const url = base + "/app/";
+        document.querySelectorAll("[data-app]").forEach((a) => { a.href = url; });
+        CFG.app = url;
+        const ctl = new AbortController(); setTimeout(() => ctl.abort(), 8000);
+        await fetch(base + "/login", { mode: "no-cors", cache: "no-store", signal: ctl.signal });   // échoue si le tunnel est fermé
+        offline = false;
+      })
+      .catch(() => { offline = true; });
+  }
   const frame = document.querySelector("[data-app-frame]");
   if (frame && !CFG.embed) {
     // GitHub Pages (https) ne peut pas afficher le tableau de bord du PC (http) dans la page : panneau à la place
