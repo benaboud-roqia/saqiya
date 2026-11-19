@@ -1,0 +1,53 @@
+{
+  "_note": "Principales maladies et ravageurs par culture, pour le conseiller sans IA. Conseils généraux : confirmer avec un technicien agricole avant tout traitement et respecter l'étiquette des produits.",
+  "pomme_de_terre": [
+    {"name": "Mildiou (البياض الزغبي)", "spot": "taches brun-vert huileuses sur les feuilles, duvet blanc au revers par temps humide, tubercules tachés de brun", "act": "éviter de mouiller le feuillage, arroser le matin au goutte-à-goutte, traitement préventif au cuivre ou fongicide homologué dès que le temps est humide et doux"},
+    {"name": "Alternariose (اللفحة المبكرة)", "spot": "taches brunes rondes avec des cercles concentriques sur les vieilles feuilles", "act": "rotation des cultures, fertilisation équilibrée en azote, fongicide homologué si les taches progressent"},
+    {"name": "Gale commune (الجرب العادي)", "spot": "croûtes liégeuses rugueuses à la surface des tubercules", "act": "garder le sol humide pendant la formation des tubercules, éviter le chaulage excessif (pH trop élevé), plants sains"},
+    {"name": "Rhizoctone brun", "spot": "petites croûtes noires sur les tubercules, chancres bruns sur les tiges, levée irrégulière", "act": "plants certifiés, ne pas planter dans un sol froid et trop humide, rotation de 3 à 4 ans"},
+    {"name": "Pourriture molle et jambe noire (bactéries)", "spot": "tige noire et molle à la base, tubercules qui pourrissent avec une odeur forte", "act": "éviter l'excès d'eau, arracher les plants atteints, stocker au frais et au sec, ne pas blesser les tubercules"},
+    {"name": "Fusariose (pourriture sèche)", "spot": "tubercules ridés et creux en conservation, moisissure blanche ou rose", "act": "récolter par temps sec, éviter les blessures, bien ventiler le lieu de stockage"},
+    {"name": "Virus (virus Y, enroulement)", "spot": "feuilles enroulées, marbrées ou nécrosées, plantes naines", "act": "utiliser des plants certifiés, éliminer les plants malades, lutter contre les pucerons"},
+    {"name": "Pourriture des racines / asphyxie", "spot": "flétrissement et jaunissement malgré un sol humide", "act": "réduire l'arrosage, améliorer le drainage ; le système surveille l'excès d'eau"},
+    {"name": "Doryphore (ravageur)", "spot": "larves orange et adultes rayés jaune et noir qui dévorent les feuilles", "act": "ramassage à la main au début, produits homologués si l'attaque est forte"}
+  ],
+  "tomate": [
+    {"name": "Mildiou (البياض الزغبي)", "spot": "grandes taches brunes sur feuilles et tiges, fruits marbrés de brun", "act": "aérer, goutte-à-goutte, ne pas mouiller le feuillage, cuivre ou fongicide homologué en préventif"},
+    {"name": "Oïdium (البياض الدقيقي)", "spot": "feutrage blanc poudreux sur les feuilles", "act": "aérer la culture, soufre ou fongicide homologué, éliminer les feuilles touchées"},
+    {"name": "Alternariose (اللفحة المبكرة)", "spot": "taches brunes à cercles concentriques sur les vieilles feuilles", "act": "retirer les feuilles du bas, rotation, fongicide homologué si besoin"},
+    {"name": "Botrytis ou pourriture grise (العفن الرمادي)", "spot": "moisissure grise sur fruits, tiges et fleurs", "act": "réduire l'humidité, aérer, retirer les parties atteintes"},
+    {"name": "Cul noir (carence liée à l'arrosage)", "spot": "tache noire et sèche au bout du fruit", "act": "arroser de façon régulière (le système le fait), apport de calcium si le sol en manque"},
+    {"name": "Tuta absoluta (ravageur)", "spot": "galeries blanches dans les feuilles, fruits percés", "act": "pièges à phéromone, filets, retirer les feuilles minées, produits homologués"}
+  ],
+  "ble": [
+    {"name": "Rouille (الصدأ)", "spot": "pustules orange ou brunes sur les feuilles", "act": "variétés résistantes, fongicide homologué au début de l'attaque"},
+    {"name": "Septoriose", "spot": "taches brunes allongées avec des points noirs sur les feuilles", "act": "rotation, enfouir les résidus, fongicide homologué"},
+    {"name": "Oïdium (البياض الدقيقي)", "spot": "feutrage blanc sur les feuilles et les tiges", "act": "éviter l'excès d'azote, fongicide homologué"},
+    {"name": "Fusariose de l'épi", "spot": "épillets blanchis ou roses", "act": "rotation, ne pas semer après maïs, fongicide à la floraison si temps humide"}
+  ],
+  "olivier": [
+    {"name": "Œil de paon", "spot": "taches rondes sombres entourées d'un halo jaune sur les feuilles, chute des feuilles", "act": "tailler pour aérer, traitement au cuivre en automne et au printemps"},
+    {"name": "Tuberculose de l'olivier", "spot": "galles (boules) sur les rameaux", "act": "couper et brûler les rameaux atteints, désinfecter les outils, cuivre après la taille"},
+    {"name": "Verticilliose", "spot": "dessèchement soudain d'une partie de l'arbre", "act": "éviter les blessures aux racines, ne pas planter après tomate ou pomme de terre"},
+    {"name": "Mouche de l'olive (ravageur)", "spot": "olives piquées et véreuses", "act": "pièges jaunes, récolte précoce, produits homologués"}
+  ],
+  "agrumes": [
+    {"name": "Gommose (Phytophthora)", "spot": "écoulement de gomme et écorce brune au collet", "act": "éviter l'eau contre le tronc, bon drainage, cuivre sur la zone atteinte"},
+    {"name": "Fumagine", "spot": "dépôt noir sur les feuilles, lié aux pucerons et cochenilles", "act": "lutter contre les insectes suceurs, huile blanche"},
+    {"name": "Cochenilles et pucerons (ravageurs)", "spot": "petits insectes sur les feuilles et rameaux, miellat collant", "act": "huile blanche, auxiliaires (coccinelles), produits homologués si besoin"}
+  ],
+  "poivron": [
+    {"name": "Oïdium (البياض الدقيقي)", "spot": "taches jaunes dessus, feutrage blanc dessous", "act": "aérer, soufre ou fongicide homologué"},
+    {"name": "Pourriture du collet (Phytophthora)", "spot": "flétrissement brutal, tige brune au niveau du sol", "act": "ne pas noyer le sol, drainage, retirer les plants atteints"},
+    {"name": "Cul noir", "spot": "tache sèche au bout du fruit", "act": "arrosage régulier, calcium"}
+  ],
+  "fraise": [
+    {"name": "Botrytis ou pourriture grise (العفن الرمادي)", "spot": "fruits couverts de moisissure grise", "act": "paillage, aérer, retirer les fruits pourris, ne pas mouiller les fruits"},
+    {"name": "Oïdium (البياض الدقيقي)", "spot": "feuilles qui se recroquevillent avec un feutrage blanc", "act": "aérer, soufre ou fongicide homologué"}
+  ],
+  "vigne": [
+    {"name": "Mildiou (البياض الزغبي)", "spot": "taches jaunes huileuses dessus, duvet blanc dessous", "act": "cuivre en préventif après les pluies"},
+    {"name": "Oïdium (البياض الدقيقي)", "spot": "poudre blanche sur feuilles et grappes, grains qui éclatent", "act": "soufre en préventif, aérer les grappes"},
+    {"name": "Botrytis ou pourriture grise (العفن الرمادي)", "spot": "grappes pourries et grises", "act": "effeuiller autour des grappes, éviter les blessures"}
+  ]
+}

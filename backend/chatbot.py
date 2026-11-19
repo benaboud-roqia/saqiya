@@ -112,22 +112,88 @@ def _ask_claude(question, context):
 
 
 # ---------------------------------------------------------------- moteur local
+import difflib  # noqa: E402
+import unicodedata  # noqa: E402
+
+try:
+    with open(os.path.join(os.path.dirname(__file__), "crop_diseases.json"), encoding="utf-8") as _f:
+        CROP_DISEASES = {k: v for k, v in json.load(_f).items() if not k.startswith("_")}
+except (OSError, ValueError):
+    CROP_DISEASES = {}
+
+# noms des cultures tels que l'agriculteur les écrit (français, arabe, darija)
+CROP_WORDS = {
+    "pomme_de_terre": ["pomme de terre", "pommes de terre", "patate", "batata", "بطاطا", "بطاطس", "البطاطا"],
+    "tomate": ["tomate", "tomates", "طماطم", "طماطيش", "الطماطم"],
+    "ble": ["ble", "blé", "قمح", "القمح"],
+    "olivier": ["olivier", "olive", "زيتون", "الزيتون"],
+    "agrumes": ["agrume", "orange", "citron", "حمضيات", "برتقال", "ليمون"],
+    "poivron": ["poivron", "piment", "فلفل", "الفلفل"],
+    "fraise": ["fraise", "فراولة", "الفراولة"],
+    "vigne": ["vigne", "raisin", "عنب", "العنب", "كرمة"],
+}
+
+
+def _norm(s):
+    """minuscules, sans accents, ponctuation remplacée par des espaces (garde l'arabe)."""
+    s = unicodedata.normalize("NFKD", (s or "").lower())
+    s = "".join(c for c in s if not unicodedata.combining(c))
+    return re.sub(r"[^\w؀-ۿ]+", " ", s).strip()
+
+
 def _has(q, words):
-    return any(w in q for w in words)
+    """vrai si un des mots-clés est dans la question, même avec une petite faute de frappe."""
+    tokens = q.split()
+    words = [_norm(w) for w in words if _norm(w)]
+    for w in words:
+        if (w in tokens) if len(w) <= 3 else (w in q):   # mots courts (« eau », « ph ») : mot entier seulement
+            return True
+    for w in words:
+        if len(w) >= 5 and " " not in w and difflib.get_close_matches(w, tokens, n=1, cutoff=0.78):
+            return True
+        # préfixes tapés de travers : « ;aladie » → « aladie » ≈ « maladie »
+        if len(w) >= 6 and any(len(t) >= 5 and difflib.SequenceMatcher(None, w, t[:len(w)]).ratio() >= 0.8 for t in tokens):
+            return True
+    return False
+
+
+def _crop_in(q, ctx):
+    for key, words in CROP_WORDS.items():
+        if _has(q, [_norm(w) for w in words]):
+            return key
+    return ctx.get("culture")
+
+
+def _crop_label(key):
+    return (knowledge.KB["crops"].get(key) or {}).get("label", key or "votre culture")
 
 
 def _local_answer(question, ctx):
-    q = question.lower()
+    q = _norm(question)
     r = ctx.get("latest_reading") or {}
     dec = ctx.get("irrigation_decision") or {}
     th = ctx.get("thresholds") or {}
     w = ctx.get("weather") or {}
     lines = []
+    crop = _crop_in(q, ctx)
 
-    if _has(q, ["سق", "الري", "arros", "irrig", " eau", "ماء", "pomp", "مضخ"]):
+    if _has(q, ["salut", "bonjour", "bonsoir", "salam", "slm", "hello", "coucou", "السلام", "سلام", "مرحبا", "اهلا", "صباح", "مساء"]) and len(q.split()) <= 4:
+        lines.append("وعليكم السلام ! Bonjour, je suis votre conseiller agricole.")
+        lines.append("Demandez-moi par exemple : « Est-ce que je dois arroser ? », « Quelles maladies menacent la "
+                     f"{_crop_label(crop).split(' (')[0].lower()} ? », « Quel engrais mettre ? » ou « Pourquoi les feuilles jaunissent ? ».")
+
+    if _has(q, ["merci", "شكرا", "شكرًا", "barak", "saha", "يعطيك"]) and len(q.split()) <= 5:
+        lines.append("Avec plaisir ! Je reste disponible pour toute question sur votre parcelle.")
+
+    if _has(q, ["سق", "الري", "ري ", "arros", "irrig", "eau", "ماء", "الماء", "pomp", "مضخ", "goutte"]):
         m = r.get("soil_moisture")
         if m is None:
-            lines.append("Je n'ai pas encore de mesure d'humidité du sol.")
+            lines.append("Je n'ai pas encore de mesure d'humidité du sol : le boîtier n'envoie rien pour l'instant.")
+            if w.get("available"):
+                lines.append(f"Pluie prévue sur 12 h : {w.get('rain_next_12h_mm', 0)} mm (probabilité max {w.get('rain_prob_max_12h', 0)} %). "
+                             + ("Inutile d'arroser avant la pluie." if (w.get("rain_prob_max_12h") or 0) >= 60 else "Pas de pluie importante annoncée."))
+            lines.append("En attendant : enfoncez un doigt à 5 cm dans le sol. S'il est sec, arrosez tôt le matin ; s'il est frais et humide, attendez.")
+            lines.append("Branchez l'ESP32 au PC en USB pour que je décide avec la vraie humidité du sol.")
         else:
             lines.append(f"Humidité du sol actuelle : {m:.1f} % (seuil {th.get('threshold')} %, "
                          f"cible {th.get('target')} %).")
@@ -156,18 +222,65 @@ def _local_answer(question, ctx):
             lines.append("Les niveaux N-P-K, pH et salinité mesurés sont corrects : "
                          "un engrais d'entretien équilibré suffit. " + (ctx.get("crop") or {}).get("needs", ""))
 
-    if _has(q, ["مرض", "أمراض", "malad", "champign", "فطر", "mildiou", "oïdium", "oidium"]):
+    # une maladie précise est nommée : fiche détaillée
+    named = []
+    for key, items in CROP_DISEASES.items():
+        for d in items:
+            base = _norm(d["name"].split("(")[0])
+            main = base.split()[0] if base else ""
+            if main and len(main) >= 5 and _has(q, [main]) and d["name"] not in [x["name"] for x in named]:
+                named.append(d)
+    disease_q = _has(q, ["مرض", "امراض", "أمراض", "الامراض", "maladie", "maladies", "malad", "champign", "فطر", "virus",
+                         "ravageur", "insecte", "حشرة", "parasite", "tache", "taches", "بقع", "pourri", "عفن"])
+    if named and not disease_q:
+        for d in named[:2]:
+            lines.append(f"{d['name']}")
+            lines.append(f"• Comment la reconnaître : {d['spot']}.")
+            lines.append(f"• Que faire : {d['act']}.")
+    elif disease_q or named:
+        items = CROP_DISEASES.get(crop) or []
+        label = _crop_label(crop).split(" (")[0].lower()
+        if items:
+            lines.append(f"Principales maladies et ravageurs de la {label} :")
+            for d in items:
+                lines.append(f"• {d['name']} : {d['spot']}. À faire : {d['act']}.")
         risks = (ctx.get("disease") or {}).get("risks", [])
-        if risks:
-            lines.append("Risques de maladies actuels :")
-            lines += [f"• {x['label']} : {x['risk']} % ({x['level']}) — {x['prevention']}" for x in risks[:3]]
+        if risks and crop == ctx.get("culture"):
+            top = [x for x in risks if x.get("level") != "faible"]
+            lines.append("")
+            if top:
+                lines.append("Risque en ce moment d'après les mesures de votre parcelle :")
+                lines += [f"• {x['label']} : {x['risk']} % ({x['level']}). {x['prevention']}" for x in top[:3]]
+            else:
+                lines.append("En ce moment, les mesures de votre parcelle ne montrent aucun risque élevé de maladie.")
+        elif not r:
+            lines.append("")
+            lines.append("Branchez le boîtier pour que je calcule le risque réel sur votre parcelle.")
+        lines.append("Confirmez avec un technicien agricole avant tout traitement et respectez l'étiquette des produits.")
+
+    if _has(q, ["meteo", "météo", "pluie", "pleuvoir", "temps", "طقس", "مطر", "الجو", "chaleur", "حرارة"]) and not lines:
+        if w.get("available"):
+            c = w.get("current") or {}
+            lines.append(f"Météo à la parcelle : {c.get('temperature_2m', '—')} °C, humidité de l'air {c.get('relative_humidity_2m', '—')} %.")
+            lines.append(f"Pluie prévue sur 12 h : {w.get('rain_next_12h_mm', 0)} mm (probabilité max {w.get('rain_prob_max_12h', 0)} %).")
+        else:
+            lines.append("La météo n'est pas disponible pour le moment (pas de connexion Internet).")
+
+    if _has(q, ["capteur", "boitier", "boîtier", "mesure", "mesures", "etat", "état", "sol", "ph", "salinite", "مستشعر", "قياس", "التربة"]) and not lines:
+        if r:
+            lines.append(f"Dernières mesures : humidité du sol {r.get('soil_moisture')} %, température du sol {r.get('soil_temp')} °C, "
+                         f"pH {r.get('soil_ph')}, salinité {r.get('soil_ec')} dS/m, N {r.get('n')} · P {r.get('p')} · K {r.get('k')} mg/kg.")
+        else:
+            lines.append("Aucun boîtier n'envoie de mesures pour l'instant : branchez l'ESP32 au PC en USB (moniteur série fermé).")
 
     if not lines:
-        lines.append("Je suis le خبير فلاحي du système. Posez-moi des questions sur l'arrosage, "
-                     "les maladies, les engrais ou le jaunissement des feuilles.")
+        lines.append("Je n'ai pas bien compris la question, mais je peux vous aider sur :")
+        lines.append("• l'arrosage (« Est-ce que je dois arroser ? »)")
+        lines.append(f"• les maladies (« Quelles maladies menacent la {_crop_label(crop).split(' (')[0].lower()} ? »)")
+        lines.append("• les engrais et le jaunissement des feuilles")
+        lines.append("• la météo et les mesures du boîtier")
         if r:
-            lines.append(f"État actuel : sol {r.get('soil_moisture')} %, air {r.get('air_temp')} °C / "
-                         f"{r.get('air_humidity')} %.")
+            lines.append(f"État actuel : sol {r.get('soil_moisture')} %, air {r.get('air_temp')} °C / {r.get('air_humidity')} %.")
     return "\n".join(lines)
 
 
