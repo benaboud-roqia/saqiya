@@ -610,18 +610,53 @@ $("#alerts").addEventListener("click", async (e) => {
 /* ================= journal : voir journal.js ================= */
 
 /* ================= conseiller ================= */
-function bubble(role, text, ts, source) {
+// texte simple : retire les symboles de mise en forme (**, #, `…) des anciennes réponses
+function plainText(t) {
+  return String(t || "")
+    .replace(/```[a-z]*\n?([\s\S]*?)```/gi, "$1").replace(/`([^`]*)`/g, "$1")
+    .replace(/\[([^\]]+)\]\((https?:[^)]+)\)/g, "$1 ($2)")
+    .replace(/^\s{0,3}#{1,6}\s*/gm, "").replace(/^\s*[*+-]\s+/gm, "• ").replace(/^\s*([-*_=]){3,}\s*$/gm, "")
+    .replace(/(\d)\s*\*\s*(\d)/g, "$1 × $2").replace(/(\*\*|__)(.+?)\1/g, "$2").replace(/\*/g, "").replace(/#/g, "")
+    .replace(/\n{3,}/g, "\n\n").trim();
+}
+function bubble(role, text, ts, source, typed) {
   const div = document.createElement("div");
   div.className = "msg " + (role === "user" ? "user" : "bot");
   div.dir = "auto";
-  div.textContent = text;
+  const body = document.createElement("span");
+  body.className = "msg-text";
+  const clean = role === "user" ? text : plainText(text);
+  div.appendChild(body);
   const st = document.createElement("span");
   st.className = "stamp";
   st.textContent = (role === "user" ? "Vous" : "Conseiller") + (ts ? " · " + hm(ts) : "") + (source === "local" ? " · réponse de base" : "");
   div.appendChild(st);
   $("#chat-log").appendChild(div);
+  if (typed && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) typeOut(body, clean, div);
+  else body.textContent = clean;
   $("#chat-log").scrollTop = $("#chat-log").scrollHeight;
   return div;
+}
+// réponse écrite lettre par lettre ; les longues réponses accélèrent (7 s au maximum)
+function typeOut(el, text, msg) {
+  const chars = Array.from(text), log = $("#chat-log");
+  const perChar = Math.max(4, Math.min(28, 7000 / Math.max(1, chars.length)));
+  msg.classList.add("typing-out");
+  let i = 0, last = performance.now(), acc = 0;
+  const stick = () => log.scrollHeight - log.scrollTop - log.clientHeight < 80;
+  (function step(now) {
+    acc += now - last; last = now;
+    const n = Math.floor(acc / perChar);
+    if (n > 0) {
+      acc -= n * perChar;
+      const follow = stick();
+      i = Math.min(chars.length, i + n);
+      el.textContent = chars.slice(0, i).join("");
+      if (follow) log.scrollTop = log.scrollHeight;
+    }
+    if (i < chars.length) requestAnimationFrame(step);
+    else msg.classList.remove("typing-out");
+  })(last);
 }
 async function loadChat() {
   const h = await api("/api/chat/history").catch(() => []);
@@ -644,7 +679,7 @@ async function send(text) {
   try {
     const r = await api("/api/chat", { method: "POST", body: JSON.stringify({ message: text }) });
     wait.remove();
-    bubble("bot", r.reply, Date.now() / 1000, r.source);
+    bubble("bot", r.reply, Date.now() / 1000, r.source, true);
   } catch (e) {
     wait.remove();
     bubble("bot", "Le message n'a pas pu être envoyé : " + e.message);

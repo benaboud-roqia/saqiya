@@ -143,3 +143,9 @@ body.no-device .hb-stats span:nth-child(-n+2), body.no-device .scene-mon { displ
 .dz-w p { margin: 0; font-size: .82rem; color: var(--ink-2); }
 :root[data-theme="bleu"] .dz-card, :root[data-theme="bleu"] .dz-w { background: rgba(10, 24, 48, .82); border-color: rgba(160, 190, 235, .18); }
 @media (max-width: 560px) { .dz-list { grid-template-columns: 1fr; } .dz-card { grid-template-columns: 96px minmax(0, 1fr); } }
+
+/* conseiller : texte simple sur plusieurs lignes, curseur pendant l'écriture lettre par lettre */
+.msg .msg-text { white-space: pre-wrap; display: block; }
+.msg.typing-out .msg-text::after { content: ""; display: inline-block; width: 2px; height: 1.05em; margin-inline-start: 2px;
+  vertical-align: -2px; background: currentColor; animation: caret .8s steps(1) infinite; }
+@keyframes caret { 50% { opacity: 0; } }

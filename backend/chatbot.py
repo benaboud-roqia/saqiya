@@ -10,6 +10,7 @@ basé sur des règles répond quand même aux questions courantes à partir des 
 """
 import json
 import os
+import re
 
 import database as db
 import knowledge
@@ -35,6 +36,9 @@ Règles :
 - Si une information manque (capteur absent, météo indisponible), dis-le et donne un conseil prudent.
 - Pour les produits phytosanitaires, rappelle de respecter l'étiquette, les doses et le délai avant récolte,
   et de consulter un technicien agricole local en cas de doute.
+- FORMAT : texte simple uniquement, comme un SMS bien écrit. N'utilise JAMAIS de Markdown : pas d'astérisques (*),
+  pas de dièses (#), pas de tirets bas (_), pas d'accents graves (`), pas de tableaux ni de liens. Pour une liste,
+  mets chaque point sur une nouvelle ligne commençant par « • ». Phrases courtes, paragraphes séparés par une ligne vide.
 
 BASE DE CONNAISSANCES AGRICOLE (JSON) :
 """ + json.dumps(knowledge.KB, ensure_ascii=False)
@@ -167,6 +171,38 @@ def _local_answer(question, ctx):
     return "\n".join(lines)
 
 
+def plain_text(text):
+    """Retire toute mise en forme Markdown d'une réponse : l'agriculteur lit du texte simple."""
+    if not text:
+        return text
+    t = text.replace("\r\n", "\n")
+    t = re.sub(r"```[a-zA-Z]*\n?(.*?)```", r"\1", t, flags=re.S)          # blocs de code
+    t = re.sub(r"`([^`]*)`", r"\1", t)                                     # code en ligne
+    t = re.sub(r"!\[([^\]]*)\]\([^)]*\)", r"\1", t)                        # images
+    t = re.sub(r"\[([^\]]+)\]\((https?://[^)]+)\)", r"\1 (\2)", t)         # liens
+    lines = []
+    for ln in t.split("\n"):
+        s = ln.strip()
+        if re.fullmatch(r"\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?", s):  # ligne de séparation d'un tableau
+            continue
+        if s.startswith("|") and s.endswith("|"):                          # ligne de tableau -> valeurs séparées
+            s = "   ".join(c.strip() for c in s.strip("|").split("|"))
+        s = re.sub(r"^#{1,6}\s*", "", s)                                   # titres
+        s = re.sub(r"^>\s?", "", s)                                        # citations
+        s = re.sub(r"^[*+\-]\s+", "• ", s)                                 # puces
+        if re.fullmatch(r"[-*_=]{3,}", s):                                 # traits horizontaux
+            continue
+        lines.append(s)
+    t = "\n".join(lines)
+    t = re.sub(r"(?<=\d)\s*\*\s*(?=\d)", " × ", t)                        # 3*4 -> 3 × 4 (multiplication)
+    t = re.sub(r"(\*\*|__)(.+?)\1", r"\2", t)                             # gras
+    t = re.sub(r"(?<![\w*])\*(?!\s)(.+?)(?<!\s)\*(?![\w*])", r"\1", t)    # italique *x*
+    t = re.sub(r"(?<![\w_])_(?!\s)(.+?)(?<!\s)_(?![\w_])", r"\1", t)      # italique _x_
+    t = t.replace("*", "").replace("#", "").replace("`", "")              # restes éventuels
+    t = re.sub(r"\n{3,}", "\n\n", t)
+    return t.strip()
+
+
 def answer(question, context):
     reply, source = None, "local"
     if llm_available():
@@ -191,6 +227,7 @@ def answer(question, context):
     if not reply:
         reply = _local_answer(question, context)
         source = "local"
+    reply = plain_text(reply)
     db.add_chat("user", question, "user")
     db.add_chat("assistant", reply, source)
     return {"reply": reply, "source": source}
