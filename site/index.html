@@ -27,7 +27,7 @@
     <a href="#boitier">Le boîtier</a>
     <a href="#questions">Questions</a>
   </nav>
-  <a class="btn btn-dark" href="/app/">Ouvrir le tableau de bord</a>
+  <a class="btn btn-dark" href="/app/" data-app>Ouvrir le tableau de bord</a>
   <button class="burger" id="burger" aria-label="Menu" aria-expanded="false"><i></i><i></i></button>
 </header>
 
@@ -41,7 +41,7 @@
         d'ouvrir l'eau, attend la pluie quand elle est annoncée, repère les conditions des maladies avant les premières
         taches, et répond aux questions de l'agriculteur en arabe, en darija ou en français.</p>
       <div class="cta">
-        <a class="cta-main" href="/app/">
+        <a class="cta-main" href="/app/" data-app>
           <span class="cta-live" aria-hidden="true"><i></i></span>
           <span class="cta-txt"><b>Voir la parcelle en direct</b><small>Tableau de bord · <span lang="ar">لوحة التحكم</span></small></span>
           <svg class="cta-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
@@ -296,8 +296,8 @@
     </header>
     <div class="frame reveal">
       <div class="frame-bar"><i></i><i></i><i></i><span>localhost:8000/app</span></div>
-      <div class="frame-body"><iframe src="/app/" title="Tableau de bord en direct" loading="lazy" tabindex="-1"></iframe></div>
-      <a class="frame-link" href="/app/">Ouvrir en plein écran</a>
+      <div class="frame-body"><iframe src="/app/" data-app-frame title="Tableau de bord en direct" loading="lazy" tabindex="-1"></iframe></div>
+      <a class="frame-link" href="/app/" data-app>Ouvrir en plein écran</a>
     </div>
   </section>
 
@@ -333,7 +333,7 @@
     <img src="https://images.unsplash.com/photo-1647432460909-153f77f1630f?auto=format&fit=crop&w=2000&q=70" alt="" loading="lazy">
     <div class="final-text reveal">
       <h2>La parcelle de démonstration tourne en ce moment.</h2>
-      <a class="btn btn-light" href="/app/">Ouvrir le tableau de bord</a>
+      <a class="btn btn-light" href="/app/" data-app>Ouvrir le tableau de bord</a>
     </div>
   </section>
 </main>
@@ -363,6 +363,7 @@
   <a class="to-top" href="#top">Haut de page ↑</a>
 </footer>
 
+<script src="config.js"></script>
 <script src="site.js"></script>
 <script src="video.js"></script>
 </body>

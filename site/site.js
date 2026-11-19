@@ -1,6 +1,24 @@
 /* Sāqiya — site de présentation : menu, apparitions, compteur, état de la parcelle en direct. */
 (function () {
   const $ = (s) => document.querySelector(s);
+  const CFG = Object.assign({ app: "/app/", live: true, embed: true }, window.SAQIYA || {});
+
+  // liens vers le tableau de bord : sur le PC « /app/ », sur GitHub Pages l'adresse choisie dans config.js
+  document.querySelectorAll("[data-app]").forEach((a) => { a.href = CFG.app; });
+  const frame = document.querySelector("[data-app-frame]");
+  if (frame && !CFG.embed) {
+    // GitHub Pages (https) ne peut pas afficher le tableau de bord du PC (http) dans la page : panneau à la place
+    const body = frame.parentElement;
+    body.classList.add("frame-off");
+    body.innerHTML = `<div class="frame-off-in">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H4z"/><path d="M8 20h8M12 16v4"/><path d="M8 12l2.5-3 2 2 3.5-4"/></svg>
+        <b>Le tableau de bord tourne sur le PC de la parcelle</b>
+        <p>Il reçoit les mesures du boîtier en direct. Ouvrez-le depuis le PC où le serveur Sāqiya est lancé.</p>
+        <a class="btn btn-dark" href="${CFG.app}">Ouvrir le tableau de bord</a>
+      </div>`;
+    const bar = document.querySelector(".frame-bar span");
+    if (bar) bar.textContent = CFG.app.replace(/^https?:\/\//, "");
+  }
 
   // en-tête : filet au défilement
   const top = $("#top");
@@ -67,6 +85,10 @@
       $("#live").hidden = true;
     }
   }
-  live();
-  setInterval(live, 10000);
+  if (CFG.live) {
+    live();
+    setInterval(live, 10000);
+  } else {
+    $("#live").hidden = true;   // pas de serveur derrière GitHub Pages
+  }
 })();

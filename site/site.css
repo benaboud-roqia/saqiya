@@ -259,3 +259,10 @@ html[dir="rtl"] .cta-arrow { transform: scaleX(-1); }
   .cta-arrow { margin-inline-start: auto; }
 }
 @media (prefers-reduced-motion: reduce) { .cta-main::after, .cta-live i { animation: none; } }
+
+/* GitHub Pages : panneau à la place de l'aperçu intégré */
+.frame-off { display: grid; place-items: center; background: linear-gradient(135deg, #0b1d33, #12345a); }
+.frame-off-in { max-width: 420px; padding: 32px 24px; text-align: center; color: #eaf2ff; display: grid; gap: 12px; justify-items: center; }
+.frame-off-in svg { width: 48px; height: 48px; fill: none; stroke: #7cc8ff; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.frame-off-in b { font-size: 1.15rem; }
+.frame-off-in p { margin: 0; color: #b9cbe6; }
