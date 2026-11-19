@@ -13,8 +13,22 @@ import database as db
 import knowledge
 
 _lock = threading.RLock()
-_pump = {"on": False, "until": 0.0, "event_id": None, "mode": None, "started": 0.0}
-_last_decision = {"action": "attente", "reason": "Aucune mesure reçue pour l'instant.", "ts": 0}
+# une pompe et une dernière décision par compte (chaque compte a sa parcelle)
+_pumps = {}
+_decisions = {}
+
+
+def _P():
+    return _pumps.setdefault(db.uid(), {"on": False, "until": 0.0, "event_id": None, "mode": None, "started": 0.0})
+
+
+def _D():
+    return _decisions.setdefault(db.uid(), {"action": "attente", "reason": "Aucune mesure reçue pour l'instant.", "ts": 0})
+
+
+def active_pumps():
+    """Comptes dont la pompe tourne (pour la tâche de fond)."""
+    return [u for u, p in _pumps.items() if p["on"]]
 
 
 def thresholds(settings, reading=None):
@@ -36,24 +50,24 @@ def pump_state():
     with _lock:
         now = time.time()
         # échéance dépassée sans nouvelle mesure du boîtier : on clôt l'arrosage quand même
-        if _pump["on"] and now >= _pump["until"]:
+        if _P()["on"] and now >= _P()["until"]:
             latest = db.latest_reading() or {}
             _stop(latest.get("soil_moisture"), db.get_settings())
             _decide("arrêt", "Durée d'arrosage atteinte.")
         return {
-            "on": _pump["on"],
-            "mode": _pump["mode"],
-            "seconds_remaining": max(0, int(_pump["until"] - now)) if _pump["on"] else 0,
-            "running_for_s": int(now - _pump["started"]) if _pump["on"] else 0,
+            "on": _P()["on"],
+            "mode": _P()["mode"],
+            "seconds_remaining": max(0, int(_P()["until"] - now)) if _P()["on"] else 0,
+            "running_for_s": int(now - _P()["started"]) if _P()["on"] else 0,
         }
 
 
 def last_decision():
-    return dict(_last_decision)
+    return dict(_D())
 
 
 def _decide(action, reason):
-    _last_decision.update({"action": action, "reason": reason, "ts": time.time()})
+    _D().update({"action": action, "reason": reason, "ts": time.time()})
 
 
 on_event = None   # rappel (notifications) : on_event(started, mode, seconds, moisture)
@@ -68,7 +82,7 @@ def _notify(*args):
 
 
 def _start(duration_s, mode, reason, moisture):
-    _pump.update({
+    _P().update({
         "on": True, "until": time.time() + duration_s, "mode": mode, "started": time.time(),
         "event_id": db.start_event(mode, reason, duration_s, moisture),
     })
@@ -76,8 +90,8 @@ def _start(duration_s, mode, reason, moisture):
 
 
 def _stop(moisture, settings):
-    event = db.end_event(_pump["event_id"], moisture) if _pump["event_id"] else None
-    _pump.update({"on": False, "until": 0.0, "event_id": None, "mode": None, "started": 0.0})
+    event = db.end_event(_P()["event_id"], moisture) if _P()["event_id"] else None
+    _P().update({"on": False, "until": 0.0, "event_id": None, "mode": None, "started": 0.0})
     if event:
         _learn(event, settings)
         _notify(False, event.get("mode"), event.get("duration_s"), moisture)
@@ -114,7 +128,7 @@ def run_schedules(weather):
     for i, sc in enumerate(settings.get("schedules") or []):
         if not sc.get("on", True) or sc.get("time") != hhmm or t.tm_wday not in sc.get("days", range(7)):
             continue
-        key = f"{today}-{i}-{hhmm}"
+        key = f"{db.uid()}-{today}-{i}-{hhmm}"
         if _done_schedules.get(key):
             continue
         _done_schedules[key] = True
@@ -122,7 +136,7 @@ def run_schedules(weather):
         m = latest.get("soil_moisture")
         _, target = thresholds(settings, latest)
         with _lock:
-            if _pump["on"]:
+            if _P()["on"]:
                 continue
             if sc.get("only_if_dry", True) and m is not None and m >= target:
                 _decide("reporté", f"Arrosage programmé de {hhmm} annulé : sol déjà humide ({m:.1f} % ≥ {target} %).")
@@ -161,12 +175,12 @@ def manual(action, duration_s=None):
         if action == "on":
             dur = int(duration_s or 300)
             dur = max(10, min(dur, int(settings["max_duration_s"])))
-            if _pump["on"]:
+            if _P()["on"]:
                 _stop(moisture, settings)
             _start(dur, "manuel", "Démarrage manuel", moisture)
             _decide("arrosage", f"Arrosage manuel pendant {dur} s.")
         elif action == "off":
-            if _pump["on"]:
+            if _P()["on"]:
                 _stop(moisture, settings)
             _decide("arrêt", "Pompe arrêtée manuellement.")
     return pump_state()
@@ -181,14 +195,14 @@ def process_reading(reading, weather):
 
     with _lock:
         # 1) une irrigation est en cours : faut-il l'arrêter ?
-        if _pump["on"]:
-            if now >= _pump["until"]:
+        if _P()["on"]:
+            if now >= _P()["until"]:
                 _stop(moisture, settings)
                 _decide("arrêt", "Durée d'arrosage atteinte.")
-            elif _pump["mode"] == "auto" and moisture is not None and moisture >= target:
+            elif _P()["mode"] == "auto" and moisture is not None and moisture >= target:
                 _stop(moisture, settings)
                 _decide("arrêt", f"Humidité cible atteinte ({moisture:.1f} % ≥ {target} %).")
-            elif _pump["mode"] == "auto" and reading.get("rain_detected"):
+            elif _P()["mode"] == "auto" and reading.get("rain_detected"):
                 _stop(moisture, settings)
                 _decide("arrêt", "Pluie détectée pendant l'arrosage : arrêt de la pompe.")
             return pump_state()

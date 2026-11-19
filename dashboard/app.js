@@ -694,9 +694,58 @@ $("#chat-input").addEventListener("keydown", (e) => {
 });
 $("#chat-input").addEventListener("input", (e) => { e.target.style.height = ""; e.target.style.height = Math.min(140, e.target.scrollHeight) + "px"; });
 $$("#prompts button").forEach((b) => b.addEventListener("click", () => send(b.textContent)));
+// nouvelle conversation : l'ancienne reste dans l'historique
 $("#chat-clear").addEventListener("click", async () => {
-  await api("/api/chat/clear", { method: "POST" });
-  loadChat();
+  await api("/api/chat/clear", { method: "POST", body: "{}" });
+  await loadChat();
+  if (!$("#chat-hist").hidden) loadChatHistory();
+  toast("Nouvelle conversation · l'ancienne est dans l'historique");
+});
+
+/* historique des conversations du compte */
+function chatDay(ts) {
+  const d = new Date(ts * 1000), today = new Date();
+  const y = new Date(); y.setDate(today.getDate() - 1);
+  const same = (a, b) => a.toDateString() === b.toDateString();
+  if (same(d, today)) return "Aujourd'hui";
+  if (same(d, y)) return "Hier";
+  return d.toLocaleDateString(LOC(), { weekday: "long", day: "numeric", month: "long" });
+}
+async function loadChatHistory() {
+  const r = await api("/api/chat/conversations").catch(() => ({ conversations: [] }));
+  const list = r.conversations || [];
+  $("#chat-hist-n").textContent = list.length ? `${list.length} conversation${list.length > 1 ? "s" : ""}` : "";
+  if (!list.length) { $("#chat-hist-list").innerHTML = `<li class="ch-empty">Aucune conversation pour l'instant.</li>`; return; }
+  let html = "", last = "";
+  for (const c of list) {
+    const day = chatDay(c.last);
+    if (day !== last) { html += `<li class="ch-day">${esc(day)}</li>`; last = day; }
+    html += `<li class="ch-item ${c.current ? "on" : ""}" data-conv="${c.conv}">
+      <button class="ch-open" type="button"><b dir="auto">${esc(plainText(c.title || "Conversation").slice(0, 80))}</b>
+        <small>${hm(c.started)} · ${c.messages} message${c.messages > 1 ? "s" : ""}${c.current ? " · en cours" : ""}</small></button>
+      <button class="ch-del" type="button" title="Supprimer" aria-label="Supprimer"><svg><use href="#i-trash"/></svg></button>
+    </li>`;
+  }
+  $("#chat-hist-list").innerHTML = html;
+}
+$("#chat-hist-btn").addEventListener("click", () => {
+  const p = $("#chat-hist"), open = p.hidden;
+  p.hidden = !open;
+  $("#chat-hist-btn").setAttribute("aria-expanded", String(open));
+  if (open) loadChatHistory();
+});
+$("#chat-hist-list").addEventListener("click", async (e) => {
+  const li = e.target.closest(".ch-item");
+  if (!li) return;
+  const conv = +li.dataset.conv;
+  if (e.target.closest(".ch-del")) {
+    if (!confirm("Supprimer définitivement cette conversation ?")) return;
+    await api("/api/chat/delete", { method: "POST", body: JSON.stringify({ conv }) });
+  } else {
+    await api("/api/chat/open", { method: "POST", body: JSON.stringify({ conv }) });
+  }
+  await loadChat();
+  loadChatHistory();
 });
 
 /* ================= réglages : voir settings.js ================= */

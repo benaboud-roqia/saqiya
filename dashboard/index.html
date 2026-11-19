@@ -317,7 +317,7 @@
         </form>
       </div>
       <div class="dz-bar">
-        <h3>Diagnostics</h3>
+        <h3>Historique des diagnostics <small class="dz-count" id="dz-count"></small></h3>
         <div class="filters" id="photo-filters">
           <button class="on" data-k="">Tous</button>
           <button data-k="malade">Malades</button><button data-k="surveiller">À surveiller</button>
@@ -341,8 +341,15 @@
             <h2>Le conseiller <span lang="ar">الخبير الفلاحي</span></h2>
             <p class="hint" id="advisor-status">—</p>
           </div>
-          <button class="icon-btn" id="chat-clear" title="Nouvelle conversation"><svg><use href="#i-trash"/></svg></button>
+          <div class="ch-actions">
+            <button class="ch-btn" id="chat-hist-btn" type="button" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/></svg><span>Historique</span></button>
+            <button class="ch-btn" id="chat-clear" type="button" title="Nouvelle conversation"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>Nouvelle</span></button>
+          </div>
         </div>
+        <aside class="chat-hist" id="chat-hist" hidden>
+          <div class="chat-hist-h"><b>Historique des conversations</b><small id="chat-hist-n"></small></div>
+          <ul id="chat-hist-list"></ul>
+        </aside>
         <div class="chat-log" id="chat-log"></div>
         <div class="chat-bottom">
           <div class="prompts" id="prompts">

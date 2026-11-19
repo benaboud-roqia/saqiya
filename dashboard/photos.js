@@ -87,15 +87,33 @@
     const L = ar();
     const list = photos.filter((p) => p.kind !== "sol" && p.kind !== "materiel").filter((p) => !filter || verdictOf(p).k === filter);
     const URG = { faible: L ? "استعجال ضعيف" : "urgence faible", moyenne: L ? "استعجال متوسط" : "urgence moyenne", haute: L ? "استعجال عالٍ" : "urgence haute" };
+    // bilan de l'historique (toutes les photos du compte)
+    const all = photos.filter((p) => p.kind !== "sol" && p.kind !== "materiel").map(verdictOf);
+    const n = (k) => all.filter((v) => v.k === k).length;
+    $("#dz-count").textContent = all.length
+      ? (L ? `${all.length} تشخيص · ${n("malade")} مريضة · ${n("surveiller")} للمراقبة · ${n("sain")} سليمة`
+           : `${all.length} diagnostic${all.length > 1 ? "s" : ""} · ${n("malade")} malade${n("malade") > 1 ? "s" : ""} · ${n("surveiller")} à surveiller · ${n("sain")} saine${n("sain") > 1 ? "s" : ""}`)
+      : "";
+    // historique : regroupé par jour
+    const dayOf = (ts) => {
+      const d = new Date(ts * 1000), t = new Date(), y = new Date(); y.setDate(t.getDate() - 1);
+      if (d.toDateString() === t.toDateString()) return L ? "اليوم" : "Aujourd'hui";
+      if (d.toDateString() === y.toDateString()) return L ? "أمس" : "Hier";
+      return d.toLocaleDateString(LOC(), { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+    };
+    let lastDay = "";
     $("#gallery").innerHTML = list.length ? list.map((p, i) => {
       const v = verdictOf(p);
-      return `<article class="dz-card ph ${v.cls}" data-id="${p.id}" style="animation-delay:${Math.min(i, 12) * 40}ms">
+      const day = dayOf(p.ts);
+      const head = day !== lastDay ? `<h4 class="dz-day">${esc(day)}</h4>` : "";
+      lastDay = day;
+      return head + `<article class="dz-card ph ${v.cls}" data-id="${p.id}" style="animation-delay:${Math.min(i, 12) * 40}ms">
         <div class="dz-img"><img src="/photos/${encodeURIComponent(p.file)}" alt="${esc(p.caption || KINDS[p.kind])}" loading="lazy"></div>
         <div class="dz-body">
           <span class="dz-chip ${v.cls}">${v.cls === "wait" ? "<i></i>" : ""}${esc(v.title)}${v.conf ? ` · ${v.conf} %` : ""}</span>
           ${v.urg && URG[v.urg] ? `<span class="dz-urg ${v.urg}">${URG[v.urg]}</span>` : ""}
           <p dir="auto">${esc(v.text)}</p>
-          <small>${KINDS[p.kind] || p.kind}${p.caption ? " · " + esc(p.caption) : ""} · ${dayHm(p.ts)}${v.colorsOnly ? (L ? " · تحليل الألوان" : " · analyse des couleurs") : ""}</small>
+          <small>${KINDS[p.kind] || p.kind}${p.caption ? " · " + esc(p.caption) : ""} · ${hm(p.ts)}${v.colorsOnly ? (L ? " · تحليل الألوان" : " · analyse des couleurs") : ""}</small>
         </div>
       </article>`;
     }).join("") : (photos.length ? `<p class="dz-none">${L ? "لا توجد صورة في هذه الفئة." : "Aucune photo dans cette catégorie."}</p>` : EMPTY);

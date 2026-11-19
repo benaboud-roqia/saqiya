@@ -5,7 +5,7 @@ import time
 import urllib.parse
 import urllib.request
 
-_cache = {"key": None, "ts": 0, "data": None}
+_cache = {}   # une entrée par lieu (chaque compte a sa parcelle)
 _lock = threading.Lock()
 TTL = 30 * 60
 
@@ -13,8 +13,9 @@ TTL = 30 * 60
 def forecast(lat, lon):
     key = (round(float(lat), 3), round(float(lon), 3))
     with _lock:
-        if _cache["key"] == key and time.time() - _cache["ts"] < TTL and _cache["data"]:
-            return _cache["data"]
+        hit = _cache.get(key)
+        if hit and time.time() - hit["ts"] < TTL and hit["data"]:
+            return hit["data"]
     params = urllib.parse.urlencode({
         "latitude": key[0], "longitude": key[1],
         "current": "temperature_2m,relative_humidity_2m,precipitation",
@@ -44,6 +45,6 @@ def forecast(lat, lon):
         data = {"available": False, "error": str(e), "rain_next_12h_mm": 0,
                 "rain_prob_max_12h": 0, "fetched_at": time.time()}
     with _lock:
-        _cache.update({"key": key, "ts": time.time() if data["available"] else time.time() - TTL + 120,
-                       "data": data})
+        _cache[key] = {"ts": time.time() if data["available"] else time.time() - TTL + 120,
+                       "data": data}
     return data

@@ -53,7 +53,7 @@ RANGES = {
     "air_temp": (-40, 70), "air_humidity": (0, 100), "rain_detected": (0, 1),
 }
 
-_disease_cache = {"ts": 0, "data": None}
+_disease_cache = {}   # un calcul de risques par compte
 _disease_lock = threading.Lock()
 
 
@@ -85,10 +85,11 @@ def get_weather(settings):
 
 def disease_status(force=False):
     with _disease_lock:
-        if force or not _disease_cache["data"] or time.time() - _disease_cache["ts"] > 60:
-            _disease_cache["data"] = disease.assess()
-            _disease_cache["ts"] = time.time()
-        return _disease_cache["data"]
+        hit = _disease_cache.get(db.uid())
+        if force or not hit or time.time() - hit["ts"] > 60:
+            hit = {"data": disease.assess(), "ts": time.time()}
+            _disease_cache[db.uid()] = hit
+        return hit["data"]
 
 
 def lan_addresses():
@@ -147,8 +148,10 @@ def public_settings(s):
 def start_photo_analysis(pid):
     """Lance le diagnostic IA d'une photo dans un fil séparé (l'envoi de la photo reste instantané)."""
     db.set_photo_analysis(pid, "pending")
+    owner = db.uid()
 
     def run():
+        db.set_uid(owner)              # le fil d'analyse travaille sur la parcelle du compte
         photo = db.get_photo(pid)
         try:
             ctx = chat_context()
@@ -237,12 +240,18 @@ def background_loop():
     offline_sent, daily_sent = {}, None
     while True:
         try:
+            for user_id in db.active_user_ids():          # chaque compte a sa parcelle, ses programmes et sa pompe
+                with db.as_user(user_id):
+                    try:
+                        irrigation.pump_state()           # clôt un arrosage arrivé à échéance
+                        irrigation.run_schedules(get_weather(db.get_settings()))
+                    except Exception as e:
+                        print(f"[tâches de fond] compte {user_id} : {e!r}")
+            db.set_uid(None)                               # alertes Telegram et résumé : parcelle du propriétaire
             settings = db.get_settings()
-            irrigation.pump_state()                       # clôt un arrosage arrivé à échéance
-            irrigation.run_schedules(get_weather(settings))
             now = time.time()
-            for d in db.list_devices():
-                if d["id"] in ("esp32-simulateur", "historique-demo"):
+            for d in db.list_devices(all_users=True):
+                if d["id"] in db.DEMO_DEVICES or d.get("uid") != db.owner_id():
                     continue
                 off = now - (d["last_seen"] or 0) > 600
                 if off != offline_sent.get(d["id"], False) and (off or d["id"] in offline_sent):
@@ -319,12 +328,13 @@ class Handler(BaseHTTPRequestHandler):
 
     # ---------- contrôle d'accès ----------
     PUBLIC_API = {"/api/public/summary", "/api/i18n/ar", "/api/device/ping"}
-    OWNER_ONLY = {"/api/device/key", "/api/data/reset", "/api/notify/detect", "/api/notify/test", "/api/notify/disconnect",
+    OWNER_ONLY = {"/api/notify/detect", "/api/notify/test", "/api/notify/disconnect",
                   "/api/ai/key", "/api/ai/provider"}
 
     def _deny(self, path, method):
         """Renvoie True (et répond) si la requête doit être refusée faute de compte ouvert."""
         self.user = None
+        db.set_uid(None)               # par défaut : parcelle du propriétaire (pages publiques)
         if path.startswith("/api/auth/") or path in self.PUBLIC_API or (path == "/api/readings" and method == "POST"):
             return False
         protected = path.startswith(("/api/", "/app/", "/photos/")) or path == "/app"
@@ -332,6 +342,7 @@ class Handler(BaseHTTPRequestHandler):
             return False
         self.user = auth.user_from_cookie(self.headers.get("Cookie"))
         if self.user and self.user["status"] == "active":
+            db.set_uid(self.user["id"])  # chaque compte ne voit et ne modifie que sa propre parcelle
             if (path in self.OWNER_ONLY or path.startswith("/api/users")) and self.user["role"] != "owner":
                 self._json({"error": "réservé au propriétaire du compte"}, 403)
                 return True
@@ -413,6 +424,8 @@ class Handler(BaseHTTPRequestHandler):
             base, rel = AUTH_DIR, path[len("/auth/"):]
         elif path.startswith("/photos/"):
             base, rel = os.path.abspath(db.PHOTOS_DIR), path[len("/photos/"):]
+            if db.photo_file_owner(rel) != db.uid():
+                return self._json({"error": "introuvable"}, 404)
         elif path.startswith("/app/"):
             base, rel = DASHBOARD_DIR, (path[len("/app/"):] or "index.html")
         else:
@@ -476,7 +489,10 @@ class Handler(BaseHTTPRequestHandler):
                                   for k, v in kb["nutrients"].items()},
                 })
             if u.path == "/api/chat/history":
-                return self._json(db.chat_history(50))
+                conv = q.get("conv", [None])[0]
+                return self._json(db.chat_history(200, int(conv) if conv else None))
+            if u.path == "/api/chat/conversations":
+                return self._json({"current": db.current_conv(), "conversations": db.list_conversations()})
             if u.path == "/api/stats":
                 days = max(1, min(int(q.get("days", ["7"])[0]), 90))
                 data = db.stats(days)
@@ -498,7 +514,7 @@ class Handler(BaseHTTPRequestHandler):
             if u.path == "/api/photos":
                 return self._json(db.list_photos())
             if u.path == "/api/device/ping":
-                ok = self.headers.get("X-Device-Key") == db.get_settings()["device_key"]
+                ok = db.uid_for_device_key(self.headers.get("X-Device-Key")) is not None
                 return self._json({"ok": ok, "server_time": time.time()}, 200 if ok else 401)
             if u.path == "/api/device":
                 return self._json(device_info())
@@ -623,7 +639,15 @@ class Handler(BaseHTTPRequestHandler):
                     return self._json({"error": "message vide"}, 400)
                 return self._json(chatbot.answer(msg[:2000], chat_context()))
             if u.path == "/api/chat/clear":
-                db.clear_chat()
+                return self._json({"ok": True, "conv": db.new_conversation()})
+            if u.path == "/api/chat/open":
+                db.open_conversation(int(body.get("conv") or 1))
+                return self._json({"ok": True})
+            if u.path == "/api/chat/delete":
+                conv = int(body.get("conv") or 0)
+                db.delete_conversation(conv)
+                if conv == db.current_conv():
+                    db.new_conversation()
                 return self._json({"ok": True})
             return self._json({"error": "route inconnue"}, 404)
         except json.JSONDecodeError:
@@ -703,8 +727,10 @@ class Handler(BaseHTTPRequestHandler):
         return self._json({"id": pid, "file": name, "ai": vision.available()})
 
     def _post_reading(self, body):
-        if self.headers.get("X-Device-Key") != db.get_settings()["device_key"]:
+        owner = db.uid_for_device_key(self.headers.get("X-Device-Key"))
+        if owner is None:
             return self._json({"error": "clé du boîtier invalide"}, 401)
+        db.set_uid(owner)              # les mesures vont sur la parcelle du compte de cette clé
         code, resp = ingest_reading(body, self.client_address[0])
         return self._json(resp, code)
 
@@ -767,7 +793,7 @@ def main():
         print(" ⚠ Clé du boîtier par défaut : générez-en une dans Tableau de bord › Boîtier.")
     print("=" * 60)
     db.on_alert = notifier.alert
-    irrigation.on_event = notifier.pump_event
+    irrigation.on_event = lambda *a: notifier.pump_event(*a) if db.uid() == db.owner_id() else None
     threading.Thread(target=background_loop, daemon=True).start()
     if os.environ.get("SAQIYA_USB", "1") != "0":
         usb_bridge.start(ingest_reading)

@@ -108,7 +108,7 @@
     "De près": "عن قرب", "une seule feuille, bien nette": "ورقة واحدة واضحة", "À la lumière du jour": "في ضوء النهار",
     "sans flash, sans contre-jour": "بدون فلاش وبدون ضوء خلفي", "Face malade visible": "الجهة المريضة ظاهرة",
     "taches, jaunissement, feutrage": "بقع، اصفرار، زغب أبيض", "Feuille": "ورقة", "Fruit": "ثمرة", "Plante entière": "النبتة كاملة",
-    "Photographier une feuille": "صوّر ورقة", "Diagnostics": "التشخيصات", "Tous": "الكل", "Malades": "مريضة",
+    "Photographier une feuille": "صوّر ورقة", "Diagnostics": "التشخيصات", "Historique des diagnostics": "سجل التشخيصات", "Historique": "السجل", "Nouvelle": "جديدة", "Historique des conversations": "سجل المحادثات", "Aucune conversation pour l'instant.": "لا توجد محادثات بعد.", "Aujourd'hui": "اليوم", "Hier": "أمس", "Tous": "الكل", "Malades": "مريضة",
     "À surveiller": "للمراقبة", "Saines": "سليمة", "En cours": "جارٍ", "Maladies surveillées pour votre culture": "الأمراض المراقبة لزراعتك",
     "Note (facultatif) : rang, variété…": "ملاحظة (اختياري): الصف، الصنف…",
     "Diagnostic IA inactif : collez la clé Groq dans le fichier .env du serveur (GROQ_API_KEY=…) puis relancez-le. En attendant, chaque photo reçoit une analyse des couleurs (jaunissement, taches brunes, feutrage blanc).":
