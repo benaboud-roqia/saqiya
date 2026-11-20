@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Sāqiya">
+  <title>Sāqiya</title>
+  <defs>
+    <linearGradient id="sq-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f3a2a"/>
+      <stop offset=".55" stop-color="#0d4a5c"/>
+      <stop offset="1" stop-color="#1a6dff"/>
+    </linearGradient>
+    <linearGradient id="sq-drop" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#d6ecff"/>
+    </linearGradient>
+    <linearGradient id="sq-water" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7cc8ff"/>
+      <stop offset="1" stop-color="#2e8bff"/>
+    </linearGradient>
+    <clipPath id="sq-clip"><path d="M30 9.5c0 0-14.5 16.2-14.5 27.2a14.5 14.5 0 0 0 29 0C44.5 25.7 30 9.5 30 9.5z"/></clipPath>
+  </defs>
+  <!-- fond de l'icône -->
+  <rect width="64" height="64" rx="15" fill="url(#sq-bg)"/>
+  <!-- goutte d'eau -->
+  <path d="M30 9.5c0 0-14.5 16.2-14.5 27.2a14.5 14.5 0 0 0 29 0C44.5 25.7 30 9.5 30 9.5z" fill="url(#sq-drop)"/>
+  <!-- niveau d'eau dans la goutte (le sol humide) -->
+  <g clip-path="url(#sq-clip)">
+    <path d="M12 41.5c4-2.4 8-2.4 12 0s8 2.4 12 0 8-2.4 12 0V56H12z" fill="url(#sq-water)"/>
+  </g>
+  <!-- jeune pousse -->
+  <path d="M30 44.5V31.5" stroke="#0f3a2a" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+  <path d="M30 35.5c-5.6.3-8.6-3.2-8.4-7.4 5.2-.2 8.4 2.9 8.4 7.4z" fill="#1f7a4a"/>
+  <path d="M30 32.2c5.2.2 8.2-2.9 8.1-6.9-4.9-.2-8 2.6-8.1 6.9z" fill="#3ddc97"/>
+  <!-- ondes du capteur -->
+  <g fill="none" stroke="#b5e05b" stroke-width="2.4" stroke-linecap="round">
+    <path d="M46.5 13.5a6 6 0 0 1 4 4"/>
+    <path d="M47 7.8a11.5 11.5 0 0 1 9.2 9.2"/>
+  </g>
+  <circle cx="46.4" cy="17.6" r="1.9" fill="#b5e05b"/>
+</svg>
